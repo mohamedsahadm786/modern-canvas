@@ -33,6 +33,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      # 🔍 HARD CHECK — prevents s3:// errors forever
+      - name: Verify S3 bucket secret
+        run: |
+          if [ -z "${{ secrets.S3_BUCKET_NAME }}" ]; then
+            echo "❌ S3_BUCKET_NAME secret is missing or empty"
+            exit 1
+          fi
+          echo "✅ Deploying to bucket: ${{ secrets.S3_BUCKET_NAME }}"
+
       - name: Upload to S3
         run: aws s3 sync client/dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
 
