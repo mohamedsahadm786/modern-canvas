@@ -1,0 +1,69 @@
+**Project task — build & modernize portfolio site (index.html + assets provided):**
+
+You will be given `index.html` and the `images/` and `icons/` folders.  
+Do the following exactly as described below.
+
+---
+
+## 1) Top-level goals
+1. Produce a modern, Apple-inspired portfolio page: minimal, generous whitespace, crisp typography, large hero imagery, subtle micro-interactions.  
+2. Keep all textual content, external links (GitHub, LinkedIn, CV links, etc.), and the structure (Home, About, Education, Projects, Experience, Skills, Recruiter message, Contact). Do not remove or rewrite my copy.  
+3. Optimize assets, accessibility, and responsiveness — mobile first.  
+
+---
+
+## 2) Design & UX rules
+- White / near-white cards on a premium **neural-network inspired background** (details below).  
+- Crisp typography: system UI font stack `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`.  
+- Large, bold headings (hero H1 large, e.g. 48–64px desktop).  
+- Minimal top nav: brand on left, simple links on right, sticky with blur.  
+- Sections should feel Apple-style: clean, elegant, premium.  
+
+---
+
+## 3) Premium background update
+Replace plain white body background with a **professional neural-network inspired theme**:
+
+- Apply a faint, very subtle neural node / network overlay pattern (opacity ~0.03–0.06) or a noise texture for premium depth.  
+- Use semi-transparent cards with glass effect: `backdrop-filter: blur(6px);` and `rgba(255,255,255,0.03)`.  
+- Provide light-mode alternative respecting `prefers-color-scheme`.  
+- Typography remains high-contrast, buttons use `--accent` with soft glow on hover.  
+
+
+) Sections to build / upgrade
+
+Hero / Home:
+Replace the current heading/subheading (sahad + in a snapshot) with exactly:
+MOHAMED SAHAD M (single professional heading).
+Keep CTA buttons (“Explore CV”, “See Projects”).
+
+About (snapshot): Profile image with circular crop, cards modernized, quote styled elegantly.
+
+Education: Vertical interactive timeline with nodes, animations on scroll, degree details + badges.
+
+Things I’ve worked on (I_am): Responsive masonry / grid, 3 columns desktop, modals on click.
+
+Projects: Project cards with images, descriptions, “SOURCE CODE” CTA, hover glass effect, small tech tags.
+
+Experience: Cards with role, company, dates, bulleted achievements.
+
+Certifications: Grid of certificates, clickable, lightbox preview.
+
+Skills (very important updates below):
+
+Skills fixes (must include):
+
+Languages subsection (new):
+English, Malayalam, Hindi.
+
+Technical skills additions:
+Advanced MS Excel, Power BI, Artificial Intelligence, Deep Learning, SPSS.
+
+Interpersonal skills corrections:
+Must include Data Storytelling, Leadership, Teamwork (and Communication if already present).
+
+Display as tiles/pills with icons; add progress bars for technical where relevant.
+
+Recruiter message / CTA: Large professional card with text + CTA buttons.
+
+Contact / Social: Keep email, phone, LinkedIn, GitHub, Twitter, Instagram. Use SVG icons if possible. Add accessible contact form (graceful mailto fallback).

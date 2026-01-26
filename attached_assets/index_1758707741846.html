@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* About Section Styling */
+        #about {
+          
+          background: url('images/about/7.png') no-repeat center center/cover;
+          
+      }
+            .about-section {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          padding: 80px 40px;
+          text-align: left;
+      }
+
+      .about-section img {
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          margin-right: 30px;
+          border: 4px solid #6c757d;
+      }
+
+      .about-content {
+          max-width: 600px;
+      }
+
+      .about-section h2 {
+          font-weight: bold;
+          font-size: 2rem;
+          margin-bottom: 15px;
+      }
+
+      .about-section p {
+          font-size: 1.1rem;
+          color: #333;
+          line-height: 1.6;
+      }
+            /* Ensure full-width image and remove round image styling */
+      #about img {
+        width: 95%; /* Leaves space on left and right */
+      height: 80vh;
+      object-fit: cover;
+      margin: 8px auto; /* Adds space below the navbar */
+      display: block; /* Centers the image */
+      border-radius: 10px; /* Slight rounding to edges */
+      }
+      #about img {
+       margin-top: 90px;
+      }
+
+
+
+      /* Override previous small image styling */
+      .about-section img {
+          border-radius: 0; /* Remove the rounded effect */
+          width: 100%; /* Full width */
+          height: auto; /* Adjust height */
+          border: none; /* Remove border */
+      }
+      
+        /* General Section Styling */
+.container {
+    max-width: 1200px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#aboutt {
+    margin-top: 70px;  /* Move the entire section down */
+    background-color: #ffceba;
+}
+
+
+#aboutt img.rounded-circle {
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.aboutt-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 5rem; /* Adjust size as needed */
+}
+
+.highlight {
+    color: red;
+    font-weight: bold;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Keeps profile pic centered */
+    margin-top: 20px;
+    position: relative;
+}
+
+.profile-pic {
+    width: 180px; /* Slightly bigger */
+    height: 180px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.small-window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px; /* Adjusted size */
+    padding: 15px;
+    background: yellow;
+    box-shadow: 0 30px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    position: absolute;
+    top: 70%;
+    transform: translateY(-50%);
+}
+
+.left-window {
+    left: -80px; /* Brings the left box closer */
+}
+
+.right-window {
+    right: -80px; /* Brings the right box closer */
+}
+
+.small-window img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.click-text {
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.sahad-btn {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.write-up-section {
+    text-align: center;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.quote {
+    color: red;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.description {
+    color: black;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Styling for Education Section */
+#education {
+  background-color: #fdfbf9;
+  padding: 50px 0;
+  margin-top: 80px;  /* Move the entire section down */
+}
+
+/* Education Heading */
+.education-heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+
+/* Timeline Structure */
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Red Vertical Line */
+.timeline::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  background-color: red;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+}
+
+/* Timeline Items */
+.timeline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: -100px;
+}
+
+/* Swap MSc to Left & BSc to Right */
+.timeline-item.left {
+  flex-direction: row;
+  text-align: right;
+}
+
+.timeline-item.right {
+  flex-direction: row-reverse;
+  text-align: left;
+}
+
+/* Content Box */
+.content {
+  background: none;
+  padding: 20px;
+  width: 45%;
+  text-align: center;
+}
+
+/* Course Name */
+.course-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: red;
+}
+
+/* University Name */
+.university-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 5px;
+}
+
+/* year of passing */
+.university-namee {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 15px;
+}
+
+/* Small Window - Yellow Box */
+/* Small Yellow Box (First Button) */
+.yellow-box-small {
+  background-color: yellow;
+  padding: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  text-align: center;
+  width: 150px;  /* Adjust size */
+  height: 70px;  /* Adjust size */
+}
+
+/* Large Yellow Box (With Image) */
+.yellow-box-large {
+  background-color: #f9fafa;
+  padding: 15px;
+  border-radius: 50px;
+  display: inline-block;
+  text-align: center;
+  width: 300px;  /* Adjust size */
+  height: 400px;  /* Let it grow based on content */
+}
+
+
+/* Custom Blue Button for Small Yellow Box */
+.custom-blue-btn-small {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 80%;
+}
+
+.custom-blue-btn-small:hover {
+  background-color: #0056b3;
+}
+
+/* Custom Blue Button for Large Yellow Box */
+.custom-blue-btn-large {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.custom-blue-btn-large:hover {
+  background-color: #0056b3;
+}
+
+
+/* Education Description */
+.edu-desc {
+  font-size: 1rem;
+  text-align: justify;
+  margin: 15px 0;
+}
+
+/* Small Window - Image & Button (Moved to End) */
+.yellow-box-large img {
+  width: 270px;
+  height: 250px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.yellow-box-small .click-text {
+    font-weight: bold;
+}
+/* for last button after education */
+.navigator-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navigator-btn:hover {
+  background-color: darkblue;
+}
+
+
+
+
+
+
+
+
+
+#I_am {
+  background-color: #d2e7b5;
+  padding: 50px 0;
+  margin-top: 100px;  /* Move the entire section down */
+}
+
+.Iam-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+  color: black;
+}
+
+.work-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.work-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.work-card:hover {
+  transform: scale(1.05);
+}
+
+
+
+
+
+
+
+
+
+
+
+#projects {
+  background: url('images/back_ground/1.jpg') no-repeat center center/cover;
+  padding: 80px 0;
+  margin-top: 50px;  /* Move the entire section down */
+}
+
+
+.project-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+  color: white !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Optional: Adds contrast */
+}
+
+.project-card {
+  background: linear-gradient(to bottom, rgba(100, 0, 200, 0.8), rgba(0, 0, 0, 0.9));
+  color: white;
+  padding: 15px;
+  text-align: center;
+  border-radius: 40px;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures equal height */
+  max-width: 380px; /* ✅ Prevents card from expanding beyond this width */
+  word-wrap: break-word; /* ✅ Forces text to wrap inside the card */
+  overflow: hidden;
+}
+
+.project-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.project-card p {
+  font-size: 1rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 280px; /* ✅ Keeps text height fixed */
+  white-space: normal; /* ✅ Allows multi-line wrapping */
+}
+
+.source-btn {
+  display: inline-block;
+  text-decoration: none;
+  background: white;
+  color: black;
+  padding: 10px 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  transition: background 0.3s;
+  margin-top: auto; /* ✅ Pushes button to the bottom */
+}
+
+.source-btn:hover {
+  background: lightgray;
+}
+
+/* ✅ Added Hover Effect */
+.project-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.5);
+}
+
+.empty-card {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+/* ✅ Ensures all cards in the same row have equal height */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ✅ Prevents stretching due to flexbox */
+.row .col-md-4 {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+
+#experience {
+  background: url('images/back_ground/3.jpeg') no-repeat center center/cover;
+  padding: 80px 0;
+  margin-top: 50px;  /* Move the entire section down */
+}
+
+.section-heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.experience-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;  /* Aligns everything to the top */
+  background: linear-gradient(to right, #6a0dad, #1a1a2e);
+  color: white;
+  padding: 20px;
+  border-radius: 50px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.experience-details {
+  width: 65%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;  /* Ensures items stack top-down */
+  align-items: flex-start; /* Aligns items to the left */
+}
+
+.internship-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #00ffff; /* Neon blue */
+  margin-bottom: 5px;
+}
+
+.company-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.internship-duration {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.internship-points {
+  margin-top: 0;
+  padding-left: 20px;
+}
+
+.internship-points li {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+
+.experience-image {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns image to the top */
+}
+
+.experience-image img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+
+
+
+
+
+
+
+/* Certifications Section */
+.certifications-section {
+    background-color: #626767; /* Dark Background */
+    padding: 50px 0;
+    text-align: center;
+}
+
+.section-title {
+    color: white;
+    font-size: 40px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: red;
+    margin: 8px auto;
+}
+
+/* Certificates Container */
+.certifications-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns in the first row */
+    gap: 20px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.certificate-card {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+}
+
+.certificate-card img {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.certificate-card p {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/* Click Here Button */
+.certificate-btn {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+.certificate-btn:hover {
+    background-color: #ff3333;
+}
+
+/* Second row has only 2 columns, leaving space for future updates */
+@media (max-width: 900px) {
+    .certifications-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns layout for small screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .certifications-container {
+        grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+#skills {
+    text-align: center;
+    padding: 50px;
+    background: url('images/back_ground/4.jpg') no-repeat center center/cover;
+    margin-top: 50px;  /* Move the entire section down */
+}
+
+.skills-heading {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.subsection-heading {
+    font-size: 24px;
+    font-style: italic;
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 10%;
+    color: white;
+    font-weight: bold;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Align items to the left */
+    gap: 20px;
+    margin-top: 10px;
+    margin-left: 10%; /* Ensure it starts slightly indented from the left */
+}
+
+.skill-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    width: 180px;
+}
+
+.skill-box img {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.skill-box:hover img {
+    transform: scale(1.1);
+}
+
+.skill-box p {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.skill-box button {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.skill-box button:hover {
+    background-color: #c9302c;
+}
+
+
+
+
+
+
+
+
+#recruiter-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.headline-box {
+    background-color: #eee;
+    border-radius: 30px;
+    padding: 10px 30px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 22px;
+    color: #5d3fd3;
+    border: 3px solid #5d3fd3;
+}
+
+.message-box {
+    background-color: #5d3fd3;
+    color: white;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 20px; /* Rounded square */
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.cta-button {
+    background-color: #ff9800;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: #e68900;
+}
+
+
+
+
+
+
+
+/* Contact Me Section */
+#contact {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Contact Info */
+#contact i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+#contact span {
+  font-size: 18px;
+}
+
+/* Social Icons */
+#contact img {
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 30%;
+  padding: 5px;
+  transition: transform 0.3s;
+}
+
+#contact img:hover {
+  transform: scale(1.1);
+}
+
+#contact p {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* Centering Text */
+#contact a {
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Padding and spacing */
+#contact .row div {
+  text-align: center;
+}
+
+
+
+
+
+/* Sticky Navbar */
+.navbar {
+  background-color: #000;
+  padding: 3px 0;
+  transition: all 0.3s;
+}
+
+/* Navbar Links */
+.navbar .nav-link {
+  color: white;
+  font-size: 15px;
+  margin-right: 1px;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+/* Change link color on hover */
+.navbar .nav-link:hover {
+  color: yellow;
+}
+
+/* Navbar Brand */
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+/* Change brand color on hover */
+.navbar-brand:hover {
+  color: #d96cb1;
+}
+
+/* Sticky Navbar Effect */
+.navbar.fixed-top {
+  background-color: #000;
+  box-shadow: 0 20px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth Scrolling Effect */
+html {
+  scroll-behavior: smooth;
+}
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+  <section id="about" class="container-fluid p-0">
+    <!-- Full-Width Image Carousel -->
+    <div id="aboutCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="images/about/1.jpg" class="d-block" alt="First Image">
+            </div>
+            <div class="carousel-item">
+              <img src="images/about/2.jpg" class="d-block" alt="First Image">
+            </div>
+            <div class="carousel-item">
+              <img src="images/about/3.jpg" class="d-block" alt="First Image">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#aboutCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#aboutCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    
+</section>
+
+
+
+
+<!-- About Section -->
+<section id="aboutt" class="py-5 ">
+  <div class="container text-center">
+    <h2 class="about-heading"><span class="highlight"><strong>SAHAD</strong></span> in a Snapshot</h2>
+    
+    <div class="profile-container">
+        <!-- Left Small Window -->
+        <div class="small-window left-window">
+            <img src="images/about/4.jpg" alt="Image 1">
+            <p class="click-text">My EDUCATION????😎 Oh, it’s flex time!</p>
+            <button class="sahad-btn" onclick="location.href='#education'">Let's go!</button>
+        </div>
+
+        <!-- Profile Picture -->
+        <img src="images/nut_shell/1.JPG" alt="Profile Image" class="my-3 rounded-circle">
+
+        <!-- Right Small Window -->
+        <div class="small-window right-window">
+            <img src="images/about/5.jpg" alt="Image 2">
+            <p class="click-text">Let my CV do the talking!</p>
+            <button class="sahad-btn" onclick="window.location.href='https://drive.google.com/file/d/1t1SdzVxrDfx0uWxgvOW0mOI9Z8fl-3qi/view?usp=sharing'">Let's go!</button>
+        </div>
+    </div>
+
+    <div class="write-up-section">
+      <p class="quote">"Data is the new oil, but refining it into insights is where the real power lies."</p>
+      <p class="description">I am a Statistician, Data Scientist, Analyst, and AI/ML Engineer with a deep passion for transforming raw data into meaningful stories. With a Master’s in Statistics from Pondicherry University and a Bachelor’s from Hindu College, University of Delhi, I have built a strong foundation in statistical modeling, machine learning, and artificial intelligence. My expertise lies in leveraging Python and SQL to extract insights, optimize decision-making, and build scalable data-driven solutions.</p>
+      
+      <p class="quote">"The goal is to turn data into information, and information into insight."</p>
+      <p class="description">Throughout my journey, I have developed and deployed AI-driven applications, worked on deep learning models for sentiment analysis, and optimized large-scale databases to enhance business efficiency. My proficiency in data visualization and storytelling allows me to communicate complex insights effectively, ensuring that data not only speaks but also drives impact.</p>
+      
+      <p class="quote">"Without data, you’re just another person with an opinion."</p>
+      <p class="description">Whether it’s predictive modeling, NLP, or statistical data analysis, I believe in harnessing the power of data to solve real-world problems. With an analytical mindset and a creative approach, I strive to bridge the gap between numbers and narratives, making data-driven decisions more accessible and actionable.</p>
+  </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<section id="education" class="py-5">
+  <div class="container text-center">
+    <!-- Heading -->
+    <h2 class="education-heading">Education</h2>
+
+    <div class="timeline">
+      <!-- MSc (Left Side) -->
+      <div class="timeline-item left">
+        <div class="content">
+          <h3 class="course-name"> MSc in <span class="highlight">STATISTICS 👈</span></h3>
+          <p class="university-name">Pondicherry University, Pondicherry, India</p>
+          <p class="university-namee">YEAR OF PASSING :  September 2023- April 2025 </p>
+
+          <!-- Small Window (Yellow Box with Blue Button) BELOW University Name -->
+          <div class="yellow-box-small">
+            <p class="click-text"><strong>8.34/10</strong></p>
+            <button class="custom-blue-btn-small">CGPA</button>
+          </div>
+
+          <!-- Description -->
+          <p class="edu-desc">
+            A place where I deepened my passion for data science and statistical analysis. Pursuing my Master's in Statistics here has provided me with a strong theoretical foundation and hands-on experience in advanced data analytics, artificial intelligence, and deep learning. The university’s research-driven environment and exposure to cutting-edge tools have shaped my ability to solve real-world data challenges.
+          </p>
+
+          <!-- Small Window (Image + Button) AT THE END -->
+          <div class="yellow-box-large">
+            <img src="images/education/1.jpg" alt="SPSS Course">
+            <button class="custom-blue-btn-large" onclick="window.location.href='https://en.wikipedia.org/wiki/Pondicherry_University'">College details? I got you!</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BSc (Bottom Right Side) -->
+      <div class="timeline-item right">
+        <div class="content">
+          <h3 class="course-name">👉 BSc (H) in <span class="highlight">STATISTICS</span></h3>
+          <p class="university-name">Hindu College, University of Delhi, India</p>
+          <p class="university-namee">YEAR OF PASSING : July 2023 </p>
+
+          <!-- Small Window (Yellow Box with Blue Button) BELOW University Name -->
+          <div class="yellow-box-small">
+            <p class="click-text"><strong>8.49/10</strong></p>
+            <button class="custom-blue-btn-small">CGPA</button>
+          </div>
+
+          <!-- Description -->
+          <p class="edu-desc">
+            One of India's most prestigious institutions, Hindu College played a crucial role in building my analytical mindset. My undergraduate journey in Statistics here was filled with rigorous academic training, problem-solving, and a deep dive into the fundamentals of data science. The vibrant intellectual environment and emphasis on research fostered my skills in Python, SQL, and data visualization, laying a strong foundation for my career in analytics.
+          </p>
+
+          <!-- Small Window (Image + Button) AT THE END -->
+          <div class="yellow-box-large">
+            <img src="images/education/2.jpg" alt="SPSS Course">
+            <button class="custom-blue-btn-large" onclick="window.location.href='https://en.wikipedia.org/wiki/Hindu_College,_Delhi'">College details? I got you!</button>
+          </div>
+        </div>
+      </div>
+       <!-- Timeline Item 3: Higher Secondary (Left) -->
+       <div class="timeline-item left">
+        <div class="content">
+          <h3 class="course-name">Higher Secondary Education👈</h3>
+          <p class="university-name">GHSS Irumbuzhi, Kerala, India</p>
+          <p class="university-namee">YEAR OF PASSING :  July 2020</p>
+          <!-- Small Yellow Box (No image) -->
+          <div class="yellow-box-small">
+            <p class="click-text"><strong>95.6%</strong></p>
+            <button class="custom-blue-btn-small">Percentage</button>
+          </div>
+          <p class="edu-desc"></p>
+          <!-- Large Yellow Box (With image) -->
+          <div class="yellow-box-large">
+            <img src="images/education/3.jpg" alt="Higher Secondary Course" width="100%">
+            <button class="custom-blue-btn-large" onclick="window.location.href='https://www.justdial.com/Malappuram/Government-Higher-Secondary-School-Irumbuzhi-Malappuram-Ho/9999PX483-X483-110709122333-S6I2_BZDET'">Let's go!</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Timeline Item 4: High School (Right) -->
+      <div class="timeline-item right">
+        <div class="content">
+          <h3 class="course-name">👉High School Education </h3>
+          <p class="university-name">MMET HS Melmuri, Kerala, India</p>
+          <p class="university-namee">YEAR OF PASSING : June 2018 </p>
+          <!-- Small Yellow Box (No image) -->
+          <div class="yellow-box-small">
+            <p class="click-text"><strong> 10 A+/10 A+</strong></p>
+            <button class="custom-blue-btn-small">Number of A+</button>
+          </div>
+          <p class="edu-desc"></p>
+          <!-- Large Yellow Box (With image) -->
+          <div class="yellow-box-large">
+            <img src="images/education/4.jpg" alt="High School Course" width="100%">
+            <button class="custom-blue-btn-large" onclick="window.location.href='https://www.justdial.com/Malappuram/M-M-E-T-High-School-Malappuram-Ho/9999PX483-X483-110709103712-K9Q9_BZDET'">Let's go!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<section id="I_am" class="py-5">
+  <div class="container text-center">
+    <h2 class="Iam-heading">SOME THINGS I'VE WORKED ON</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/1.png" alt="Project 1">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/2.jpg" alt="Project 2">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/3.jpg" alt="Project 3">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/4.jpg" alt="Project 4">
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/5.jpg" alt="Project 5">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/6.jpg" alt="Project 6">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/7.png" alt="Project 7">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/8.jpg" alt="Project 8">
+        </div>
+      
+    </div>
+  </div>
+
+
+   <!-- Third Row -->
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/9.jpg" alt="Project 9">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/10.jpg" alt="Project 10">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/11.jpg" alt="Project 11">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="work-card">
+          <img src="images/I_am/12.jpg" alt="Project 12">
+        </div>
+      
+    </div>
+  </div>
+</section>
+<div class="text-center mt-4">
+  <button class="navigator-btn" onclick="location.href='#projects'">Oh, you thought that was cool? Buckle up, because the real deal is about to drop! 😎</button>
+</div>
+
+    
+
+
+
+
+
+
+
+<section id="projects" class="py-5">
+  <div class="container text-center">
+    <h2 class="project-heading">PROJECTS</h2>
+
+    <!-- First Row -->
+    <div class="row">
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/1.png" alt="Project 1">
+          <p>Analyzed over 29,000 Amazon purchasing records using complex SQL queries to derive key business insights. Implemented PL/pgSQL stored procedures to automate inventory updates, eliminating manual processes. Optimized queries using indexing and CTEs, improving performance by 30% and enhancing data retrieval efficiency.</p>
+          <a href="https://github.com/mohamedsahadm786/advanced-postgresql-business-insights" class="source-btn">SOURCE CODE</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/2.jpg" alt="Project 2">
+          <p>Developed an AI-powered chatbot leveraging deep learning and NLP to classify user sentiments with 86.3% accuracy. Built using LSTM neural networks in Python, the chatbot processes text inputs and provides real-time sentiment-based responses, improving user interaction and engagement.</p>
+          <a href="https://github.com/mohamedsahadm786/Sentiment-Analysis-Chatbot" class="source-btn">SOURCE CODE</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/3.jpg" alt="Project 3">
+          <p>Designed a predictive modeling tool for Bangalore’s real estate market using machine learning techniques such as Random Forest and Gradient Boosting. Integrated a Flask-based UI to provide stakeholders with data-driven insights, enabling more informed property investment decisions.</p>
+          <a href="https://github.com/mohamedsahadm786/Real-Estate-Price-Prediction-AI-Powered-Tool-for-Bangalore-Housing-Market-" class="source-btn">SOURCE CODE</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/4.jpg" alt="Project 4">
+          <p>Conducted performance analytics on T20 World Cup 2022 data, scraping and processing over 10,000 data points. Used Python and Power BI to visualize player performance metrics, helping identify top-performing players and optimize Best XI team selection based on statistical insights.</p>
+          <a href="https://github.com/mohamedsahadm786/Cricket-T20-World-Cup-2022-Data-Analysis" class="source-btn">SOURCE CODE</a>
+        </div>
+       </div>
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/5.png" alt="Project 5">
+          <p>Developed an AI-powered pipeline to analyze 1000+ page multilingual sustainability reports, identifying digitalization needs using GPT-4o-mini with 95%+ accuracy. Automated PDF parsing, OCR, and section-wise text processing with PyMuPDF, Tesseract, and spaCy. Mapped insights to external service portfolios via dynamic web scraping, reducing manual effort by ~80% and enabling scalable ESG analysis.</p>
+          <a href="https://github.com/mohamedsahadm786/AI-powered-LLM-Sustainability-Report-Analyzer" class="source-btn">SOURCE CODE</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/6.jpg" alt="Project 6">
+          <p>Built a predictive model to estimate food delivery times using the Zomato Delivery dataset. Applied Random Forest and XGBoost with R² > 0.90. Performed feature engineering and hyperparameter tuning to improve accuracy, helping optimize delivery logistics and customer satisfaction.</p>
+          <a href="https://github.com/mohamedsahadm786/food-delivery-time-prediction" class="source-btn">SOURCE CODE</a>
+        </div>
+    </div>
+  </div>
+
+
+    <!-- Third Row -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/7.webp" alt="Project 7">
+          <p>Developed an AI-powered tool to generate job-specific, ATS-friendly resumes and cover letters within seconds. Utilized GPT-4o, NLP, and LaTeX automation to tailor content based on job descriptions. Built with Streamlit for a clean, one-click web interface to simplify job application processes.</p>
+          <a href="https://github.com/mohamedsahadm786/AI-Powered-ATS-Optimized-Resume-and-Cover-Letter-Generator" class="source-btn">SOURCE CODE</a>
+        </div>
+       </div>
+       <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/8.webp" alt="Project 8">
+          <p>An AI-powered Interview Coach that simulates realistic, voice-based mock interviews and provides instant feedback on both answer quality and communication style. Designed to help candidates practice confidently, it tailors questions to job roles and resumes while offering personalized tips to improve real-world interview performance.</p>
+          <a href="https://github.com/mohamedsahadm786/AI-Powered-Multilingual-Voice-Interview-Simulator" class="source-btn">SOURCE CODE</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="project-card">
+          <img src="images/projects/9.png" alt="Project 9">
+          <p>Built four custom automations using the n8n no-code platform: a Prompt-to-Photo Editor for quick image edits, an Image-to-Video Creator that transforms photos into short videos, a Multimodal Telegram Assistant supporting text, audio, video, and document inputs, and a RAG-powered Cover Letter Builder that generates tailored applications from job details and user background.</p>
+          <a href="https://github.com/mohamedsahadm786/N8N_Automation" class="source-btn">SOURCE CODE</a>
+        </div>
+    </div>
+  </div>
+       
+    
+
+
+</section>
+
+<div class="text-center mt-4">
+  <button class="navigator-btn" onclick="location.href='#experience'">Oh, now I’ve got your attention! Time to dive into my work experience! 😎</button>
+</div>
+
+
+
+
+
+
+
+
+<section id="experience" class="py-5">
+  <div class="container">
+    <h2 class="section-heading">EXPERIENCE</h2>
+
+
+    <!-- Internship 2 -->
+    <div class="experience-card">
+      <div class="experience-details">
+        <h3 class="internship-title">Data Scientist Intern</h3>
+        <h4 class="company-name">RP2 Private Ltd.</h4>
+        <p class="internship-duration">Present</p>
+        <ul class="internship-points">
+          <li>Building AI-powered applications using LLMs (OpenAI, HuggingFace Transformers), speech-to-text (Whisper, DeepSpeech), and NLP/NLU frameworks, integrated with Flask, REST APIs, and real-time audio interaction systems.</li>
+          <li>Developing and deploying ML pipelines with Python, scikit-learn, TensorFlow, PyTorch, including data preprocessing, feature engineering, model training, evaluation (AUC, SHAP), and optimization for scalability.</li>
+          <li>Working on full-stack deployment with HTML/CSS/JS, Flask servers, API integration, and applying MLOps practices, version control (Git/GitHub), and cloud readiness for production-grade AI tools.</li>
+          
+        </ul>
+      </div>
+      <div class="experience-image">
+        <img src="images/Internship/4.png" alt="Internship 1">
+      </div>
+    </div>
+
+    <!-- Internship 1 -->
+    <div class="experience-card">
+      <div class="experience-details">
+        <h3 class="internship-title">Data Analyst Intern</h3>
+        <h4 class="company-name">Nevar Systems</h4>
+        <p class="internship-duration">April 2025 - June 2025</p>
+        <ul class="internship-points">
+          <li>Contributed to data-driven decision-making by supporting statistical modeling and exploratory data analysis for ongoing business projects.</li>
+          <li>Assisted in executing analytical tasks including data cleaning, preprocessing, and generating actionable insights using advanced statistical techniques.</li>
+          <li>Applied core principles of statistical analysis and demonstrated strong knowledge in data manipulation, visualization, and interpretation to support project objectives.</li>
+          <li>Collaborated with cross-functional teams to deliver technical solutions and provided valuable inputs for optimizing data pipelines and business outcomes.</li>
+          <li>Maintained professionalism, accountability, and high-quality standards throughout the 2-month internship, earning recognition for commitment and performance.</li>
+          
+        </ul>
+      </div>
+      <div class="experience-image">
+        <img src="images/Internship/3.jpg" alt="Internship 1">
+      </div>
+    </div>
+
+    <!-- Internship 2 -->
+    <div class="experience-card">
+      <div class="experience-details">
+        <h3 class="internship-title">Artificial Intelligence Intern</h3>
+        <h4 class="company-name">Btech Walleh</h4>
+        <p class="internship-duration">July 2024 - August 2024</p>
+        <ul class="internship-points">
+          <li>Developed and deployed machine learning models in 2+ AI projects, addressing specific challenges.</li>
+          <li> Designed AI-driven solutions with cross-functional teams, utilizing NLP and computer vision techniques.</li>
+          <li>Processed and analyzed datasets with 100,000+ records for preprocessing, training, and performance
+            evaluation.</li>
+          <li>Enhanced proficiency in TensorFlow and PyTorch by implementing and testing 5+ models.</li>
+        </ul>
+      </div>
+      <div class="experience-image">
+        <img src="images/Internship/1.jpg" alt="Internship 1">
+      </div>
+    </div>
+
+    <!-- Internship 3 -->
+    <div class="experience-card">
+      <div class="experience-details">
+        <h3 class="internship-title">Corporate Development Specialist Intern</h3>
+        <h4 class="company-name">Younity.In</h4>
+        <p class="internship-duration">July 2023 - August 2023</p>
+        <ul class="internship-points">
+          <li>Conducted competitive analysis using 10+ industry reports, identifying trends for strategic development.</li>
+          <li>Developed and implemented 3+ strategic initiatives, enhancing market positioning and revenue.</li>
+          <li> Contributed insights in 10+ meetings, refining strategic plans.</li>
+          <li> Assisted in preparing financial forecasts, aiding decision-making with actionable data.</li>
+        </ul>
+      </div>
+      <div class="experience-image">
+        <img src="images/Internship/2.jpg" alt="Internship 2">
+      </div>
+    </div>
+    
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="certifications" class="certifications-section">
+  <h2 class="section-title">CERTIFICATIONS</h2>
+  <div class="certifications-container">
+      <!-- Certificate 1 -->
+      <div class="certificate-card">
+          <img src="images/certificates/1.png" alt="Certificate 1">
+          <p>SQL:DataReporting and Analysis</p>
+          <a href="https://www.linkedin.com/learning/certificates/5a970e01b43a5d42195f37753a0b4e47c9c98fa1fce21881c6869850e677c54f" class="certificate-btn">LinkedIn</a>
+      </div>
+
+      <!-- Certificate 2 -->
+      <div class="certificate-card">
+          <img src="images/certificates/2.png" alt="Certificate 2">
+          <p>DeepLearning for Developers</p>
+          <a href="https://drive.google.com/file/d/11FSAMxII01pRJrA3hE_4dR0Ii5-Vgtu6/view" class="certificate-btn">Infosys</a>
+      </div>
+
+      <!-- Certificate 3 -->
+      <div class="certificate-card">
+          <img src="images/certificates/3.png" alt="Certificate 3">
+          <p>Artificial Intelligence</p>
+          <a href="https://drive.google.com/file/d/1mPFkpaR3sD8K1oMiPxqJTl8bSEmL2oX7/view" class="certificate-btn">Teachnook</a>
+      </div>
+
+      <!-- Certificate 4 -->
+      <div class="certificate-card">
+          <img src="images/certificates/4.png" alt="Certificate 4">
+          <p>Mastering Excel: From Basics to Advanced Concepts</p>
+          <a href="https://drive.google.com/file/d/1akw3yn8WyhaPCWMgCe9N7NkoUyBkDKIV/view" class="certificate-btn">Younity.In</a>
+      </div>
+
+      <!-- Certificate 5 (Space left for future update) -->
+      <div class="certificate-card">
+          <img src="images/certificates/5.png" alt="Certificate 5">
+          <p>Data Analytics with Python</p>
+          <a href="https://drive.google.com/file/d/1haBa01KHS8UC7RYiFfVX0dYc4DEDMqOi/view" class="certificate-btn">IIT Roorkee</a>
+      </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="skills">
+  <h2 class="skills-heading">SKILLS</h2>
+
+  <!-- Tools and Technologies -->
+  <h3 class="subsection-heading">Tools and Technologies</h3>
+  <div class="skills-container">
+      <div class="skill-box">
+          <img src="images/skills/1.png"  alt="Python">
+          <p>Python</p>
+          <button>Proficiency: 9/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/5.png" alt="Data Visualization">
+          <p>Advanced Excel</p>
+          <button>Proficiency: 9/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/3.png" alt="SQL">
+          <p>SQL</p>
+          <button>Proficiency: 9/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/6.svg" alt="Data Storytelling">
+          <p>Power BI</p>
+          <button>Proficiency: 9/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/7.svg" alt="Python">
+          <p>Artificial Intelligence</p>
+          <button>Proficiency: 8.5/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/8.png" alt="Data Visualization">
+          <p>Deep Learning</p>
+          <button>Proficiency: 8.5/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/9.jpg" alt="SQL">
+          <p>R - Programmimg</p>
+          <button>Proficiency: 8.5/10</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/10.png" alt="Data Storytelling">
+          <p>SPSS</p>
+          <button>Proficiency: 8/10</button>
+      </div>
+  </div>
+
+  <!-- Language Skills -->
+  <h3 class="subsection-heading">Language Skills</h3>
+  <div class="skills-container">
+      <div class="skill-box">
+          <img src="images/skills/11.png" alt="Python">
+          <p>English</p>
+          <button>Distinguished</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/12.png" alt="Data Visualization">
+          <p>Malayalam</p>
+          <button>Native</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/1.webp" alt="SQL">
+          <p>Hindi</p>
+          <button>Advanced</button>
+      </div>
+  </div>
+
+  <!-- Interpersonal Skills -->
+  <h3 class="subsection-heading">Interpersonal Skills</h3>
+  <div class="skills-container">
+      <div class="skill-box">
+          <img src="images/skills/13.png" alt="Python">
+          <p>Communication</p>
+          <button>Superior</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/4.png" alt="Data Visualization">
+          <p>Data Storytelling</p>
+          <button>Superior</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/14.png" alt="SQL">
+          <p>Leadership</p>
+          <button>Superior</button>
+      </div>
+      <div class="skill-box">
+          <img src="images/skills/1.jpg" alt="Data Storytelling">
+          <p>Teamwork</p>
+          <button>Superior</button>
+      </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+<section id="recruiter-message" class="text-center">
+  <div class="headline-box">
+      <h2>YOUR MOVE, RECRUITER!</h2>
+  </div>
+  
+  <div class="message-box">
+      <p><strong>"SO, YOU'VE MADE IT THIS FAR—GUESS THAT MEANS YOU'RE PRETTY INTERESTED IN MY PROFILE!" </strong></p>
+      <p>
+          NOW, IT'S YOUR TURN TO MAKE THE NEXT MOVE. LET'S BE REAL—YOU'RE ALREADY EXCITED ABOUT WHAT I BRING TO THE TABLE. 
+          SO WHY THINK TWICE? GIVE ME A SHOT, AND I PROMISE I’LL GO BEYOND YOUR EXPECTATIONS. YOU’LL LOOK BACK AND KNOW 
+          YOU MADE THE RIGHT CALL.
+      </p>
+      <p>
+          LOOKING FORWARD TO THE OPPORTUNITY TO BRING MY SKILLS TO YOUR TEAM!
+      </p>
+      <p><strong>THANK YOU FOR YOUR TIME AND CONSIDERATION. 👀</strong></p>
+  </div>
+
+  <a href="https://drive.google.com/file/d/1t1SdzVxrDfx0uWxgvOW0mOI9Z8fl-3qi/view?usp=sharing" class="cta-button">Explore My CV!</a>
+</section>
+
+
+
+
+
+
+
+
+
+
+      <section id="contact" class="py-5 text-white">
+        <div class="container text-center">
+          <h2 class="mb-4">Contact Me</h2>
+          
+          <!-- Contact Info -->
+          <div class="d-flex justify-content-center mb-4">
+            <div class="me-5">
+              <i class="fas fa-envelope"></i>
+              <span>mohamedsahadm786@gmail.com</span>
+            </div>
+            <div>
+              <i class="fas fa-phone-alt"></i>
+              <span>+91 7510341129</span>
+            </div>
+          </div>
+          
+          <!-- Social Icons -->
+          <div class="row">
+            <div class="col-md-2 offset-md-1">
+              <a href="https://www.linkedin.com/in/mohamed-sahad-m-96b038200/" target="_blank">
+                <img src="icons/linkedin.png" alt="LinkedIn">
+                <p>LinkedIn</p>
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="https://github.com/mohamedsahadm786" target="_blank">
+                <img src="icons/github.png" alt="Twitter">
+                <p>GitHub</p>
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="https://x.com/_sahad_m_" target="_blank">
+                <img src="icons/2.png" alt="GitHub">
+                <p>Twitter</p>
+              </a>
+            </div>
+            <div class="col-md-2">
+              <a href="https://www.instagram.com/sha._hd_/?hl=en" target="_blank">
+                <img src="icons/1.png" alt="Medium">
+                <p>Instagram</p>
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+
+
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#home">My Portfolio</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#about">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#aboutt">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#education">Education</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#projects">Projects</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#experience">Experience</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#skills">Skills</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      
+      
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+

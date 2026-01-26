@@ -1,0 +1,121 @@
+Project task — rebuild & modernize existing portfolio (index.html + assets):
+
+You will be provided with index.html and the images/ and icons/ folders. Do the following:
+
+Top-level goals (one line each):
+
+Produce a modern, Apple-inspired portfolio page: minimal, generous whitespace, crisp typography, large hero imagery, subtle micro-interactions.
+
+Keep all textual content, external links (GitHub, LinkedIn, CV links, etc.), and the structure (Home, About, Education, Projects, Experience, Skills, Recruiter message, Contact). Do not remove or rewrite my copy.
+
+Optimize assets, accessibility, and responsiveness — mobile first.
+
+Design & UX brief (visual rules):
+
+White / near-white background, neutral greys, near-black text; one subtle accent color (default #0071E3 or use a deep accent of my choice). Use tactile rounded cards and drop shadows that are subtle.
+
+Use system UI font stack to mimic Apple's crisp appearance: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif. Large, bold headings (hero H1 large, e.g. 48–64px desktop) and comfortable line-height.
+
+Use full-bleed hero (edge-to-edge) with high-quality image, dark translucent overlay for readable white heading text. Keep image focal point centered. Use object-fit: cover and srcset for retina/responsive images.
+
+Minimal top nav: brand on left, simple links on right, sticky on scroll with subtle background blur. Hamburger for mobile.
+
+Sections to build / upgrade (must match the content already in index.html):
+
+Hero / Home: Convert carousel to a single elegant full-bleed hero with optionally auto-rotating subtle slide effect (or keep controlled carousel). Large headline (your name/“SAHAD in a snapshot”), one-sentence subtitle, 2 CTAs: “Explore CV” (link to your Drive) and “See Projects” (anchor). Add small keyboard-accessible play/pause for carousel if carousel is kept.
+
+About (snapshot): Keep the profile image and the two “small windows” on either side but modernize: show circular profile on left (or centered on mobile) and two rounded cards with short CTAs; replace yellow boxes with soft cards. Use readable quote styling with left border or subtle accent.
+
+Education: Replace current timeline with an interactive vertical timeline / stepper: a thin center line, nodes animate in on scroll, each node shows degree, university, year, short details and a link. Clicking a node expands details. Preserve CGPA / badges as small pill elements.
+
+“Things I’ve worked on” / I_am: Convert to a responsive masonry / card grid with large thumbnails, 3 columns desktop, 1–2 mobile. Add hover tilt / scale + accessible alt text. Clicking opens a modal with the larger image and description.
+
+Projects: Grid of project cards (3 columns desktop). Each card: high-res image, short description excerpt, 1 big primary CTA “SOURCE CODE” (open GitHub in new tab). Add subtle glass-like background on hover and small tags for tech used. Keep all existing GitHub links.
+
+Experience: Modern cards with company name, role, duration, bulleted achievements. Keep thumbnails. Add a subtle timeline or left accent color bar.
+
+Certifications: Convert to a neat responsive grid with clickable images that open the certificate link (keep all existing links). Add lightbox preview on click.
+
+Skills: Replace static boxes with modern skill tiles plus a small progress bar or radial progress for proficiency. Group into Tools, Languages, Interpersonal. Use icons from provided images/skills. Make them keyboard accessible.
+
+Recruiter message / CTA: Turn into a polished, card-style hero: big heading, persuasive copy as in file, CTA buttons (Download CV, Contact). Use a color accent and large button.
+
+Contact / Social icons: Keep email, phone, and social links. Replace PNG icons with crisp SVG where possible; if not available, optimize PNG. Add a contact form (name, email, message) which gracefully degrades to mailto: if no backend is provided. Validate client-side and use accessible labels.
+
+File & assets handling (do this precisely):
+
+Use the provided folder layout and images (do not remove or rename the originals). Create an assets/optimized/ folder and export optimized WebP versions for large images (plus appropriate srcset JPG/WEBP fallbacks). Use loading="lazy" on non-hero images.
+
+Replace icons with SVG versions when possible. If you cannot produce SVGs, use the provided PNGs but optimize and ensure transparent backgrounds.
+
+Ensure all img elements include descriptive alt attributes. If alt text isn't present in the HTML, generate short descriptive alt values from the filename (e.g., images/projects/1.png → alt="Project 1 - Amazon purchasing analysis"). Keep existing captions and links intact.
+
+Motion & interactions:
+
+Use CSS transitions for hover effects (transform/opacity). Use IntersectionObserver to animate sections in (fade + slide up) as they scroll into view.
+
+Hero: subtle parallax on scroll (image moves slower than foreground). Project cards: scale + drop shadow on hover.
+
+Avoid overuse of motion — include a “Reduce motion” preference that respects prefers-reduced-motion.
+
+Responsiveness & layout rules:
+
+Mobile-first. Ensure every section looks great on small screens: single column stack with large tap targets, hamburger nav.
+
+Desktop uses multi-column grids; keep line lengths readable (max 70–80 characters).
+
+Implement CSS variables for colors, spacing and breakpoints. Provide a small design token section at top of main.css.
+
+Accessibility & best practices:
+
+Use semantic HTML5 elements (header, main, section, footer). Add aria-labels for landmark sections.
+
+Keyboard navigable nav and modals; focus trap the modal and restore focus after close.
+
+Color contrast meets WCAG AA. All form fields have labels and aria-invalid handling.
+
+Add meta tags: viewport, description, Open Graph preview, structured data (schema.org Person with resume link). Keep existing <title> unchanged but add improved description meta.
+
+Performance & SEO:
+
+Optimize images to WebP and provide srcset and sizes.
+
+Defer non-critical JS; use minimal custom JS and avoid heavy frameworks. Use preconnect to fonts if necessary.
+
+Build a small README.md that lists build steps and how to deploy on Replit.
+
+Deliverables (required):
+
+index.html (refactored, semantic).
+
+css/main.css (or styles with CSS variables). Minified and readable source.
+
+js/main.js (small file for nav, carousel, IntersectionObserver). Keep JS < 150 KB unminified.
+
+assets/optimized/ with optimized images (webp + fallback sizes).
+
+README.md with steps to run on Replit, mapping of old → new filenames, and a short “what changed” summary.
+
+A design-notes.md describing typography, colors, spacing scale, and accessibility choices.
+
+Acceptance criteria (how I will judge success):
+
+Visuals look Apple-inspired: large hero image, generous whitespace, crisp headings and subtle animation.
+
+Site is fully responsive and usable on mobile.
+
+All original text, links and social handles are preserved and functional.
+
+Images are optimized; lazy loading used; nav accessible by keyboard.
+
+README documents how to deploy and lists optimizations performed.
+
+Extra tips for you (Replit AI):
+
+If a Bootstrap file is included from index.html, replace with a small custom CSS to reduce bloat and allow precise Apple-style control. If keeping a framework, prefer Tailwind or a small grid utility — but do not leave the default heavy Bootstrap CSS without customization.
+
+Prefer CSS Grid for layout and Flexbox for internal alignments. Use only vanilla JS for interactivity.
+
+Provide a small “lightweight” animation library (tiny) only if absolutely needed — prefer IntersectionObserver + CSS transitions.
+
+IMPORTANT: I will upload index.html and the images/ + icons/ folders to Replit. Use those files as your content source; do not invent new content. At the end, produce the updated project folder ready to publish on Replit with a single click.
