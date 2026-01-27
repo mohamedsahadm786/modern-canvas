@@ -19,6 +19,8 @@ import PR13 from '@assets/generated_images/Projects/13.png';
 import PR14 from '@assets/generated_images/Projects/14.jpeg';
 import PR15 from '@assets/generated_images/Projects/15.webp';
 import PR16 from '@assets/generated_images/Projects/16.jpg';
+import PR17 from '@assets/generated_images/Projects/17.jpg';
+
 
 
 interface Project {
@@ -80,6 +82,14 @@ const projects: Project[] = [
     image: PR11,
     githubUrl: "https://github.com/mohamedsahadm786/Fine_tuning",
     technologies: ["PyTorch", "Hugging Face Transformers", "scikit-learn" , "MoviePy", "VideoMAE", "WavLM"]
+  },
+    {
+    id: 1,
+    title: "Banking Risk Analytics and Client Segmentation Dashboard",
+    description: "Engineered and analyzed a comprehensive banking risk analytics dataset of 3,000+ clients, leveraging feature engineering (Engagement Timeframe, Income Bands, Processing Fees) and advanced exploratory data analysis using Python (pandas, seaborn, numpy), to quantify relationships across deposits, loans, credit card balances, and business lending—uncovering 0.84+ strong correlations and segmenting clients for targeted lending strategies. Developed and deployed a multi-tab Power BI dashboard integrating 10+ key banking sector metrics (Total Clients, Business Lending, Loan Amount, Deposits, Fees), delivered actionable risk segmentation and interactive drill-through insights, empowering banking decision makers to optimize loan approvals and minimize default risk while boosting client acquisition and operational efficiency, validated by distinct counts, KPIs, and segmented visual analysis.",
+    image: PR17,
+    githubUrl: "https://github.com/mohamedsahadm786/-risk-analytics-in-banking",
+    technologies: ["Python", "numpy" , "pandas" , "seaborn" , "Power BI", "matplotlib "]
   },
 
     {
