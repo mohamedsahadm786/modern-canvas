@@ -132,7 +132,7 @@ export default function Contact() {
                     className="text-muted-foreground hover:text-primary transition-colors"
                     data-testid="contact-email"
                   >
-                    mohamedsahadm78@gmail.com
+                    mohamedsahadm786@gmail.com
                   </a>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export default function Contact() {
                   <Phone className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">Phone</p>
+                  <p className="font-semibold text-foreground">WhatsApp</p>
                   <a 
                     href="tel:+1234567890"
                     className="text-muted-foreground hover:text-primary transition-colors"
@@ -159,7 +159,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="font-semibold text-foreground">Location</p>
-                  <p className="text-muted-foreground">India</p>
+                  <p className="text-muted-foreground">Dubai, UAE</p>
                 </div>
               </div>
             </div>

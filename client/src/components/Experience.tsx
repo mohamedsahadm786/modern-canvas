@@ -21,14 +21,13 @@ interface ExperienceItem {
 const experiences: ExperienceItem[] = [
   {
     id: 'rp2',
-    title: 'Data Scientist Intern',
+    title: 'Data Scientist with GenAI Intern',
     company: 'RP2 Private Ltd.',
-    duration: 'Present',
-    status: 'Current Position',
+    duration: 'July 2025 - December 2025',
+    status: 'Ernakulam, India',
     achievements: [
-      'Building AI-powered applications using LLMs (OpenAI, HuggingFace Transformers), speech-to-text (Whisper, DeepSpeech), and NLP/NLU frameworks, integrated with Flask, REST APIs, and real-time audio interaction systems.',
-      'Developing and deploying ML pipelines with Python, scikit-learn, TensorFlow, PyTorch, including data preprocessing, feature engineering, model training, evaluation (AUC, SHAP), and optimization for scalability.',
-      'Working on full-stack deployment with HTML/CSS/JS, Flask servers, API integration, and applying MLOps practices, version control (Git/GitHub), and cloud readiness for production-grade AI tools.'
+      'Engineered and deployed multi-modal AI systems integrating LLMs, speech models, and video models within containerized back-end pipelines—boosting accuracy by 25% and reducing inference latency by 30% through optimized data flows, embedding-level evaluation, automated drift monitoring, and CI/CD-driven model validation executed under Agile methodology.',
+      ' Developed full-stack, real-time AI applications leveraging prompt-orchestrated LLM agents, dynamic question-generation engines, vector-database retrieval, and REST API microservices—improving feature delivery speed by 40% and user engagement by 45% by implementing adaptive response analysis, token-efficiency optimization, and platform-level observability, collaboratively built in cross-functional Agile sprints.'
     ],
     image: In1
   },
@@ -37,6 +36,7 @@ const experiences: ExperienceItem[] = [
     title: 'Data Analyst Intern',
     company: 'Nevar Systems',
     duration: 'April 2025 - June 2025',
+    status: 'Puducherry, India',
     achievements: [
       'Contributed to data-driven decision-making by supporting statistical modeling and exploratory data analysis for ongoing business projects.',
       'Assisted in executing analytical tasks including data cleaning, preprocessing, and generating actionable insights using advanced statistical techniques.',
@@ -51,6 +51,7 @@ const experiences: ExperienceItem[] = [
     title: 'Artificial Intelligence Intern',
     company: 'Btech Walleh',
     duration: 'July 2024 - August 2024',
+    status: 'Remote',
     achievements: [
       'Developed and deployed machine learning models in 2+ AI projects, addressing specific challenges.',
       'Designed AI-driven solutions with cross-functional teams, utilizing NLP and computer vision techniques.',
@@ -58,19 +59,6 @@ const experiences: ExperienceItem[] = [
       'Enhanced proficiency in TensorFlow and PyTorch by implementing and testing 5+ models.'
     ],
     image: In3
-  },
-  {
-    id: 'younity',
-    title: 'Corporate Development Specialist Intern',
-    company: 'Younity.In',
-    duration: 'July 2023 - August 2023',
-    achievements: [
-      'Conducted competitive analysis using 10+ industry reports, identifying trends for strategic development.',
-      'Developed and implemented 3+ strategic initiatives, enhancing market positioning and revenue.',
-      'Contributed insights in 10+ meetings, refining strategic plans.',
-      'Assisted in preparing financial forecasts, aiding decision-making with actionable data.'
-    ],
-    image: In4
   }
 ];
 

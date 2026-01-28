@@ -104,15 +104,15 @@ const skillCategories: SkillCategory[] = [
         description: 'Neural networks, TensorFlow, PyTorch for complex pattern recognition'
       },
       {
-        name: 'SPSS',
+        name: 'Amazon Web Services (AWS)',
         proficiency: 80,
         icon: Calculator,
         image: spss,
-        description: 'Statistical analysis software for advanced data analytics'
+        description: 'Cloud computing for scalable infrastructure, ML deployment, and data-driven applications'
       },
       {
         name: 'Git & Version Control',
-        proficiency: 82,
+        proficiency: 95,
         icon: GitBranch,
         image: git,
         description: 'Git workflows, GitHub collaboration, and code version management'

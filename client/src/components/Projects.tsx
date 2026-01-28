@@ -20,6 +20,8 @@ import PR14 from '@assets/generated_images/Projects/14.jpeg';
 import PR15 from '@assets/generated_images/Projects/15.webp';
 import PR16 from '@assets/generated_images/Projects/16.jpg';
 import PR17 from '@assets/generated_images/Projects/17.jpg';
+import PR18 from '@assets/generated_images/Projects/18.png';
+
 
 
 
@@ -33,6 +35,22 @@ interface Project {
 }
 
 const projects: Project[] = [
+    {
+    id: 1,
+    title: "Decision Intelligence System for Cost-Aware Machine Learning (AWS)",
+    description: "Designed and deployed a production-ready, decision-centric ML system on AWS (EC2 backend, S3 frontend) that transforms raw business data into cost-optimized decisions by explicitly modeling real-world error trade-offs (false positives vs. false negatives) across both classification and regression use cases, featuring robust preprocessing, interpretable evaluation, and decision-threshold optimization to enable scalable analysis of 10k+ records per run.",
+    image: PR18,
+    githubUrl: "https://github.com/mohamedsahadm786/No-auto-ml-DS-Project",
+    technologies: ["Python", "Scikit-learn", "FastAPI", "AWS (EC2, S3)", "Pandas", "NumPy", "Matplotlib"]
+  },
+    {
+    id: 1,
+    title: "Enterprise Insurance Analytics | Policy, Premium & Investment Intelligence",
+    description: "Designed and delivered an enterprise-scale insurance analytics solution by modeling 7 structured datasets in a star schema to resolve fragmented policy and premium visibility, enabling end-to-end lifecycle insights across customers, products, sales hierarchy, and geographies, while implementing advanced financial intelligence (Maturity Value, ROI, CAGR, profitability, and premium cash-flow forecasting) to quantify investment performance and long-term liability exposure over a 5–30 year horizon, supporting executive-level decision-making and improving strategic planning and accountability across sales, finance, and operations teams.",
+    image: PR17,
+    githubUrl: "https://github.com/mohamedsahadm786/Insurance_Analytics",
+    technologies: ["Power BI", "Advanced DAX", "Star Schema Data Modeling", "Financial & Insurance Analytics", "Power Query (ETL)", "Row-Level Security (RLS)", "GitHub"]
+  },
     {
     id: 1,
     title: "MediBot– Medical RAGChatbot (AWS|Pinecone |LangChain |OpenAI)",
@@ -83,15 +101,6 @@ const projects: Project[] = [
     githubUrl: "https://github.com/mohamedsahadm786/Fine_tuning",
     technologies: ["PyTorch", "Hugging Face Transformers", "scikit-learn" , "MoviePy", "VideoMAE", "WavLM"]
   },
-    {
-    id: 1,
-    title: "Banking Risk Analytics and Client Segmentation Dashboard",
-    description: "Engineered and analyzed a comprehensive banking risk analytics dataset of 3,000+ clients, leveraging feature engineering (Engagement Timeframe, Income Bands, Processing Fees) and advanced exploratory data analysis using Python (pandas, seaborn, numpy), to quantify relationships across deposits, loans, credit card balances, and business lending—uncovering 0.84+ strong correlations and segmenting clients for targeted lending strategies. Developed and deployed a multi-tab Power BI dashboard integrating 10+ key banking sector metrics (Total Clients, Business Lending, Loan Amount, Deposits, Fees), delivered actionable risk segmentation and interactive drill-through insights, empowering banking decision makers to optimize loan approvals and minimize default risk while boosting client acquisition and operational efficiency, validated by distinct counts, KPIs, and segmented visual analysis.",
-    image: PR17,
-    githubUrl: "https://github.com/mohamedsahadm786/-risk-analytics-in-banking",
-    technologies: ["Python", "numpy" , "pandas" , "seaborn" , "Power BI", "matplotlib "]
-  },
-
     {
     id: 1,
     title: "Banking Risk Analytics and Client Segmentation Dashboard",
