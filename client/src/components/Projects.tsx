@@ -35,6 +35,14 @@ interface Project {
 }
 
 const projects: Project[] = [
+  {
+    id: 8,
+    title: "multilingual AI voice Interview Simulator",
+    description: "An AI-powered Interview Coach that simulates realistic, voice-based mock interviews and provides instant feedback on both answer quality and communication style. Designed to help candidates practice confidently, it tailors questions to job roles and resumes while offering personalized tips to improve real-world interview performance.",
+    image: PR8,
+    githubUrl: "https://github.com/mohamedsahadm786/AI-Powered-Multilingual-Voice-Interview-Simulator",
+    technologies: ["AI", "Voice Processing", "Machine Learning", "Interview Coaching", "Multilingual"]
+  },
     {
     id: 1,
     title: "Decision Intelligence System for Cost-Aware Machine Learning (AWS)",
@@ -58,14 +66,6 @@ const projects: Project[] = [
     image: PR10,
     githubUrl: "https://github.com/mohamedsahadm786/-MediBot_Rag_Pinecone_Aws",
     technologies: [" Pinecone", "LangChain", "AWS", "CI/CD Pipeline"]
-  },
-    {
-    id: 8,
-    title: "AI Interview Simulator",
-    description: "An AI-powered Interview Coach that simulates realistic, voice-based mock interviews and provides instant feedback on both answer quality and communication style. Designed to help candidates practice confidently, it tailors questions to job roles and resumes while offering personalized tips to improve real-world interview performance.",
-    image: PR8,
-    githubUrl: "https://github.com/mohamedsahadm786/AI-Powered-Multilingual-Voice-Interview-Simulator",
-    technologies: ["AI", "Voice Processing", "Machine Learning", "Interview Coaching", "Multilingual"]
   },
   {
     id: 1,
