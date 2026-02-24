@@ -21,6 +21,7 @@ import PR15 from '@assets/generated_images/Projects/15.webp';
 import PR16 from '@assets/generated_images/Projects/16.jpg';
 import PR17 from '@assets/generated_images/Projects/17.jpg';
 import PR18 from '@assets/generated_images/Projects/18.png';
+import PR19 from '@assets/generated_images/Projects/19.png';
 
 
 
@@ -35,6 +36,14 @@ interface Project {
 }
 
 const projects: Project[] = [
+    {
+    id: 8,
+    title: "Multi-Tenant Agentic AI SaaS for Global Supplier Risk Intelligence (AWS Deployed)",
+    description: "Built and deployed a production-grade, multi-tenant Agentic AI SaaS platform on AWS that automates global supplier due diligence using a 5-agent orchestration workflow and 4 MCP tool layers, reducing a 3–5 day manual compliance process to under 5 minutes with explainable, database-backed risk intelligence.",
+    image: PR8,
+    githubUrl: "https://github.com/mohamedsahadm786/agentic_supplier_risk_ai",
+    technologies: ["Python", "LangGraph", "LangChain", "MCP", "LLM", "AWS", "Docker", "FastAPI", "Pydantic", "PostgreSQL"]
+  },
   {
     id: 8,
     title: "multilingual AI voice Interview Simulator",
@@ -45,7 +54,7 @@ const projects: Project[] = [
   },
     {
     id: 1,
-    title: "Decision Intelligence System for Cost-Aware Machine Learning (AWS)",
+    title: "Decision Intelligence System for Cost-Aware Machine Learning (AWS Deployed)",
     description: "Designed and deployed a production-ready, decision-centric ML system on AWS (EC2 backend, S3 frontend) that transforms raw business data into cost-optimized decisions by explicitly modeling real-world error trade-offs (false positives vs. false negatives) across both classification and regression use cases, featuring robust preprocessing, interpretable evaluation, and decision-threshold optimization to enable scalable analysis of 10k+ records per run.",
     image: PR18,
     githubUrl: "https://github.com/mohamedsahadm786/No-auto-ml-DS-Project",
@@ -61,7 +70,7 @@ const projects: Project[] = [
   },
     {
     id: 1,
-    title: "MediBot– Medical RAGChatbot (AWS|Pinecone |LangChain |OpenAI)",
+    title: "MediBot– Medical RAGChatbot (AWS Deployed|Pinecone |LangChain |OpenAI)",
     description: "Engineered an end-to-end Generative AI medical chatbot using LangChain, OpenAI GPT-4o, HuggingFace embeddings, and Pinecone, enabling context-aware responses from a 700+-page medical corpus with 92% retrieval accuracy and <1-second latency across 10,000+ user queries.Deployed a scalable Flask-based RAG pipeline on AWS EC2 using Docker and automated CI/CD via GitHub Actions, improving deployment efficiency by 60%, reducing manual intervention, and demonstrating full MLOps lifecycle integration from data ingestion to production hosting.",
     image: PR10,
     githubUrl: "https://github.com/mohamedsahadm786/-MediBot_Rag_Pinecone_Aws",
