@@ -40,7 +40,7 @@ const projects: Project[] = [
     id: 8,
     title: "Multi-Tenant Agentic AI SaaS for Global Supplier Risk Intelligence (AWS Deployed)",
     description: "Built and deployed a production-grade, multi-tenant Agentic AI SaaS platform on AWS that automates global supplier due diligence using a 5-agent orchestration workflow and 4 MCP tool layers, reducing a 3–5 day manual compliance process to under 5 minutes with explainable, database-backed risk intelligence.",
-    image: PR8,
+    image: PR19,
     githubUrl: "https://github.com/mohamedsahadm786/agentic_supplier_risk_ai",
     technologies: ["Python", "LangGraph", "LangChain", "MCP", "LLM", "AWS", "Docker", "FastAPI", "Pydantic", "PostgreSQL"]
   },
