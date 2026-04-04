@@ -22,6 +22,7 @@ import PR16 from '@assets/generated_images/Projects/16.jpg';
 import PR17 from '@assets/generated_images/Projects/17.jpg';
 import PR18 from '@assets/generated_images/Projects/18.png';
 import PR19 from '@assets/generated_images/Projects/19.png';
+import PR20 from '@assets/generated_images/Projects/20.png';
 
 
 
@@ -36,6 +37,14 @@ interface Project {
 }
 
 const projects: Project[] = [
+    {
+    id: 8,
+    title: " Multi-Agentic Hybrid RAG System with Fine-Tuned LLMs for Financial Intelligence",
+    description: "Built and deployed a production-grade, multi-tenant AI system that transforms unstructured financial documents (annual reports, credit agreements, earnings calls, etc.) into structured, explainable credit risk insights in minutes.The system combines a multi-agent orchestration pipeline (LangGraph), fine-tuned LLaMA for financial extraction, dual FinBERT models for sentiment and covenant breach detection, and an XGBoost-based risk engine with SHAP explainability. It also integrates a hybrid RAG architecture (dense + sparse retrieval, HyDE, and cross-encoder re-ranking) to enable grounded document-level Q&A. Designed with asynchronous processing (Celery + Redis), vector search (Qdrant), and secure multi-tenant architecture, the platform is fully containerized and deployed on AWS, supporting real-world scalability, auditability, and decision-grade reliability.",
+    image: PR20,
+    githubUrl: "https://github.com/mohamedsahadm786/finsight-ai",
+    technologies: ["LLaMA","QLoRA","FinBERT","XGBoost","LangGraph","Hybrid RAG","Docker","Kubernetes","Prometheus","Grafana","RAGAS","LangSmith","AWS"]
+  },
     {
     id: 8,
     title: "Multi-Tenant Agentic AI SaaS for Global Supplier Risk Intelligence (AWS Deployed)",
