@@ -9,11 +9,13 @@ import C2 from '@assets/generated_images/Certifications/2.png';
 import C3 from '@assets/generated_images/Certifications/3.png';
 import C4 from '@assets/generated_images/Certifications/4.png';
 import C5 from '@assets/generated_images/Certifications/5.png';
+import C6 from '@assets/generated_images/Certifications/6.webp';
 import CR1 from '@assets/generated_images/Certifications/Certificates/1.png';
 import CR2 from '@assets/generated_images/Certifications/Certificates/2.jpg';
 import CR3 from '@assets/generated_images/Certifications/Certificates/3.jpg';
 import CR4 from '@assets/generated_images/Certifications/Certificates/4.jpg';
 import CR5 from '@assets/generated_images/Certifications/Certificates/5.jpg';
+import CR6 from '@assets/generated_images/Certifications/Certificates/6.jpg';
 
 interface Certificate {
   id: number;
@@ -25,8 +27,16 @@ interface Certificate {
 }
 
 const certificates: Certificate[] = [
-  {
+    {
     id: 1,
+    title: ' Claude with the Anthropic API',
+    issuer: 'Anthropic',
+    description: ' Claude with the Anthropic API',
+    link: 'https://verify.skilljar.com/c/uxif6t2fchkw',
+    image: C6
+  },
+  {
+    id: 6,
     title: 'SQL: Data Reporting and Analysis',
     issuer: 'LinkedIn Learning',
     description: 'Advanced SQL techniques for data reporting and business analysis',
@@ -70,11 +80,12 @@ const certificates: Certificate[] = [
 export default function Certifications() {
   // map certificate id -> preview image (CR1..CR5)
   const previewImages: Record<number, string> = {
-    1: CR1,
+    1: CR6,
     2: CR2,
     3: CR3,
     4: CR4,
-    5: CR5
+    5: CR5,
+    6: CR1
   };
 
   return (
