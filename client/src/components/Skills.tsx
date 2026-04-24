@@ -135,7 +135,7 @@ export default function Skills() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="skills-title"
           >
-            <span className="text-primary">&gt;_</span> SKILLS
+            SKILLS
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>

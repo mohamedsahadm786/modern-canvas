@@ -101,7 +101,7 @@ export default function Education() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="education-title"
           >
-            <span className="text-primary">&gt;_</span> Education
+            Education
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>

@@ -436,9 +436,9 @@
      SECTION GLASS — semi-transparent so the canvas shows through
      ============================================================ */
   .section-glass {
-    background: hsl(var(--background) / 0.78);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: hsl(var(--background) / 0.70);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
   }
 
   /* ============================================================
@@ -617,8 +617,9 @@
     content: '';
     position: absolute;
     inset: 2px;
-    border-radius: calc(inherit - 2px);
-    background: hsl(var(--primary) / 0.05);
+    border-radius: inherit;
+    /* Solid dark fill — masks the gradient except at the 2px border strip */
+    background: hsl(var(--background) / 0.97);
     z-index: -1;
   }
 

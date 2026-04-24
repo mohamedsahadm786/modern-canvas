@@ -58,7 +58,7 @@ export default function WorkGallery() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="work-gallery-title"
           >
-            <span className="text-primary">&gt;_</span> THINGS I'VE WORKED ON
+            THINGS I'VE WORKED ON
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>

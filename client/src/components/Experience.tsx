@@ -96,7 +96,7 @@ export default function Experience() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="experience-title"
           >
-            <span className="text-primary">&gt;_</span> EXPERIENCE
+            EXPERIENCE
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>

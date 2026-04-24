@@ -81,7 +81,7 @@ export default function Contact() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-4"
             data-testid="contact-title"
           >
-            <span className="text-primary">&gt;_</span> Let's Connect
+            Let's Connect
           </h2>
           <p className="text-base font-mono text-muted-foreground max-w-2xl mx-auto">
             Ready to collaborate or have a question? I'd love to hear from you.

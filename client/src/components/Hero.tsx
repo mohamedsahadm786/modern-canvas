@@ -47,16 +47,6 @@ export default function Hero() {
       {/* ── Left content column ─────────────────────────────── */}
       <div className="relative z-10 w-full lg:w-1/2 px-8 md:px-14 lg:px-16">
 
-        {/* Terminal prompt decoration */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1,  x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="font-mono text-xs text-primary/60 mb-4 tracking-widest"
-        >
-          &gt;_ initializing_profile.py
-        </motion.div>
-
         {/* Glitch headline */}
         <h1
           className="glitch-text text-4xl md:text-5xl lg:text-6xl font-bold font-mono mb-6 leading-tight text-white"

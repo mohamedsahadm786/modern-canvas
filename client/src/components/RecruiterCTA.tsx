@@ -48,7 +48,7 @@ export default function RecruiterCTA() {
         >
           <div
             className="p-8 md:p-12 text-center rounded-2xl"
-            style={{ background: 'hsl(var(--primary) / 0.12)', backdropFilter: 'blur(12px)' }}
+            style={{ background: 'hsl(var(--background) / 0.92)', backdropFilter: 'blur(12px)' }}
           >
             <div className="max-w-3xl mx-auto">
 

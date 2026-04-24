@@ -113,7 +113,7 @@ export default function Certifications() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="certifications-title"
           >
-            <span className="text-primary">&gt;_</span> CERTIFICATIONS
+            CERTIFICATIONS
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>

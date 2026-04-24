@@ -254,7 +254,7 @@ export default function Projects() {
             className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="projects-title"
           >
-            <span className="text-primary">&gt;_</span> PROJECTS
+            PROJECTS
           </h2>
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>
