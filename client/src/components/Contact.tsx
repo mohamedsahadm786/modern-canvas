@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Github, 
-  Linkedin, 
-  Twitter, 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Github,
+  Linkedin,
+  Twitter,
   Instagram,
   Send,
   User,
@@ -24,12 +25,15 @@ interface ContactForm {
   message: string;
 }
 
+const socialLinks = [
+  { name: 'LinkedIn',  icon: Linkedin,  url: 'https://www.linkedin.com/in/mohamed-sahad-m',          color: 'hover:text-blue-400' },
+  { name: 'GitHub',    icon: Github,    url: 'https://github.com/mohamedsahadm786',                   color: 'hover:text-foreground' },
+  { name: 'Twitter',   icon: Twitter,   url: 'https://x.com/_sahad_m_',                               color: 'hover:text-blue-400' },
+  { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/sha._hd_/?hl=en',             color: 'hover:text-pink-500' },
+];
+
 export default function Contact() {
-  const [form, setForm] = useState<ContactForm>({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [form, setForm] = useState<ContactForm>({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -37,14 +41,12 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Create mailto link as fallback
     const subject = encodeURIComponent(`Contact from ${form.name}`);
     const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
     const mailtoLink = `mailto:mohamedsahadm78@gmail.com?subject=${subject}&body=${body}`;
-    
+
     window.location.href = mailtoLink;
 
     toast({
@@ -60,221 +62,223 @@ export default function Contact() {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  const socialLinks = [
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      url: 'https://www.linkedin.com/in/mohamed-sahad-m',
-      color: 'hover:text-blue-600'
-    },
-    {
-      name: 'GitHub',
-      icon: Github,
-      url: 'https://github.com/mohamedsahadm786',
-      color: 'hover:text-gray-700'
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      url: 'https://x.com/_sahad_m_',
-      color: 'hover:text-blue-400'
-    },
-    {
-      name: 'Instagram',
-      icon: Instagram,
-      url: 'https://www.instagram.com/sha._hd_/?hl=en',
-      color: 'hover:text-pink-600'
-    }
-  ];
-
   return (
-    <section 
-      id="contact" 
-      className="py-20 lg:py-32 bg-background"
+    <section
+      id="contact"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Contact section"
     >
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 
-            className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-4"
             data-testid="contact-title"
           >
-            Let's Connect
+            <span className="text-primary">&gt;_</span> Let's Connect
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base font-mono text-muted-foreground max-w-2xl mx-auto">
             Ready to collaborate or have a question? I'd love to hear from you.
           </p>
-        </div>
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
           {/* Contact Information */}
-          <div className="space-y-8">
+          <motion.div
+            className="space-y-8"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
             <div>
-              <h3 className="text-2xl font-bold text-foreground mb-6">
+              <h3 className="text-xl font-bold font-mono text-foreground mb-4">
                 Get in Touch
               </h3>
-              <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                Whether you're looking to hire a data scientist, discuss a project, 
+              <p className="text-muted-foreground text-sm leading-relaxed mb-8">
+                Whether you're looking to hire a data scientist, discuss a project,
                 or just want to connect, I'm always open to new opportunities and conversations.
               </p>
             </div>
 
             {/* Contact Details */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Email</p>
-                  <a 
-                    href="mailto:mohamedsahadm78@gmail.com"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    data-testid="contact-email"
+            <div className="space-y-5">
+              {[
+                {
+                  icon: Mail,
+                  label: 'Email',
+                  content: <a href="mailto:mohamedsahadm78@gmail.com" className="text-muted-foreground hover:text-primary transition-colors font-mono text-sm" data-testid="contact-email">mohamedsahadm786@gmail.com</a>,
+                },
+                {
+                  icon: Phone,
+                  label: 'WhatsApp',
+                  content: <a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors font-mono text-sm" data-testid="contact-phone">+91 7510341129</a>,
+                },
+                {
+                  icon: MapPin,
+                  label: 'Location',
+                  content: <p className="text-muted-foreground font-mono text-sm">Dubai, UAE</p>,
+                },
+              ].map(({ icon: Icon, label, content }, i) => (
+                <motion.div
+                  key={label}
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)' }}
                   >
-                    mohamedsahadm786@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">WhatsApp</p>
-                  <a 
-                    href="tel:+1234567890"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    data-testid="contact-phone"
-                  >
-                    +91 7510341129
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Location</p>
-                  <p className="text-muted-foreground">Dubai, UAE</p>
-                </div>
-              </div>
+                    <Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-mono text-xs text-primary/60 tracking-widest uppercase mb-0.5">{label}</p>
+                    {content}
+                  </div>
+                </motion.div>
+              ))}
             </div>
 
-            {/* Social Links */}
+            {/* Social Links — magnetic-style hover */}
             <div>
-              <h4 className="text-lg font-semibold text-foreground mb-4">
+              <h4 className="text-sm font-mono font-semibold text-primary/70 mb-4 tracking-widest uppercase">
                 Follow Me
               </h4>
               <div className="flex gap-4">
-                {socialLinks.map((social) => {
+                {socialLinks.map((social, i) => {
                   const IconComponent = social.icon;
                   return (
-                    <a
+                    <motion.a
                       key={social.name}
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center text-muted-foreground transition-all duration-300 hover:scale-110 hover:border-primary ${social.color}`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-muted-foreground transition-all duration-300 ${social.color}`}
+                      style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.2)' }}
+                      whileHover={{ scale: 1.15, boxShadow: '0 0 16px rgba(0,212,255,0.35)' }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: i * 0.08 }}
                       data-testid={`contact-social-${social.name.toLowerCase()}`}
                       aria-label={`Follow on ${social.name}`}
                     >
                       <IconComponent className="w-5 h-5" />
-                    </a>
+                    </motion.a>
                   );
                 })}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <Card className="hover-elevate transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-2">
-                <MessageSquare className="w-6 h-6 text-primary" />
-                Send a Message
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium text-foreground">
-                    Your Name *
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="name"
-                      type="text"
-                      value={form.name}
-                      onChange={(e) => handleChange('name', e.target.value)}
-                      className="pl-10"
-                      placeholder="Enter your full name"
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <Card className="glass-neon border-0">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold font-mono text-foreground flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-primary" />
+                  Send a Message
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-xs font-mono text-primary/70 tracking-widest uppercase">
+                      Your Name *
+                    </Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
+                      <Input
+                        id="name"
+                        type="text"
+                        value={form.name}
+                        onChange={(e) => handleChange('name', e.target.value)}
+                        className="pl-10 font-mono text-sm bg-transparent border-primary/20 focus:border-primary transition-colors"
+                        style={{ '--tw-ring-color': 'var(--neon-cyan, #00d4ff)' } as React.CSSProperties}
+                        placeholder="Enter your full name"
+                        required
+                        data-testid="contact-form-name"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-xs font-mono text-primary/70 tracking-widest uppercase">
+                      Email Address *
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
+                      <Input
+                        id="email"
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => handleChange('email', e.target.value)}
+                        className="pl-10 font-mono text-sm bg-transparent border-primary/20 focus:border-primary transition-colors"
+                        placeholder="your.email@example.com"
+                        required
+                        data-testid="contact-form-email"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-xs font-mono text-primary/70 tracking-widest uppercase">
+                      Message *
+                    </Label>
+                    <Textarea
+                      id="message"
+                      value={form.message}
+                      onChange={(e) => handleChange('message', e.target.value)}
+                      className="min-h-32 resize-none font-mono text-sm bg-transparent border-primary/20 focus:border-primary transition-colors"
+                      placeholder="Tell me about your project, opportunity, or just say hello..."
                       required
-                      data-testid="contact-form-name"
+                      data-testid="contact-form-message"
                     />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                    Email Address *
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      className="pl-10"
-                      placeholder="your.email@example.com"
-                      required
-                      data-testid="contact-form-email"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-sm font-medium text-foreground">
-                    Message *
-                  </Label>
-                  <Textarea
-                    id="message"
-                    value={form.message}
-                    onChange={(e) => handleChange('message', e.target.value)}
-                    className="min-h-32 resize-none"
-                    placeholder="Tell me about your project, opportunity, or just say hello..."
-                    required
-                    data-testid="contact-form-message"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full group"
-                  disabled={isSubmitting}
-                  data-testid="contact-form-submit"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                      Sending Message...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <motion.div whileTap={{ scale: 0.98 }}>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full font-mono group"
+                      style={{ boxShadow: '0 0 16px rgba(0,212,255,0.2)' }}
+                      disabled={isSubmitting}
+                      data-testid="contact-form-submit"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                          Sending Message...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 mr-2 transition-transform group-hover:translate-x-1" />
+                          Send Message
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </section>

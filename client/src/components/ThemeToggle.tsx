@@ -1,15 +1,15 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Terminal } from 'lucide-react';
+import { Moon, Sun, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const themes = ['dark', 'light', 'night'] as const;
+const themes = ['night', 'dark', 'light'] as const;
 type Theme = (typeof themes)[number];
 
 const themeConfig: Record<Theme, { icon: React.ComponentType<{ className?: string }>; label: string; title: string }> = {
-  dark:  { icon: Moon,     label: 'Dark',  title: 'Switch to Light mode' },
-  light: { icon: Sun,      label: 'Light', title: 'Switch to Night mode' },
-  night: { icon: Terminal, label: 'Night', title: 'Switch to Dark mode'  },
+  night: { icon: Zap,  label: 'Night', title: 'Switch to Dark mode'  },
+  dark:  { icon: Moon, label: 'Dark',  title: 'Switch to Light mode' },
+  light: { icon: Sun,  label: 'Light', title: 'Switch to Night mode' },
 };
 
 export default function ThemeToggle() {
@@ -27,9 +27,6 @@ export default function ThemeToggle() {
 
   const cycleTheme = () => {
     setTheme(next);
-    // Apply class to html element for non-Tailwind .night support
-    document.documentElement.classList.remove('dark', 'light', 'night');
-    document.documentElement.classList.add(next);
   };
 
   return (

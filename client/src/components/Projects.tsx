@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,9 +24,6 @@ import PR17 from '@assets/generated_images/Projects/17.jpg';
 import PR18 from '@assets/generated_images/Projects/18.png';
 import PR19 from '@assets/generated_images/Projects/19.png';
 import PR20 from '@assets/generated_images/Projects/20.png';
-
-
-
 
 interface Project {
   id: number;
@@ -91,23 +89,23 @@ const projects: Project[] = [
     description: "AI-powered RAG system that ingests PDF/DOCX documents, performs semantic chunking, TF-IDF keyword mining, MiniLM embedding, and FAISS vector retrieval, then uses few-shot LLM prompting to generate difficulty-controlled MCQ/Yes/No/Descriptive/Coding questions with full post-processing (validation, semantic deduplication, quality scoring). Includes a complete web interface (Node.js + Python backend) for document upload, dynamic question generation, and automated answer evaluation.",
     image: PR16,
     githubUrl: "https://github.com/mohamedsahadm786/AI-Document-Based-Question-Generator-",
-    technologies: ["LLM Prompt Engineering", 
-"Retrieval-Augmented Generation (RAG)", 
-"Semantic Text Chunking", 
-"FAISS Vector Database", 
-"SentenceTransformers (MiniLM Embeddings)", 
-"TF-IDF Keyword Extraction (Scikit-Learn)", 
-"OpenAI API Integration", 
-"Few-Shot Learning", 
-"Embedding-Based Similarity Search", 
-"Semantic Deduplication", 
-"Difficulty-Controlled Question Generation", 
-"PyMuPDF (PDF Extraction)", 
-"python-docx / docx2txt (Document Parsing)", 
-"Python Backend Architecture", 
-"Node.js Web Server", 
-"Full-Stack AI Integration", 
-"End-to-End Pipeline Orchestration", 
+    technologies: ["LLM Prompt Engineering",
+"Retrieval-Augmented Generation (RAG)",
+"Semantic Text Chunking",
+"FAISS Vector Database",
+"SentenceTransformers (MiniLM Embeddings)",
+"TF-IDF Keyword Extraction (Scikit-Learn)",
+"OpenAI API Integration",
+"Few-Shot Learning",
+"Embedding-Based Similarity Search",
+"Semantic Deduplication",
+"Difficulty-Controlled Question Generation",
+"PyMuPDF (PDF Extraction)",
+"python-docx / docx2txt (Document Parsing)",
+"Python Backend Architecture",
+"Node.js Web Server",
+"Full-Stack AI Integration",
+"End-to-End Pipeline Orchestration",
 "LLM-Based Answer Evaluation"
 ]
   },
@@ -199,7 +197,6 @@ const projects: Project[] = [
     githubUrl: "https://github.com/mohamedsahadm786/Cricket-T20-World-Cup-2022-Data-Analysis",
     technologies: ["Python", "Power BI", "Data Scraping", "Sports Analytics", "Visualization"]
   },
-
   {
     id: 6,
     title: "Food Delivery Time Prediction",
@@ -208,8 +205,6 @@ const projects: Project[] = [
     githubUrl: "https://github.com/mohamedsahadm786/food-delivery-time-prediction",
     technologies: ["Python", "XGBoost", "Random Forest", "Feature Engineering", "Logistics"]
   },
-
-
   {
     id: 9,
     title: "N8N Automation Suite",
@@ -220,117 +215,156 @@ const projects: Project[] = [
   }
 ];
 
+const cardVariant = {
+  hidden:  { opacity: 0, rotateY: 15, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1, rotateY: 0, y: 0,
+    transition: { duration: 0.6, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+  }),
+};
+
 export default function Projects() {
   const [expanded, setExpanded] = useState<number | null>(null);
 
-  const toggleExpanded = (id: number) => {
-    setExpanded(expanded === id ? null : id);
+  const toggleExpanded = (idx: number) => {
+    setExpanded(expanded === idx ? null : idx);
   };
 
   const scrollToExperience = () => {
-    const element = document.getElementById('experience');
-    element?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section 
-      id="projects" 
-      className="py-20 lg:py-32 bg-gradient-to-br from-card via-card/50 to-muted/30"
+    <section
+      id="projects"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Projects section"
+      style={{ perspective: '1200px' }}
     >
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 
-            className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="projects-title"
           >
-            PROJECTS
+            <span className="text-primary">&gt;_</span> PROJECTS
           </h2>
-        </div>
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
-        {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {projects.map((project) => (
-            <Card 
-              key={project.id}
-              className="group hover-elevate transition-all duration-300 hover:scale-105 overflow-hidden bg-card/50 backdrop-blur-sm border border-black"
-              data-testid={`project-card-${project.id}`}
+          {projects.map((project, idx) => (
+            <motion.div
+              key={idx}
+              custom={idx % 9}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={cardVariant}
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <div className="relative overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={`${project.title} project thumbnail`}
-                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-              
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xl font-bold text-foreground line-clamp-2">
-                  {project.title}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="pt-0">
-                <p className={`text-sm text-muted-foreground leading-relaxed mb-2 ${expanded === project.id ? '' : 'line-clamp-4'}`}>
-                  {project.description}
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleExpanded(project.id)}
-                  className="p-0 h-auto mb-4 text-blue-600 hover:text-blue-800"
-                >
-                  {expanded === project.id ? (
-                    <>Show Less <ChevronUp className="w-4 h-4 ml-1" /></>
-                  ) : (
-                    <>Show More <ChevronDown className="w-4 h-4 ml-1" /></>
-                  )}
-                </Button>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.slice(0, 3).map((tech) => (
-                    <Badge 
-                      key={tech} 
-                      variant="secondary" 
-                      className="text-xs"
-                    >
-                      {tech}
-                    </Badge>
-                  ))}
-                  {project.technologies.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{project.technologies.length - 3}
-                    </Badge>
-                  )}
+              <Card
+                className="group glass-neon border-0 overflow-hidden hover:scale-[1.03] transition-all duration-300 h-full flex flex-col"
+                data-testid={`project-card-${project.id}`}
+              >
+                {/* Image */}
+                <div className="relative overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={`${project.title} project thumbnail`}
+                    className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Neon border on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{ boxShadow: 'inset 0 0 0 2px var(--neon-cyan, #00d4ff)' }}
+                  />
                 </div>
-                
-                <Button
-                  onClick={() => window.open(project.githubUrl, '_blank')}
-                  className="w-full group/btn"
-                  data-testid={`project-source-${project.id}`}
-                >
-                  <Github className="w-4 h-4 mr-2 transition-transform group-hover/btn:scale-110" />
-                  SOURCE CODE
-                  <ExternalLink className="w-3 h-3 ml-2 opacity-70" />
-                </Button>
-              </CardContent>
-            </Card>
+
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base font-bold font-mono text-primary line-clamp-2">
+                    {project.title}
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-0 flex flex-col flex-1">
+                  <p className={`text-sm text-muted-foreground leading-relaxed mb-2 ${expanded === idx ? '' : 'line-clamp-4'}`}>
+                    {project.description}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleExpanded(idx)}
+                    className="p-0 h-auto mb-3 text-primary hover:text-primary/80 font-mono text-xs self-start"
+                  >
+                    {expanded === idx ? (
+                      <>Show Less <ChevronUp className="w-3 h-3 ml-1" /></>
+                    ) : (
+                      <>Show More <ChevronDown className="w-3 h-3 ml-1" /></>
+                    )}
+                  </Button>
+
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.technologies.slice(0, 3).map((tech) => (
+                      <Badge
+                        key={tech}
+                        variant="secondary"
+                        className="text-xs font-mono px-2 py-0.5"
+                      >
+                        {tech}
+                      </Badge>
+                    ))}
+                    {project.technologies.length > 3 && (
+                      <Badge variant="outline" className="text-xs font-mono border-primary/40 text-primary/70">
+                        +{project.technologies.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="mt-auto">
+                    <Button
+                      onClick={() => window.open(project.githubUrl, '_blank')}
+                      className="w-full font-mono text-xs group/btn"
+                      style={{ boxShadow: '0 0 12px rgba(0,212,255,0.15)' }}
+                      data-testid={`project-source-${project.id}`}
+                    >
+                      <Github className="w-4 h-4 mr-2 transition-transform group-hover/btn:scale-110" />
+                      SOURCE CODE
+                      <ExternalLink className="w-3 h-3 ml-2 opacity-70" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
-        {/* CTA to Experience */}
-        <div className="text-center">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <Button
             size="lg"
             onClick={scrollToExperience}
-            className="px-8 py-3 text-lg font-semibold hover-elevate"
+            className="font-mono px-8 py-3 text-base font-semibold"
+            style={{ boxShadow: '0 0 16px rgba(0,212,255,0.2)' }}
             data-testid="projects-cta"
           >
             Oh, now I've got your attention! Time to dive into my work experience! 😎
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

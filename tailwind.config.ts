@@ -81,18 +81,16 @@ export default {
           busy: "rgb(239 68 68)",
           offline: "rgb(156 163 175)",
         },
-      },
-      fontFamily: {
-        sans: ["'Inter'", "var(--font-sans)"],
-        serif: ["var(--font-serif)"],
-        mono: ["'JetBrains Mono'", "var(--font-mono)"],
-      },
-      colors: {
         neon: {
           cyan: "#00d4ff",
           green: "#00ff41",
           purple: "#7c3aed",
         },
+      },
+      fontFamily: {
+        sans: ["'Inter'", "var(--font-sans)"],
+        serif: ["var(--font-serif)"],
+        mono: ["'JetBrains Mono'", "var(--font-mono)"],
       },
       boxShadow: {
         "neon-cyan": "0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 212, 255, 0.15)",

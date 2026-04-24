@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -12,40 +12,15 @@ import RecruiterCTA from '@/components/RecruiterCTA';
 import Contact from '@/components/Contact';
 
 export default function Portfolio() {
-  useEffect(() => {
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-        }
-      });
-    }, observerOptions);
-
-    // Observe all sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section) => {
-      observer.observe(section);
-    });
-
-    return () => {
-      sections.forEach((section) => {
-        observer.unobserve(section);
-      });
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen bg-background text-foreground neural-bg">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
-      
+
       <main>
+        {/* Hero — no glass, canvas fully visible */}
         <Hero />
+
+        {/* All other sections sit on section-glass so canvas shows through */}
         <About />
         <Education />
         <WorkGallery />
@@ -58,13 +33,23 @@ export default function Portfolio() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-8">
+      <motion.footer
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="section-glass border-t border-primary/20 py-8"
+      >
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-muted-foreground">
-            © 2024 SAHAD. All rights reserved. Built with passion for data science and innovation.
+          <div className="h-px w-32 mx-auto mb-6 bg-gradient-to-r from-transparent via-primary to-transparent" />
+          <p className="font-mono text-xs text-muted-foreground tracking-widest">
+            © 2024 SAHAD · Built with passion for data science and innovation
+          </p>
+          <p className="font-mono text-xs text-primary/40 mt-1 tracking-widest">
+            &gt;_ all rights reserved
           </p>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 }

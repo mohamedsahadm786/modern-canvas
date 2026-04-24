@@ -6,6 +6,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Portfolio from "@/pages/Portfolio";
 import NotFound from "@/pages/not-found";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import CustomCursor from "@/components/CustomCursor";
+import { useLenis } from "@/hooks/useLenis";
+import { useClickRipple } from "@/hooks/useClickRipple";
 
 function Router() {
   return (
@@ -16,20 +20,33 @@ function Router() {
   );
 }
 
+function AppInner() {
+  useLenis();
+  useClickRipple();
+
+  return (
+    <>
+      <AnimatedBackground />
+      <CustomCursor />
+      <div className="min-h-screen relative" style={{ zIndex: 1 }}>
+        <Router />
+        <Toaster />
+      </div>
+    </>
+  );
+}
+
 function App() {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="night"
       themes={['dark', 'light', 'night']}
       enableSystem={false}
     >
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <div className="min-h-screen">
-            <Router />
-            <Toaster />
-          </div>
+          <AppInner />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>

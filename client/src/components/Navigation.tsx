@@ -49,7 +49,7 @@ export default function Navigation() {
             className="text-xl font-bold font-mono text-primary hover-elevate px-3 py-2 rounded-lg transition-colors tracking-widest"
             data-testid="nav-brand"
           >
-            &lt;SAHAD/&gt;
+            SAHAD
           </button>
 
           {/* Desktop Navigation */}

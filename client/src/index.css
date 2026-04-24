@@ -209,6 +209,11 @@
     @apply font-sans antialiased bg-background text-foreground;
     /* Custom cursor — hidden on touch devices */
     cursor: none;
+    /* Subtle circuit-board grid visible through transparent sections */
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
   /* Restore cursor for touch devices */
@@ -425,6 +430,15 @@
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* ============================================================
+     SECTION GLASS — semi-transparent so the canvas shows through
+     ============================================================ */
+  .section-glass {
+    background: hsl(var(--background) / 0.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 
   /* ============================================================
