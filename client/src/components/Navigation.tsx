@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,8 +34,8 @@ export default function Navigation() {
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-sm' 
+        isScrolled
+          ? 'bg-background/90 backdrop-blur-md border-b border-primary/20 shadow-lg shadow-primary/5'
           : 'bg-transparent'
       }`}
       role="navigation"
@@ -45,24 +46,25 @@ export default function Navigation() {
           {/* Brand */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="text-2xl font-bold text-foreground hover-elevate px-3 py-2 rounded-lg transition-colors"
+            className="text-xl font-bold font-mono text-primary hover-elevate px-3 py-2 rounded-lg transition-colors tracking-widest"
             data-testid="nav-brand"
           >
-            SAHAD
+            &lt;SAHAD/&gt;
           </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors hover-elevate px-3 py-2 rounded-lg"
+                className="text-sm font-medium font-mono text-primary/80 hover:text-primary transition-colors hover-elevate px-3 py-2 rounded-lg tracking-wide"
                 data-testid={`nav-link-${item.id}`}
               >
                 {item.label}
               </button>
             ))}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
@@ -86,12 +88,15 @@ export default function Navigation() {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-left text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors hover-elevate px-3 py-2 rounded-lg"
+                  className="text-left text-sm font-medium font-mono text-primary/80 hover:text-primary transition-colors hover-elevate px-3 py-2 rounded-lg tracking-wide"
                   data-testid={`nav-mobile-link-${item.id}`}
                 >
                   {item.label}
                 </button>
               ))}
+              <div className="pt-2">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         )}
