@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Award } from 'lucide-react';
@@ -86,10 +87,10 @@ const previewImages: Record<number, string> = {
 };
 
 const cardVariant = {
-  hidden:  { opacity: 0, y: 40, scale: 0.95 },
+  hidden:  { opacity: 0, y: 60, rotateX: 18, scale: 0.92 },
   visible: (i: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.55, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }
+    opacity: 1, y: 0, rotateX: 0, scale: 1,
+    transition: { duration: 0.65, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }
   }),
 };
 
@@ -127,9 +128,11 @@ export default function Certifications() {
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               variants={cardVariant}
+              style={{ transformStyle: 'preserve-3d' }}
             >
+              <TiltCard glowColor="124,58,237">
               <Card
-                className="group glass-neon border-0 overflow-hidden hover:scale-[1.03] transition-all duration-300"
+                className="group glass-neon border-0 overflow-hidden"
                 data-testid={`certificate-card-${cert.id}`}
               >
                 <CardContent className="p-6">
@@ -222,6 +225,7 @@ export default function Certifications() {
                   </div>
                 </CardContent>
               </Card>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

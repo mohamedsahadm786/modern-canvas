@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -216,10 +217,10 @@ const projects: Project[] = [
 ];
 
 const cardVariant = {
-  hidden:  { opacity: 0, rotateY: 15, y: 30 },
+  hidden:  { opacity: 0, y: 60, rotateX: 18, scale: 0.92 },
   visible: (i: number) => ({
-    opacity: 1, rotateY: 0, y: 0,
-    transition: { duration: 0.6, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }
+    opacity: 1, y: 0, rotateX: 0, scale: 1,
+    transition: { duration: 0.65, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }
   }),
 };
 
@@ -270,8 +271,9 @@ export default function Projects() {
               variants={cardVariant}
               style={{ transformStyle: 'preserve-3d' }}
             >
+              <TiltCard className="h-full">
               <Card
-                className="group glass-neon border-0 overflow-hidden hover:scale-[1.03] transition-all duration-300 h-full flex flex-col"
+                className="group glass-neon border-0 overflow-hidden h-full flex flex-col"
                 data-testid={`project-card-${project.id}`}
               >
                 {/* Image */}
@@ -344,6 +346,7 @@ export default function Projects() {
                   </div>
                 </CardContent>
               </Card>
+              </TiltCard>
             </motion.div>
           ))}
         </div>
