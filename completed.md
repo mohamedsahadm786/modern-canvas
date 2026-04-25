@@ -76,8 +76,14 @@ See `plan.md` for the full plan. This file tracks what has been done.
 ## Phase 6 — Cinematic Skills Section
 **Status:** Not started
 
-## Phase 7 — Typography & Text Effects
-**Status:** Not started
+## Phase 7 — Typography & Text Effects ✓
+**Branch:** `feature/phase-7-typography` → merged into `design-overhaul`
+
+- Created `ScrambleHeading` component: scroll-triggered hacker-style character scramble that resolves left-to-right into real text; unresolved chars glow cyan; full hover re-scramble on any resolved heading; `prefers-reduced-motion` skips straight to resolved; optional `children` prop swaps in multi-colour markup after resolution
+- Created `useCinematicTypewriter` hook: sequences through multiple lines — each line types character by character, cursor transfers to the next line after a configurable pause, cursor stays on the last line once all lines are done
+- Hero: title replaced with `ScrambleHeading`; subtitle + tagline now use cinematic typewriter with live cursor handoff between the two lines
+- All 9 section headings replaced with `ScrambleHeading` (About, Education, WorkGallery, Projects, Experience, Certifications, Skills × h2, Skills × 4 category h3s, Contact)
+- Every section heading container gets scroll-driven parallax Y ±18 px via Framer Motion `useScroll` + `useTransform`
 
 ## Phase 8 — Global Polish
 **Status:** Not started
