@@ -7,60 +7,87 @@ import MorphVisual from '@/components/MorphVisual';
 
 /* ─────────────────────────────────────────────────────────────────────────
    MorphField: cycles 1 → 2 → 4 → 8 → 1 copies every PHASE_MS ms.
-   Each copy floats freely, shrinks proportionally, rotates 3D on Y-axis.
+   • 1 / 2 / 4 copies → full size, free random-walk motion
+   • 8 copies        → reduced size (0.28×), circular orbit motion
 ───────────────────────────────────────────────────────────────────────── */
 const PHASE_SEQUENCE = [1, 2, 4, 8] as const;
-const PHASE_MS       = 2500;
+const PHASE_MS       = 4000; // 4 seconds per phase
 
-// Visual scale per copy count (sizes shrink as count grows)
-const SCALE: Record<number, number> = { 1: 1.0, 2: 0.62, 4: 0.42, 8: 0.28 };
+// Scale: full size for 1/2/4, shrink only at 8
+const SCALE: Record<number, number> = { 1: 1.0, 2: 1.0, 4: 1.0, 8: 0.28 };
 
-// Max float distance from centre per copy count (more spread when more copies)
-const FLOAT: Record<number, number> = { 1: 18, 2: 110, 4: 160, 8: 210 };
+// Free-float range (only used for count < 8)
+const FLOAT: Record<number, number> = { 1: 15, 2: 115, 4: 155, 8: 0 };
 
-/* ── One free-floating, Y-rotating copy ─────────────────────────────── */
+// Circular orbit radius for 8 copies
+const ORBIT_RADIUS = 165;
+const ORBIT_SPEED  = 0.28; // radians per second
+
+/* ── One copy: free-float OR circular orbit, plus Y-axis rotation ──── */
 function FloatingMorph({ id, count }: { id: number; count: number }) {
-  const scale = SCALE[count];
-  const range = FLOAT[count];
+  const scale      = SCALE[count];
+  const isCircular = count === 8;
 
   const xMv = useMotionValue(0);
   const yMv = useMotionValue(0);
 
-  // Kick off autonomous random-walk for x and y independently
   useEffect(() => {
-    let alive = true;
+    let alive  = true;
+    let rafId  = 0;
 
-    const walk = async (mv: ReturnType<typeof useMotionValue<number>>, delay: number) => {
-      await new Promise(r => setTimeout(r, delay));
-      while (alive) {
-        const target   = (Math.random() - 0.5) * range * 2;
-        const duration = 2 + Math.random() * 2.5;
-        await animate(mv, target, { duration, ease: 'easeInOut' });
-      }
+    if (isCircular) {
+      // ── Circular orbit via rAF ────────────────────────────────────────
+      const startAngle = (id / 8) * Math.PI * 2; // evenly space 8 copies
+      let t0: number | null = null;
+
+      const loop = (ts: number) => {
+        if (!alive) return;
+        if (t0 === null) t0 = ts;
+        const elapsed = (ts - t0) / 1000;
+        const angle   = startAngle + elapsed * ORBIT_SPEED;
+        xMv.set(Math.cos(angle) * ORBIT_RADIUS);
+        yMv.set(Math.sin(angle) * ORBIT_RADIUS);
+        rafId = requestAnimationFrame(loop);
+      };
+      rafId = requestAnimationFrame(loop);
+
+    } else {
+      // ── Random-walk ───────────────────────────────────────────────────
+      const range = FLOAT[count];
+
+      const walk = async (mv: ReturnType<typeof useMotionValue<number>>, delay: number) => {
+        await new Promise<void>(r => setTimeout(r, delay));
+        while (alive) {
+          const target   = (Math.random() - 0.5) * range * 2;
+          const duration = 2.2 + Math.random() * 2.5;
+          await animate(mv, target, { duration, ease: 'easeInOut' });
+        }
+      };
+
+      walk(xMv, id * 220);
+      walk(yMv, id * 170 + 120);
+    }
+
+    return () => {
+      alive = false;
+      cancelAnimationFrame(rafId);
     };
-
-    // Stagger start times so copies don't all move in sync
-    walk(xMv, id * 220);
-    walk(yMv, id * 170 + 120);
-
-    return () => { alive = false; };
-  }, [id, range, xMv, yMv]);
+  }, [id, count, isCircular, xMv, yMv]);
 
   return (
     <motion.div
-      key={id}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale, opacity: count === 1 ? 1 : 0.82 }}
       exit={{ scale: 0, opacity: 0, transition: { duration: 0.4 } }}
       transition={{ duration: 0.55, ease: 'easeOut' }}
       style={{
-        position : 'absolute',
-        left     : '50%',
-        top      : '50%',
-        marginLeft: -160,   // half of MorphVisual's 320 px CSS width
+        position  : 'absolute',
+        left      : '50%',
+        top       : '50%',
+        marginLeft: -160,  // half of MorphVisual's 320 px CSS width
         marginTop : -160,
-        x        : xMv,
-        y        : yMv,
+        x         : xMv,
+        y         : yMv,
       }}
     >
       {/* Continuous full 3-D Y-axis rotation */}

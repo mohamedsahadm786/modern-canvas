@@ -14,6 +14,18 @@ See `plan.md` for the full plan. This file tracks what has been done.
 - Wired `Scene3D` into `App.tsx` via `React.lazy + Suspense` (lazy-loaded to avoid blocking first paint); sits on top of `AnimatedBackground` (both transparent canvases layer correctly)
 - Replaced wireframe face in `Hero.tsx` with `MorphVisual`; scroll handler fades + parallaxes it on scroll
 - Fixed duplicate `style` attribute warning in `Hero.tsx`
+- Removed 4 corner bracket decorations from Hero MorphVisual container
+- Reordered MorphVisual states: AI/ML → Software Eng → Data Science → Analytics → Globe
+- Replaced DataGlobe in About section with real profile photo (`mine.png`):
+  - Zoom-out entry animation (scale 1.4 → 1.0 on scroll into view)
+  - Continuous full 360° Y-axis rotation (20s cycle)
+  - Two counter-rotating scan rings + cyan neon glow border
+- Added `MorphField` system to Hero right panel:
+  - Phase cycle (4s each): 1 → 2 → 4 → 8 copies → loops back to 1
+  - 1 / 2 / 4 copies: full size (scale 1.0), free random-walk motion (easeInOut)
+  - 8 copies: reduced size (scale 0.28), circular orbit motion (rAF loop, evenly spaced)
+  - Every copy rotates full 360° on Y-axis (16s, Framer Motion)
+  - AnimatePresence handles scale-pop appear / exit between phases
 
 ---
 
