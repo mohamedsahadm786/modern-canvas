@@ -1,12 +1,9 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { useCinematicTypewriter } from '@/hooks/useCinematicTypewriter';
 import ScrambleHeading from '@/components/ScrambleHeading';
-
-const MorphShape3D = lazy(() => import('@/components/MorphShape3D'));
-
 
 const TITLE    = 'MOHAMED SAHAD M';
 const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
@@ -21,7 +18,7 @@ export default function Hero() {
   const [subtitleText, taglineText] = lines;
   const imageRef = useRef<HTMLDivElement>(null);
 
-  // Fade out the MorphVisual as user scrolls down
+  // Fade out the right panel as user scrolls down
   useEffect(() => {
     const container = imageRef.current;
     if (!container) return;
@@ -113,17 +110,25 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── Right: Phase 4 — 3D morphing point-cloud shape ── */}
+      {/* ── Right: Hero video ────────────────────────────────── */}
       <div
         ref={imageRef}
         className="hidden lg:block absolute right-0 top-0 w-1/2 h-full"
         style={{ transition: 'opacity 0.1s, transform 0.1s' }}
       >
-        {/* Left-edge fade — blends the 3D canvas into the text column */}
+        {/* Left-edge fade — blends video into the text column */}
         <div
           className="absolute inset-0 pointer-events-none z-10"
           style={{
-            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%, transparent 80%, hsl(var(--background)) 100%)',
+            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 22%, transparent 80%, hsl(var(--background)) 100%)',
+          }}
+        />
+
+        {/* Top/bottom edge fades */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 12%, transparent 88%, hsl(var(--background)) 100%)',
           }}
         />
 
@@ -133,9 +138,22 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 1.6 }}
           className="w-full h-full"
         >
-          <Suspense fallback={null}>
-            <MorphShape3D />
-          </Suspense>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              mixBlendMode: 'screen',
+            }}
+          >
+            <source src="/assets/hero-video.mp4" type="video/mp4" />
+          </video>
         </motion.div>
       </div>
 
