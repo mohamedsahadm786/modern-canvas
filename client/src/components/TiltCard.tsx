@@ -9,7 +9,7 @@
 import { useRef } from 'react';
 import { motion, useMotionValue, useMotionTemplate, animate } from 'framer-motion';
 
-interface TiltCardProps {
+interface TiltCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -24,6 +24,7 @@ export function TiltCard({
   style,
   glowColor = '0,212,255',
   maxTilt = 10,
+  ...rest
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const rotX   = useMotionValue(0);
@@ -55,6 +56,7 @@ export function TiltCard({
     <motion.div
       ref={cardRef}
       className={className}
+      {...rest}
       style={{
         ...style,
         rotateX: rotX,
