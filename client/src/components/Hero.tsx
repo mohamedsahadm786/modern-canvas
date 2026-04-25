@@ -130,30 +130,21 @@ export default function Hero() {
           }}
         />
 
-        {/* The auto-cycling 5-state canvas */}
+        {/* Entry fade-in + scale, then continuous 3D Y-axis rotation */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6, duration: 1.2, ease: 'easeOut' }}
           className="relative z-20"
         >
-          <MorphVisual />
+          <motion.div
+            animate={{ rotateY: 360 }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'linear', delay: 1.8 }}
+            style={{ transformPerspective: 1200 }}
+          >
+            <MorphVisual />
+          </motion.div>
         </motion.div>
-
-        {/* Corner brackets */}
-        {(['top-8 left-8', 'top-8 right-8', 'bottom-8 left-8', 'bottom-8 right-8'] as const).map((pos, i) => (
-          <div
-            key={i}
-            className={`absolute ${pos} w-7 h-7 z-20`}
-            style={{
-              borderTop:    i < 2  ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
-              borderBottom: i >= 2 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
-              borderLeft:   i % 2 === 0 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
-              borderRight:  i % 2 === 1 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
-              opacity: 0.6,
-            }}
-          />
-        ))}
       </div>
 
       {/* ── Scroll indicator ───────────────────────────────── */}

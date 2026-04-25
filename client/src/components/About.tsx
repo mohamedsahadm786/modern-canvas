@@ -1,169 +1,74 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import profileImage from '@assets/generated_images/About/mine.png';
 
-/* ── DataGlobe: rotating 3-D sphere of neural-network nodes ── */
-function DataGlobe() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d')!;
-    const S = 360;
-    canvas.width  = S;
-    canvas.height = S;
-
-    const N   = 32;
-    const R   = 130;
-    let angle = 0;
-    let time  = 0;
-
-    // Distribute nodes evenly on sphere (Fibonacci / golden angle)
-    const nodes = Array.from({ length: N }, (_, i) => {
-      const phi   = Math.acos(1 - (2 * (i + 0.5)) / N);
-      const theta = 2 * Math.PI * i * 1.6180339887;
-      return { phi, theta, phase: Math.random() * Math.PI * 2 };
-    });
-
-    // Data-science labels that float near large nodes
-    const labels = ['σ', 'μ', 'loss', 'RAG', 'LSTM', 'fit()', 'grad', 'SQL', 'AI', 'AUC', 'ROC', 'p<.05'];
-    const nodeLabels = nodes.map((_, i) => (i % 4 === 0 ? labels[Math.floor(i / 4) % labels.length] : null));
-
-    // Signal packets travelling between pairs
-    const pairs: Array<[number, number]> = [];
-    for (let i = 0; i < N; i++) {
-      const j = (i + 7) % N;
-      pairs.push([i, j]);
-    }
-    const signals = pairs.slice(0, 12).map(([a, b]) => ({ from: a, to: b, t: Math.random() }));
-
-    let raf: number;
-
-    const render = () => {
-      time  += 0.015;
-      angle += 0.006;
-      ctx.clearRect(0, 0, S, S);
-
-      const CX = S / 2, CY = S / 2;
-      const isNight = document.documentElement.classList.contains('night');
-      const cyanStr = isNight ? '0,255,65' : '0,212,255';
-      const purpleStr = isNight ? '191,0,255' : '124,58,237';
-
-      // Project all nodes
-      const proj = nodes.map(n => {
-        const cosA = Math.cos(angle), sinA = Math.sin(angle);
-        const x0 = R * Math.sin(n.phi) * Math.cos(n.theta);
-        const y0 = R * Math.cos(n.phi);
-        const z0 = R * Math.sin(n.phi) * Math.sin(n.theta);
-        const xR =  x0 * cosA + z0 * sinA;
-        const zR = -x0 * sinA + z0 * cosA;
-        // slight tilt around X
-        const cosB = Math.cos(0.25), sinB = Math.sin(0.25);
-        const yR = y0 * cosB - zR * sinB;
-        const zF = y0 * sinB + zR * cosB;
-        const fov   = R * 2.8;
-        const scale = fov / (fov + zF);
-        return { sx: CX + xR * scale, sy: CY + yR * scale, z: zF, scale };
-      });
-
-      // Wireframe latitude/longitude lines
-      ctx.strokeStyle = `rgba(${cyanStr},0.05)`;
-      ctx.lineWidth   = 0.5;
-      for (let lat = -60; lat <= 60; lat += 30) {
-        const y  = R * Math.sin(lat * Math.PI / 180) * 0.85;
-        const rL = Math.sqrt(Math.max(0, R * R * 0.72 - y * y));
-        if (rL > 0) {
-          ctx.beginPath();
-          ctx.ellipse(CX, CY + y, rL, rL * 0.28, 0, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      }
-      for (let i = 0; i < 5; i++) {
-        const a = (angle * 0.8 + i * Math.PI / 2.5) % Math.PI;
-        ctx.beginPath();
-        ctx.ellipse(CX, CY, Math.abs(Math.cos(a)) * R * 0.85, R * 0.85, 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      // Edges
-      for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-          const d = Math.hypot(proj[i].sx - proj[j].sx, proj[i].sy - proj[j].sy);
-          if (d < 90) {
-            const alpha = (1 - d / 90) * 0.45 * Math.min(proj[i].scale, proj[j].scale);
-            ctx.strokeStyle = `rgba(${cyanStr},${alpha.toFixed(3)})`;
-            ctx.lineWidth   = 0.7;
-            ctx.beginPath();
-            ctx.moveTo(proj[i].sx, proj[i].sy);
-            ctx.lineTo(proj[j].sx, proj[j].sy);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Signal packets
-      signals.forEach(sig => {
-        sig.t = (sig.t + 0.008) % 1;
-        const a = proj[sig.from], b = proj[sig.to];
-        const sx = a.sx + (b.sx - a.sx) * sig.t;
-        const sy = a.sy + (b.sy - a.sy) * sig.t;
-        const grd = ctx.createRadialGradient(sx, sy, 0, sx, sy, 6);
-        grd.addColorStop(0, `rgba(${cyanStr},0.9)`);
-        grd.addColorStop(1, `rgba(${cyanStr},0)`);
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 6, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Nodes (painter sorted front→back)
-      const sorted = proj.map((p, i) => ({ ...p, i })).sort((a, b) => a.z - b.z);
-      sorted.forEach(p => {
-        const pulse  = Math.sin(time * 2.2 + nodes[p.i].phase) * 0.3 + 0.7;
-        const depth  = ((p.z + R) / (2 * R));
-        const r      = 3.2 * p.scale * pulse;
-        const alpha  = Math.max(0.15, depth * 0.9);
-
-        // Outer glow
-        const grd = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, r * 5);
-        grd.addColorStop(0, `rgba(${cyanStr},${(alpha * 0.55 * pulse).toFixed(3)})`);
-        grd.addColorStop(1, `rgba(${cyanStr},0)`);
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, r * 5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Core
-        ctx.fillStyle = `rgba(${cyanStr},${Math.min(1, alpha).toFixed(3)})`;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Label on large front-facing nodes
-        if (nodeLabels[p.i] && depth > 0.65 && p.scale > 0.8) {
-          ctx.fillStyle = `rgba(${cyanStr},${(depth * 0.8).toFixed(2)})`;
-          ctx.font      = `${Math.round(9 * p.scale)}px 'JetBrains Mono', monospace`;
-          ctx.textAlign = 'center';
-          ctx.fillText(nodeLabels[p.i]!, p.sx, p.sy - r * 2 - 3);
-        }
-      });
-
-      raf = requestAnimationFrame(render);
-    };
-
-    raf = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
+/* ── ProfilePhoto: 3-D rotating photo with zoom-out entry ── */
+function ProfilePhoto() {
   return (
-    <canvas
-      ref={canvasRef}
-      className="block mx-auto"
-      style={{
-        width: 320, height: 320,
-        filter: 'drop-shadow(0 0 32px rgba(0,212,255,0.45)) drop-shadow(0 0 80px rgba(0,212,255,0.18))',
-      }}
-    />
+    <div className="relative flex items-center justify-center" style={{ width: 320, height: 320 }}>
+      {/* Outer neon glow ring — pulses */}
+      <div
+        className="absolute inset-0 rounded-full animate-pulse-neon pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%)',
+          boxShadow: '0 0 60px rgba(0,212,255,0.25), 0 0 120px rgba(0,212,255,0.10)',
+        }}
+      />
+
+      {/* Rotating scan ring */}
+      <motion.div
+        className="absolute inset-4 rounded-full pointer-events-none"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+        style={{
+          border: '1px solid transparent',
+          borderTopColor: 'var(--neon-cyan, #00d4ff)',
+          borderRightColor: 'rgba(0,212,255,0.3)',
+          opacity: 0.7,
+        }}
+      />
+      <motion.div
+        className="absolute inset-8 rounded-full pointer-events-none"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+        style={{
+          border: '1px solid transparent',
+          borderBottomColor: 'var(--neon-cyan, #00d4ff)',
+          borderLeftColor: 'rgba(0,212,255,0.2)',
+          opacity: 0.5,
+        }}
+      />
+
+      {/* Photo — full 3D Y-axis rotation, entry zoom-out */}
+      <motion.div
+        initial={{ scale: 1.4, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative z-10"
+        style={{ width: 240, height: 240 }}
+      >
+        <motion.div
+          animate={{ rotateY: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          style={{ transformPerspective: 1000, width: '100%', height: '100%' }}
+        >
+          <img
+            src={profileImage}
+            alt="Mohamed Sahad M"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'top',
+              borderRadius: '50%',
+              filter: 'drop-shadow(0 0 24px rgba(0,212,255,0.5)) drop-shadow(0 0 60px rgba(0,212,255,0.2)) grayscale(0.3) contrast(1.1)',
+              border: '2px solid rgba(0,212,255,0.4)',
+            }}
+          />
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -235,40 +140,15 @@ export default function About() {
         {/* Two-column: DataGlobe left, bio right */}
         <div className="flex flex-col lg:flex-row items-center gap-16">
 
-          {/* DataGlobe — 3-D rotating neural sphere (NOT the same profile photo) */}
+          {/* Profile photo — zoom-out entry + continuous 3D Y rotation */}
           <motion.div
             className="w-full lg:w-5/12 flex justify-center"
-            initial={{ opacity: 0, scale: 0.8, rotateY: -25 }}
-            whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{ perspective: 800 }}
+            transition={{ duration: 0.8 }}
           >
-            <div className="relative">
-              {/* Outer glow ring */}
-              <div
-                className="absolute inset-0 rounded-full animate-pulse-neon"
-                style={{ margin: '-24px', opacity: 0.4 }}
-              />
-              {/* Corner brackets */}
-              {['top-0 left-0','top-0 right-0','bottom-0 left-0','bottom-0 right-0'].map((pos, i) => (
-                <div
-                  key={i}
-                  className={`absolute ${pos} w-6 h-6 z-20`}
-                  style={{
-                    borderTop:    i < 2  ? '2px solid var(--neon-cyan,#00d4ff)' : 'none',
-                    borderBottom: i >= 2 ? '2px solid var(--neon-cyan,#00d4ff)' : 'none',
-                    borderLeft:   i % 2 === 0 ? '2px solid var(--neon-cyan,#00d4ff)' : 'none',
-                    borderRight:  i % 2 === 1 ? '2px solid var(--neon-cyan,#00d4ff)' : 'none',
-                  }}
-                />
-              ))}
-              <DataGlobe />
-              {/* Label below globe */}
-              <p className="text-center font-mono text-xs text-primary/60 tracking-widest mt-3">
-                DATA·AI·STATISTICS·ML
-              </p>
-            </div>
+            <ProfilePhoto />
           </motion.div>
 
           {/* Bio blocks */}

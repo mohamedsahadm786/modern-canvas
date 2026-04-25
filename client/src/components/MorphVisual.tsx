@@ -463,8 +463,8 @@ export default function MorphVisual() {
     const STATE_DURATION = 7;    // seconds per state
     const TRANS_DURATION = 1.5;  // seconds for transition
     const TOTAL_STATES = 5;
-    const drawFns = [drawGlobe, drawDataScience, drawAnalytics, drawNeuralNetwork, drawSoftwareEngineering];
-    const stateLabels = ['GLOBE', 'DATA SCIENCE', 'ANALYTICS', 'AI / ML', 'SOFTWARE ENG'];
+    const drawFns = [drawNeuralNetwork, drawSoftwareEngineering, drawDataScience, drawAnalytics, drawGlobe];
+    const stateLabels = ['AI / ML', 'SOFTWARE ENG', 'DATA SCIENCE', 'ANALYTICS', 'GLOBE'];
 
     let startTime = performance.now() / 1000;
     let particles: Particle[] = [];
