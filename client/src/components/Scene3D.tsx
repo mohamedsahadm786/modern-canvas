@@ -12,6 +12,7 @@ import { Points, PointMaterial } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
+import MatrixRain3D from './MatrixRain3D';
 
 /* ── Inline compact simplex-3D noise for GLSL ────────────────────────────── */
 const SIMPLEX = /* glsl */`
@@ -255,6 +256,9 @@ export default function Scene3D() {
         style={{ background: 'transparent' }}
         dpr={[1, 1.5]}
       >
+        {/* 3-D instanced matrix rain — Phase 2 */}
+        <MatrixRain3D />
+
         <Stars />
         <BinaryField />
 

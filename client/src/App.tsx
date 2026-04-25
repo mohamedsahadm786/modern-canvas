@@ -7,7 +7,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Portfolio from "@/pages/Portfolio";
 import NotFound from "@/pages/not-found";
-import AnimatedBackground from "@/components/AnimatedBackground";
 import CustomCursor from "@/components/CustomCursor";
 import { useLenis } from "@/hooks/useLenis";
 import { useClickRipple } from "@/hooks/useClickRipple";
@@ -30,16 +29,12 @@ function AppInner() {
 
   return (
     <>
-      {/* Layer 1 (back): 2D code-rain + neural-net canvas */}
-      <AnimatedBackground />
-
-      {/* Layer 2: Three.js 3D orbs float on top of the code rain.
-          Canvas has alpha:true so the rain shows through the transparent gaps. */}
+      {/* Layer 1: Three.js canvas — 3D matrix rain + orbs + starfield (Phase 2) */}
       <Suspense fallback={null}>
         <Scene3D />
       </Suspense>
 
-      {/* Layer 3 (front): page content + cursor */}
+      {/* Layer 2 (front): page content + cursor */}
       <CustomCursor />
       <div className="min-h-screen relative" style={{ zIndex: 1 }}>
         <Router />

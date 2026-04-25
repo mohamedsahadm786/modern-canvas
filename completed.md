@@ -29,8 +29,18 @@ See `plan.md` for the full plan. This file tracks what has been done.
 
 ---
 
-## Phase 2 — Matrix Code Rain (3D, Morphing)
-**Status:** Not started
+## Phase 2 — Matrix Code Rain (3D, Morphing) ✓
+**Branch:** `feature/phase-2-matrix-rain` → merged into `design-overhaul`
+
+- Created `MatrixRain3D.tsx` — 1,200 instanced `PlaneGeometry` sprites sharing the Scene3D canvas
+- 60 columns × 20 drops per column; Z spread ±4.5 world units for real 3D parallax depth
+- Per-instance buffer attributes: column, startY, fallSpeed, depth, charSeed, charSpeed
+- Vertex shader: dynamic character cycling per instance (`aCharSpeed * time`), depth-based scale, depth-based alpha
+- Fragment shader: samples two canvas atlas textures (640×64px each, 10 chars per atlas), mixes by `uBlend` for smooth cross-fade
+- Phase cycling every 4 s: **code keywords → digits (0–9) → math symbols (Σ ∫ ∇ σ …) → algorithm tokens** → loops
+- 1-second GLSL cross-fade blend at end of each phase (character shapes dissolve into next set)
+- Depth-based colour: near Z = cyan `#00f7eb`, far Z = green `#0de63d`; AdditiveBlending → bloom amplifies glow
+- Removed `AnimatedBackground.tsx` (2D canvas) from `App.tsx`; matrix rain now lives inside the existing R3F canvas sharing Bloom post-processing
 
 ## Phase 3 — Scroll-Driven 3D Scene
 **Status:** Not started
