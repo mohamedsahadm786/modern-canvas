@@ -1,0 +1,7 @@
+- Removed the opaque `bg-background` wrapper from `client/src/pages/Portfolio.tsx` so the fixed `Scene3D` canvas can actually show through the site instead of being hidden behind a full-page solid layer.
+- Replaced the temporary fallback version of `client/src/components/MatrixRain3D.tsx` with a shader-driven instanced matrix rain:
+- Uses 1,200 instanced planes across 60 columns with real Z-depth spread.
+- Builds canvas atlas textures for code keywords, digits, math symbols, and algorithm tokens.
+- Cycles phases every 4 seconds with a 1-second shader crossfade between atlases.
+- Uses additive blending, depth-based cyan/green coloring, and stronger alpha so the rain remains visible through the site glass effects.
+- Keeps per-instance movement on the CPU with `setMatrixAt`, which is simpler to debug and more predictable than pushing the full motion logic into the vertex shader.
