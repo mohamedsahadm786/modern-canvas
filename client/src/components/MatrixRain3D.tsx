@@ -1,22 +1,33 @@
 /**
- * MatrixRain3D — 1 200 instanced sprite rain in the Scene3D canvas.
+ * MatrixRain3D — Debug-stable rewrite.
  *
- * Design choices that avoid past bugs:
- *  • Mesh created imperatively in useMemo → returned as <primitive> (no R3F
- *    reconciler attribute-attachment timing issues)
- *  • NormalBlending + alpha 0.65–1.0 (AdditiveBlending on alpha:true canvas
- *    produced near-invisible chars after canvas→page composite)
- *  • Y / X ranges are depth-proportional so near-camera sprites never fall
- *    outside the frustum
- *  • All uniforms live in a stable useRef; never recreated on resize
+ * Root cause analysis after three failed attempts:
+ *  1. AdditiveBlending on alpha:true canvas → near-zero composite alpha (fixed)
+ *  2. GLSL const float CAMERA_Z = 7  → integer literal in float const = type error
+ *     in strict GLSL ES 1.00 implementations (fixed)
+ *  3. Y range not depth-aware → near chars outside frustum (fixed)
+ *  4. CanvasTexture 640×64 px (non-power-of-2 width) + default mipmap filtering
+ *     → broken texture on some WebGL implementations (fixed)
+ *  5. Complex custom vertex shader for positioning via InstancedBufferAttribute
+ *     → unknown Three.js r184 / driver-specific behaviour
+ *
+ * This version eliminates #5 entirely:
+ *  • Positions updated on CPU via setMatrixAt (Three.js–guaranteed API)
+ *  • Vertex shader is trivial: instanceMatrix * position + UV pass-through
+ *  • Fragment shader does atlas UV lookup + colour (minimal custom GLSL)
+ *  • Per-instance character cycling still works via InstancedBufferAttribute
+ *    (only two floats per instance: aCharSeed, aCharSpeed)
+ *
+ * If you still see nothing: open browser DevTools → Console and look for
+ * WebGL shader compile errors or JavaScript exceptions.
  */
 import { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-/* ── Character groups (phase cycle) ─────────────────────────────────────── */
+/* ── Character groups ────────────────────────────────────────────────────── */
 const CHAR_GROUPS = [
-  ['def', 'class', 'async', 'yield', 'torch', 'import', 'return', 'fit()', 'log', 'RAG'],
+  ['def', 'class', 'async', 'torch', 'import', 'return', 'fit()', 'log', 'RAG', 'yield'],
   ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
   ['Σ', '∫', '∇', 'σ', 'μ', 'λ', 'π', 'δ', 'ε', 'θ'],
   ['O(n)', 'DFS', 'BFS', 'SORT', 'MAP', 'argmax', 'grad', 'loss', 'LLM', 'ETL'],
@@ -25,100 +36,75 @@ const CHAR_GROUPS = [
 const CHARS_PER_GROUP = 10;
 const INSTANCE_COUNT  = 1200;
 const COL_COUNT       = 60;
-const PHASE_DURATION  = 4;    // seconds per phase
-const BLEND_DURATION  = 1;    // cross-fade at end of each phase
-const CELL_SIZE       = 64;   // canvas px per character cell
+const PHASE_DURATION  = 4;
+const BLEND_DURATION  = 1;
+/* Canvas cell — use 512/10 = 51.2 → round to 51; total width ≈ 512 (power-of-2) */
+const CELL_W  = 51;
+const CELL_H  = 64;
+/* Camera constants (must match Scene3D canvas settings) */
+const CAM_Z       = 7.0;
+const TAN_HALF    = 0.5206;   /* tan(27.5°)  for fov = 55 */
+const Z_SPREAD    = 3.5;
 
-/* Camera constants matching Scene3D canvas: fov=55, camera z=7 */
-const CAMERA_Z      = 7.0;
-const TAN_HALF_FOV  = 0.5206;   // tan(27.5°)
-
-/* ── Build a 640×64 canvas atlas texture for one character group ─────────── */
+/* ── Build atlas texture (one horizontal strip per group) ───────────────── */
 function buildAtlasTexture(chars: readonly string[]): THREE.CanvasTexture {
-  const canvas  = document.createElement('canvas');
-  canvas.width  = CHARS_PER_GROUP * CELL_SIZE;
-  canvas.height = CELL_SIZE;
-  const ctx     = canvas.getContext('2d')!;
+  const W = CHARS_PER_GROUP * CELL_W;   /* 510 */
+  const H = CELL_H;                      /* 64  */
+  const canvas = document.createElement('canvas');
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d')!;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  /* Draw glow layer first */
-  ctx.shadowColor  = '#00ffcc';
-  ctx.shadowBlur   = 10;
-  ctx.fillStyle    = '#ccfff8';
-  ctx.font         = `bold ${Math.floor(CELL_SIZE * 0.46)}px "JetBrains Mono", monospace`;
+  ctx.clearRect(0, 0, W, H);
+  /* Use monospace (always available) so text renders even before web fonts load */
+  ctx.font         = `bold ${Math.floor(CELL_H * 0.50)}px monospace`;
+  ctx.fillStyle    = '#ffffff';
   ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
-
   chars.forEach((ch, i) => {
-    ctx.fillText(String(ch), i * CELL_SIZE + CELL_SIZE / 2, CELL_SIZE / 2);
+    ctx.fillText(String(ch), i * CELL_W + CELL_W / 2, CELL_H / 2);
   });
 
-  const tex       = new THREE.CanvasTexture(canvas);
-  tex.needsUpdate = true;
+  const tex = new THREE.CanvasTexture(canvas);
+  /* Disable mipmaps to avoid NPOT (non-power-of-2) texture issues */
+  tex.minFilter     = THREE.LinearFilter;
+  tex.magFilter     = THREE.LinearFilter;
+  tex.generateMipmaps = false;
+  tex.needsUpdate   = true;
   return tex;
 }
 
-/* ── Vertex shader ──────────────────────────────────────────────────────── */
+/* ── Minimal vertex shader — instanceMatrix handles all positioning ──────── */
 const VERT = /* glsl */`
-  /* Per-instance attributes */
-  attribute float aCol;
-  attribute float aStartY;
-  attribute float aFallSpeed;
-  attribute float aDepth;
+  /* Three.js injects: projectionMatrix, modelViewMatrix, instanceMatrix,
+     position (vec3), uv (vec2) automatically for ShaderMaterial.       */
+
   attribute float aCharSeed;
   attribute float aCharSpeed;
+  attribute float aDepth;
 
   uniform float uTime;
-  uniform float uAspect;   /* viewport width / height */
 
   varying vec2  vUv;
   varying float vCharUvStart;
   varying float vNearness;
   varying float vAlpha;
 
-  const float CAMERA_Z     = ${CAMERA_Z};
-  const float TAN_HALF_FOV = ${TAN_HALF_FOV};
-  const float COL_COUNT    = ${COL_COUNT}.0;
-  const float CHARS        = ${CHARS_PER_GROUP}.0;
-
   void main() {
-    /* Pass geometry UV to fragment (uv is a built-in Three.js attribute) */
     vUv = uv;
 
-    /* ── Depth ── */
-    /* aDepth –1 (far) … +1 (near camera).
-       zPos = +3.5 is close to camera (camera sits at z=7). */
-    float zPos       = aDepth * 3.5;
-    float distFromCam = CAMERA_Z - zPos;           /* 3.5 … 10.5 */
+    float nearness   = (aDepth + 1.0) * 0.5;
+    float charIdx    = mod(floor(uTime * aCharSpeed + aCharSeed * 7.391), 10.0);
+    vCharUvStart     = charIdx / 10.0;
+    vNearness        = nearness;
+    vAlpha           = 0.70 + nearness * 0.30;   /* 0.70–1.00 */
 
-    /* ── Screen-filling X / Y (columns & fall range scale with depth) ── */
-    float halfH  = TAN_HALF_FOV * distFromCam;
-    float halfW  = halfH * uAspect;
-
-    float xPos   = (aCol / COL_COUNT - 0.5) * halfW * 2.0;
-    float yNorm  = mod(aStartY + uTime * aFallSpeed, 1.0);
-    float yPos   = mix(halfH * 1.15, -halfH * 1.15, yNorm);
-
-    /* ── Char scale: same screen fraction at all depths, bias toward near ── */
-    /* nearness: 0 = far edge, 1 = near edge */
-    float nearness  = (aDepth + 1.0) * 0.5;
-    float screenFrac = 0.032 + nearness * 0.022;       /* 3.2 % … 5.4 % of vh */
-    float charScale  = screenFrac * distFromCam * TAN_HALF_FOV * 2.0;
-
-    /* ── Dynamic character cycling ── */
-    float charIdx    = mod(floor(uTime * aCharSpeed + aCharSeed * 7.391), CHARS);
-    vCharUvStart     = charIdx / CHARS;
-
-    vNearness = nearness;
-    vAlpha    = 0.65 + nearness * 0.35;   /* 0.65 – 1.0 */
-
-    vec3 pos    = position * charScale + vec3(xPos, yPos, zPos);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    /* instanceMatrix carries scale + translation set by setMatrixAt each frame */
+    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
   }
 `;
 
-/* ── Fragment shader ─────────────────────────────────────────────────────── */
+/* ── Fragment shader — atlas UV lookup ──────────────────────────────────── */
 const FRAG = /* glsl */`
   uniform sampler2D uTexA;
   uniform sampler2D uTexB;
@@ -129,19 +115,15 @@ const FRAG = /* glsl */`
   varying float vNearness;
   varying float vAlpha;
 
-  const float CHARS = ${CHARS_PER_GROUP}.0;
-
   void main() {
-    float u      = vCharUvStart + vUv.x / CHARS;
-    vec2  uvSamp = vec2(u, vUv.y);
-
-    float aA    = texture2D(uTexA, uvSamp).a;
-    float aB    = texture2D(uTexB, uvSamp).a;
+    float u     = vCharUvStart + vUv.x / 10.0;
+    vec2  uvS   = vec2(u, vUv.y);
+    float aA    = texture2D(uTexA, uvS).a;
+    float aB    = texture2D(uTexB, uvS).a;
     float alpha = mix(aA, aB, uBlend);
 
-    if (alpha < 0.04) discard;
+    if (alpha < 0.03) discard;
 
-    /* Near = brighter cyan, far = deeper green */
     vec3 cyan  = vec3(0.00, 1.00, 0.95);
     vec3 green = vec3(0.04, 0.85, 0.30);
     vec3 col   = mix(green, cyan, vNearness);
@@ -150,50 +132,59 @@ const FRAG = /* glsl */`
   }
 `;
 
+/* ── Per-instance data (stable, never changes) ──────────────────────────── */
+interface DropData {
+  col:       number;  /* 0–59  */
+  startY:    number;  /* 0–1   */
+  fallSpeed: number;  /* world/sec */
+  depth:     number;  /* –1…+1 */
+  charSeed:  number;  /* 0–9   */
+  charSpeed: number;  /* chars/sec */
+}
+
 /* ── Component ───────────────────────────────────────────────────────────── */
 export default function MatrixRain3D() {
   const { viewport } = useThree();
-  const phaseRef = useRef({ current: 0, next: 1, timer: 0 });
+  const phaseRef     = useRef({ current: 0, next: 1, timer: 0 });
 
-  /* Atlas textures — four groups, built once */
+  /* Atlas textures — four groups */
   const textures = useMemo(() => CHAR_GROUPS.map(buildAtlasTexture), []);
 
-  /* Stable uniform refs — never recreated on resize */
+  /* Stable uniform object — mutated in-place each frame */
   const uniforms = useRef({
     uTime:   { value: 0 },
-    uAspect: { value: 1 },
     uTexA:   { value: textures[0] },
     uTexB:   { value: textures[1] },
     uBlend:  { value: 0 },
   });
 
-  /* ── Build the InstancedMesh once — everything imperative ────────────── */
-  const mesh = useMemo(() => {
-    /* Per-instance float arrays */
-    const col       = new Float32Array(INSTANCE_COUNT);
-    const startY    = new Float32Array(INSTANCE_COUNT);
-    const fallSpeed = new Float32Array(INSTANCE_COUNT);
-    const depth     = new Float32Array(INSTANCE_COUNT);
-    const charSeed  = new Float32Array(INSTANCE_COUNT);
-    const charSpeed = new Float32Array(INSTANCE_COUNT);
-
+  /* Per-instance fall data (CPU-side, used in useFrame) */
+  const drops = useMemo<DropData[]>(() => {
+    const arr: DropData[] = [];
     for (let i = 0; i < INSTANCE_COUNT; i++) {
-      col[i]       = i % COL_COUNT;
-      startY[i]    = Math.floor(i / COL_COUNT) / 20 + Math.random() * 0.04;
-      fallSpeed[i] = 0.05 + Math.random() * 0.11;
-      depth[i]     = (Math.random() - 0.5) * 2;      /* –1 … +1 */
-      charSeed[i]  = Math.floor(Math.random() * CHARS_PER_GROUP);
-      charSpeed[i] = 0.4 + Math.random() * 2.6;
+      arr.push({
+        col:       i % COL_COUNT,
+        startY:    Math.floor(i / COL_COUNT) / 20 + Math.random() * 0.04,
+        fallSpeed: 0.05 + Math.random() * 0.11,
+        depth:     (Math.random() - 0.5) * 2,
+        charSeed:  Math.floor(Math.random() * CHARS_PER_GROUP),
+        charSpeed: 0.4 + Math.random() * 2.6,
+      });
     }
+    return arr;
+  }, []);
 
-    /* Geometry: PlaneGeometry(1,1) → charScale in vertex shader sets final size */
+  /* Build instanced mesh with minimal custom ShaderMaterial */
+  const mesh = useMemo(() => {
     const geo = new THREE.PlaneGeometry(1, 1);
-    geo.setAttribute('aCol',       new THREE.InstancedBufferAttribute(col,       1));
-    geo.setAttribute('aStartY',    new THREE.InstancedBufferAttribute(startY,    1));
-    geo.setAttribute('aFallSpeed', new THREE.InstancedBufferAttribute(fallSpeed, 1));
-    geo.setAttribute('aDepth',     new THREE.InstancedBufferAttribute(depth,     1));
-    geo.setAttribute('aCharSeed',  new THREE.InstancedBufferAttribute(charSeed,  1));
-    geo.setAttribute('aCharSpeed', new THREE.InstancedBufferAttribute(charSpeed, 1));
+
+    /* Only two per-instance shader attributes — char selection */
+    const charSeedArr  = new Float32Array(drops.map(d => d.charSeed));
+    const charSpeedArr = new Float32Array(drops.map(d => d.charSpeed));
+    const depthArr     = new Float32Array(drops.map(d => d.depth));
+    geo.setAttribute('aCharSeed',  new THREE.InstancedBufferAttribute(charSeedArr,  1));
+    geo.setAttribute('aCharSpeed', new THREE.InstancedBufferAttribute(charSpeedArr, 1));
+    geo.setAttribute('aDepth',     new THREE.InstancedBufferAttribute(depthArr,     1));
 
     const mat = new THREE.ShaderMaterial({
       uniforms:       uniforms.current,
@@ -205,27 +196,36 @@ export default function MatrixRain3D() {
     });
 
     const m = new THREE.InstancedMesh(geo, mat, INSTANCE_COUNT);
-
-    /* Identity matrices — vertex shader handles all positioning */
+    m.frustumCulled = false;
+    /* initialise all matrices to identity */
     const id = new THREE.Matrix4();
     for (let i = 0; i < INSTANCE_COUNT; i++) m.setMatrixAt(i, id);
     m.instanceMatrix.needsUpdate = true;
-    m.frustumCulled = false;
-
     return m;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);   /* textures ref is stable; uniforms.current is mutated in-place */
+  }, []);
 
-  /* ── Animate ──────────────────────────────────────────────────────────── */
+  /* Reusable objects to avoid GC pressure each frame */
+  const _mat3  = useRef(new THREE.Matrix4());
+  const _pos   = useRef(new THREE.Vector3());
+  const _scale = useRef(new THREE.Vector3(1, 1, 1));
+  const _quat  = useRef(new THREE.Quaternion());
+
   useFrame(({ clock }, delta) => {
-    const u  = uniforms.current;
-    const ph = phaseRef.current;
+    const u       = uniforms.current;
+    const ph      = phaseRef.current;
+    const t       = clock.getElapsedTime();
+    const aspect  = viewport.width / viewport.height;
+    const mat4    = _mat3.current;
+    const pos     = _pos.current;
+    const scl     = _scale.current;
+    const quat    = _quat.current;
 
-    u.uTime.value   = clock.getElapsedTime();
-    u.uAspect.value = viewport.width / viewport.height;
+    /* Update time uniform */
+    u.uTime.value = t;
 
+    /* Phase cycling */
     ph.timer += delta;
-
     if (ph.timer >= PHASE_DURATION) {
       ph.timer   = 0;
       ph.current = ph.next;
@@ -237,6 +237,35 @@ export default function MatrixRain3D() {
       const rem      = PHASE_DURATION - ph.timer;
       u.uBlend.value = rem < BLEND_DURATION ? 1 - rem / BLEND_DURATION : 0;
     }
+
+    /* Update all instance matrices on CPU */
+    for (let i = 0; i < INSTANCE_COUNT; i++) {
+      const d = drops[i];
+
+      /* Depth → Z → distance from camera */
+      const zPos       = d.depth * Z_SPREAD;
+      const distFromCam = CAM_Z - zPos;          /* 3.5 … 10.5 */
+
+      /* Screen-filling X: column maps to –halfW…+halfW at this depth */
+      const halfH = TAN_HALF * distFromCam;
+      const halfW = halfH * aspect;
+      const xPos  = (d.col / COL_COUNT - 0.5) * halfW * 2.0;
+
+      /* Falling Y: wraps top → bottom */
+      const yNorm = ((d.startY + t * d.fallSpeed) % 1 + 1) % 1;
+      const yPos  = halfH * 1.15 - yNorm * halfH * 2.3;   /* top to bottom */
+
+      /* Character scale: same screen-fraction regardless of depth + nearness bias */
+      const nearness   = (d.depth + 1.0) * 0.5;
+      const screenFrac = 0.032 + nearness * 0.022;
+      const cs         = screenFrac * distFromCam * TAN_HALF * 2.0;
+
+      pos.set(xPos, yPos, zPos);
+      scl.set(cs, cs, 1);
+      mat4.compose(pos, quat, scl);
+      mesh.setMatrixAt(i, mat4);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
   });
 
   return <primitive object={mesh} />;
