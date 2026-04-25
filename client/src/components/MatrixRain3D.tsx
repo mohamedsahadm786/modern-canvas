@@ -67,11 +67,14 @@ const VERT = /* glsl */`
   uniform float uViewW;
   uniform float uViewH;
 
+  varying vec2  vUv;
   varying float vCharUvStart;
   varying float vNearness;
   varying float vAlpha;
 
   void main() {
+    vUv = uv;
+
     /* Column X position */
     float xPos = (aCol / ${COL_COUNT}.0 - 0.5) * uViewW * 1.05;
 
@@ -105,14 +108,15 @@ const FRAG = /* glsl */`
   uniform sampler2D uTexB;
   uniform float     uBlend;
 
+  varying vec2  vUv;
   varying float vCharUvStart;
   varying float vNearness;
   varying float vAlpha;
 
   void main() {
     /* UV within this character's atlas cell */
-    float u = vCharUvStart + uv.x / ${CHARS_PER_GROUP}.0;
-    vec2  charUV = vec2(u, uv.y);
+    float u = vCharUvStart + vUv.x / ${CHARS_PER_GROUP}.0;
+    vec2  charUV = vec2(u, vUv.y);
 
     /* Cross-fade between current and next atlas */
     float aA   = texture2D(uTexA, charUV).a;
