@@ -67,7 +67,6 @@ export default function Hero() {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ delay: 1.0, duration: 0.8, ease: 'easeOut' }}
-          style={{ transformOrigin: 'left' }}
           className="h-px w-48 bg-primary mb-5"
           style={{ boxShadow: '0 0 12px var(--neon-cyan, #00d4ff)', transformOrigin: 'left' }}
         />
