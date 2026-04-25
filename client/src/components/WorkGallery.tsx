@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ZoomIn } from 'lucide-react';
@@ -28,10 +29,10 @@ const workItems = images.map((img, i) => ({
 }));
 
 const cardVariant = {
-  hidden:  { opacity: 0, y: -40 },
+  hidden:  { opacity: 0, y: 50, scale: 0.93 },
   visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.5, delay: i * 0.06, ease: [0.25, 0.46, 0.45, 0.94] }
+    opacity: 1, y: 0, scale: 1,
+    transition: { duration: 0.60, delay: i * 0.055, ease: [0.22, 1, 0.36, 1] }
   }),
 };
 
@@ -73,31 +74,34 @@ export default function WorkGallery() {
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               variants={cardVariant}
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <Dialog>
-                <DialogTrigger asChild>
-                  <Card
-                    className="group cursor-pointer glass-neon border-0 overflow-hidden hover:scale-[1.04] transition-all duration-300"
-                    data-testid={`work-item-${item.id}`}
-                  >
-                    <CardContent className="p-0 relative">
-                      <img
-                        src={item.image}
-                        alt={item.alt}
-                        className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
-                        <ZoomIn className="w-8 h-8 text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
-                      </div>
-                      {/* Neon border on hover */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                        style={{ boxShadow: 'inset 0 0 0 2px var(--neon-cyan, #00d4ff)' }}
-                      />
-                    </CardContent>
-                  </Card>
-                </DialogTrigger>
+                <TiltCard maxTilt={8}>
+                  <DialogTrigger asChild>
+                    <Card
+                      className="group cursor-pointer glass-neon border-0 overflow-hidden"
+                      data-testid={`work-item-${item.id}`}
+                    >
+                      <CardContent className="p-0 relative">
+                        <img
+                          src={item.image}
+                          alt={item.alt}
+                          className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
+                          <ZoomIn className="w-8 h-8 text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
+                        </div>
+                        {/* Neon border on hover */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                          style={{ boxShadow: 'inset 0 0 0 2px var(--neon-cyan, #00d4ff)' }}
+                        />
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                </TiltCard>
                 <DialogContent className="max-w-4xl w-full p-0 bg-transparent border-0" aria-describedby="work-gallery-description">
                   <div className="relative rounded-xl overflow-hidden border border-primary/30">
                     <img
