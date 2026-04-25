@@ -43,28 +43,35 @@ See `plan.md` for the full plan. This file tracks what has been done.
 - Removed `AnimatedBackground.tsx` (2D canvas) from `App.tsx`; matrix rain now lives inside the existing R3F canvas sharing Bloom post-processing
 
 
-not finished and there no rain animation came in the site. and debugged 4 or 5 times and you burned my entire available claude code token thrice and finally you suggested one thing that is,
+**Note:** The 3D instanced GLSL approach never produced a visible rain on the transparent canvas after multiple debug attempts. Final resolution: `MatrixRain3D.tsx` was disabled; a simpler `RightBinaryRain` overlay component was added instead. The GLSL phase-morphing rain remains unshipped.
 
-  ⎿  Read client\src\components\MatrixRain3D.tsx (243 lines)
-  ⎿  Read completed.md (73 lines)
-  ⎿  Read client\src\App.tsx (64 lines)
-  ⎿  Read client\src\components\Scene3D.tsx (303 lines)
-  ⎿  Read client\src\components\Hero.tsx (286 lines)
+---
 
-● The v4 fallback alpha of 0.12 is nearly invisible when composited over the transparent canvas — that's
-   why nothing shows even with the "safe" fallback. I'm rewriting with meshBasicMaterial first (same
-  material as the working BinaryField) to confirm instancing + positioning is correct, then adding the
-  character shader back.
+## Phase 3 — Scroll-Driven 3D Scene ✓
+**Branch:** `feature/phase-3-scroll-3d` → merged into `design-overhaul`
 
+- Added scroll-driven 3D camera path using `useScroll` from Drei + `THREE.CatmullRomCurve3`
+- NodeGlobe and NeuralNetViz components were added then removed (kept scroll camera only)
+- Scene transitions as user scrolls through sections; cinematic camera movement active
 
-## Phase 3 — Scroll-Driven 3D Scene
-**Status:** Not started
+---
 
 ## Phase 4 — 3D Morphing Shapes
 **Status:** Not started
 
-## Phase 5 — 3D Cards
-**Status:** Not started
+---
+
+## Phase 5 — 3D Cards ✓
+**Branch:** `feature/phase-5-3d-cards` → merged into `design-overhaul`
+
+- Mouse-tracked 3D tilt on all cards (Projects, Certifications, WorkGallery) using Framer Motion `useMotionValue` → `rotateX/rotateY`
+- Specular shine: radial gradient `::after` layer tracks cursor position
+- Neon glow border: animated `box-shadow` cyan/purple on hover
+- Z-pop on hover: `translateZ(40px)` + scale 1.05×
+- Entry animation: cards fly in from 60° angle via `whileInView`
+- Staggered children fade-in inside each card
+
+---
 
 ## Phase 6 — Cinematic Skills Section
 **Status:** Not started

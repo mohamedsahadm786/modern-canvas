@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import ScrambleHeading from '@/components/ScrambleHeading';
 import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,13 @@ export default function WorkGallery() {
   const scrollToProjects = () =>
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
 
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
+
   return (
     <section
       id="work-gallery"
@@ -49,18 +57,20 @@ export default function WorkGallery() {
       <div className="max-w-7xl mx-auto px-6">
 
         <motion.div
+          ref={headingRef}
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
         >
-          <h2
+          <ScrambleHeading
+            as="h2"
+            text="THINGS I'VE WORKED ON"
             className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="work-gallery-title"
-          >
-            THINGS I'VE WORKED ON
-          </h2>
+          />
           <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>
 

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
-import { useTypewriter } from '@/hooks/useTypewriter';
+import { useCinematicTypewriter } from '@/hooks/useCinematicTypewriter';
+import ScrambleHeading from '@/components/ScrambleHeading';
 import MorphVisual from '@/components/MorphVisual';
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -134,9 +135,13 @@ const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
 const TAGLINE  = 'Transforming raw data into meaningful insights';
 
 export default function Hero() {
-  const subtitle  = useTypewriter(SUBTITLE, 38, 1000);
-  const tagline   = useTypewriter(TAGLINE,  28, 3200);
-  const imageRef  = useRef<HTMLDivElement>(null);
+  const { lines, cursor } = useCinematicTypewriter([
+    { text: SUBTITLE, speed: 38, pauseAfter: 520 },
+    { text: TAGLINE,  speed: 26, pauseAfter: 0   },
+  ], 1000);
+
+  const [subtitleText, taglineText] = lines;
+  const imageRef = useRef<HTMLDivElement>(null);
 
   // Fade out the MorphVisual as user scrolls down
   useEffect(() => {
@@ -155,9 +160,6 @@ export default function Hero() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Letter-by-letter title animation
-  const titleChars = TITLE.split('');
-
   return (
     <section
       id="hero"
@@ -167,24 +169,14 @@ export default function Hero() {
       {/* ── Left content column ─────────────────────────────── */}
       <div className="relative z-10 w-full lg:w-1/2 px-8 md:px-14 lg:px-16">
 
-        {/* Glitch headline */}
-        <h1
-          className="glitch-text text-4xl md:text-5xl lg:text-6xl font-bold font-mono mb-6 leading-tight text-white"
-          data-text={TITLE}
+        {/* Scramble headline */}
+        <ScrambleHeading
+          as="h1"
+          text={TITLE}
+          className="text-4xl md:text-5xl lg:text-6xl font-bold font-mono mb-6 leading-tight text-white"
+          delay={200}
           data-testid="hero-title"
-        >
-          {titleChars.map((char, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1,  y: 0 }}
-              transition={{ delay: 0.2 + i * 0.04, duration: 0.4, ease: 'easeOut' }}
-              style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </h1>
+        />
 
         {/* Cyan divider */}
         <motion.div
@@ -195,18 +187,21 @@ export default function Hero() {
           style={{ boxShadow: '0 0 12px var(--neon-cyan, #00d4ff)', transformOrigin: 'left' }}
         />
 
-        {/* Typewriter subtitle */}
+        {/* Cinematic typewriter — subtitle */}
         <p
-          className="font-mono text-sm md:text-base text-primary mb-2 tracking-widest terminal-cursor"
+          className="font-mono text-sm md:text-base text-primary mb-2 tracking-widest"
           data-testid="hero-subtitle"
         >
-          {subtitle}
+          {subtitleText}
+          {cursor === 0 && (
+            <span className="animate-type-cursor text-primary ml-0.5">▋</span>
+          )}
         </p>
 
-        {/* Tagline */}
+        {/* Cinematic typewriter — tagline */}
         <p className="font-mono text-xs text-white/50 mb-10 tracking-wide">
-          {tagline}
-          {tagline.length < TAGLINE.length && tagline.length > 0 && (
+          {taglineText}
+          {cursor >= 1 && (
             <span className="animate-type-cursor text-primary">▋</span>
           )}
         </p>

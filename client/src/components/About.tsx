@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import profileImage from '@assets/generated_images/About/mine.png';
+import ScrambleHeading from '@/components/ScrambleHeading';
 
 /* ── ProfilePhoto: 3-D rotating photo with zoom-out entry ── */
 function ProfilePhoto() {
@@ -108,6 +109,13 @@ const fadeUp = {
 };
 
 export default function About() {
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
+
   return (
     <section
       id="about"
@@ -118,22 +126,25 @@ export default function About() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
-        {/* Section heading */}
+        {/* Section heading — parallax + scramble */}
         <motion.div
+          ref={headingRef}
           className="text-center mb-16"
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
-          variants={fadeUp}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
         >
-          <h2
-            className="glitch-text text-4xl md:text-5xl font-bold font-mono mb-4"
-            data-text="SAHAD in a Snapshot"
+          <ScrambleHeading
+            as="h2"
+            text="SAHAD in a Snapshot"
+            className="text-4xl md:text-5xl font-bold font-mono mb-4"
             data-testid="about-title"
           >
             <span className="text-primary">SAHAD</span>{' '}
             <span className="text-foreground">in a Snapshot</span>
-          </h2>
+          </ScrambleHeading>
           <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent mt-4" />
         </motion.div>
 
