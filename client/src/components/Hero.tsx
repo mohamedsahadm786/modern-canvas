@@ -1,9 +1,106 @@
-import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { useTypewriter } from '@/hooks/useTypewriter';
 import MorphVisual from '@/components/MorphVisual';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MorphField: cycles 1 → 2 → 4 → 8 → 1 copies every PHASE_MS ms.
+   Each copy floats freely, shrinks proportionally, rotates 3D on Y-axis.
+───────────────────────────────────────────────────────────────────────── */
+const PHASE_SEQUENCE = [1, 2, 4, 8] as const;
+const PHASE_MS       = 2500;
+
+// Visual scale per copy count (sizes shrink as count grows)
+const SCALE: Record<number, number> = { 1: 1.0, 2: 0.62, 4: 0.42, 8: 0.28 };
+
+// Max float distance from centre per copy count (more spread when more copies)
+const FLOAT: Record<number, number> = { 1: 18, 2: 110, 4: 160, 8: 210 };
+
+/* ── One free-floating, Y-rotating copy ─────────────────────────────── */
+function FloatingMorph({ id, count }: { id: number; count: number }) {
+  const scale = SCALE[count];
+  const range = FLOAT[count];
+
+  const xMv = useMotionValue(0);
+  const yMv = useMotionValue(0);
+
+  // Kick off autonomous random-walk for x and y independently
+  useEffect(() => {
+    let alive = true;
+
+    const walk = async (mv: ReturnType<typeof useMotionValue<number>>, delay: number) => {
+      await new Promise(r => setTimeout(r, delay));
+      while (alive) {
+        const target   = (Math.random() - 0.5) * range * 2;
+        const duration = 2 + Math.random() * 2.5;
+        await animate(mv, target, { duration, ease: 'easeInOut' });
+      }
+    };
+
+    // Stagger start times so copies don't all move in sync
+    walk(xMv, id * 220);
+    walk(yMv, id * 170 + 120);
+
+    return () => { alive = false; };
+  }, [id, range, xMv, yMv]);
+
+  return (
+    <motion.div
+      key={id}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale, opacity: count === 1 ? 1 : 0.82 }}
+      exit={{ scale: 0, opacity: 0, transition: { duration: 0.4 } }}
+      transition={{ duration: 0.55, ease: 'easeOut' }}
+      style={{
+        position : 'absolute',
+        left     : '50%',
+        top      : '50%',
+        marginLeft: -160,   // half of MorphVisual's 320 px CSS width
+        marginTop : -160,
+        x        : xMv,
+        y        : yMv,
+      }}
+    >
+      {/* Continuous full 3-D Y-axis rotation */}
+      <motion.div
+        animate={{ rotateY: 360 }}
+        transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+        style={{ transformPerspective: 1200 }}
+      >
+        <MorphVisual />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ── Phase manager ───────────────────────────────────────────────────── */
+function MorphField() {
+  const [phaseIdx, setPhaseIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(
+      () => setPhaseIdx(p => (p + 1) % PHASE_SEQUENCE.length),
+      PHASE_MS,
+    );
+    return () => clearInterval(t);
+  }, []);
+
+  const count = PHASE_SEQUENCE[phaseIdx];
+  const ids   = Array.from({ length: count }, (_, i) => i);
+
+  return (
+    // Overflow hidden so flying copies don't bleed into the left text column
+    <div className="relative w-full h-full overflow-hidden">
+      <AnimatePresence>
+        {ids.map(id => (
+          <FloatingMorph key={id} id={id} count={count} />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const TITLE    = 'MOHAMED SAHAD M';
 const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
@@ -116,34 +213,28 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── Right: 3D morphing visualisation ──────────────── */}
+      {/* ── Right: MorphField (1→2→4→8→1 floating copies) ── */}
       <div
         ref={imageRef}
-        className="hidden lg:flex absolute right-0 top-0 w-1/2 h-full items-center justify-center overflow-hidden"
+        className="hidden lg:block absolute right-0 top-0 w-1/2 h-full"
         style={{ transition: 'opacity 0.1s, transform 0.1s' }}
       >
         {/* Left-edge fade so it blends into the text column */}
         <div
           className="absolute inset-0 pointer-events-none z-10"
           style={{
-            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%, transparent 80%, hsl(var(--background)) 100%)',
+            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 18%, transparent 82%, hsl(var(--background)) 100%)',
           }}
         />
 
-        {/* Entry fade-in + scale, then continuous 3D Y-axis rotation */}
+        {/* Field fills the whole right panel — copies float anywhere inside */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, duration: 1.2, ease: 'easeOut' }}
-          className="relative z-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 1.4 }}
+          className="w-full h-full"
         >
-          <motion.div
-            animate={{ rotateY: 360 }}
-            transition={{ duration: 16, repeat: Infinity, ease: 'linear', delay: 1.8 }}
-            style={{ transformPerspective: 1200 }}
-          >
-            <MorphVisual />
-          </motion.div>
+          <MorphField />
         </motion.div>
       </div>
 
