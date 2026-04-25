@@ -13,6 +13,7 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import MatrixRain3D from './MatrixRain3D';
+import RightBinaryRain from './RightBinaryRain';
 
 /* ── Inline compact simplex-3D noise for GLSL ────────────────────────────── */
 const SIMPLEX = /* glsl */`
@@ -136,6 +137,11 @@ function Orb({
   colorA = '#00d4ff',
   colorB = '#7c3aed',
   rotSpeed = [0.003, 0.002, 0],
+  phaseShift = [0, 0, 0],
+  roamX = 0.5,
+  roamY = 0.5,
+  roamZ = 0.6,
+  roamSpeed = 0.35,
 }: {
   position: [number, number, number];
   scale?: number;
@@ -143,7 +149,13 @@ function Orb({
   colorA?: string;
   colorB?: string;
   rotSpeed?: [number, number, number];
+  phaseShift?: [number, number, number];
+  roamX?: number;
+  roamY?: number;
+  roamZ?: number;
+  roamSpeed?: number;
 }) {
+  const groupRef = useRef<THREE.Group>(null!);
   const meshRef = useRef<THREE.Mesh>(null!);
   const uniforms = useMemo(() => ({
     uTime:    { value: 0 },
@@ -153,24 +165,119 @@ function Orb({
   }), []);
 
   useFrame(({ clock }) => {
-    uniforms.uTime.value = clock.getElapsedTime();
+    const t = clock.getElapsedTime();
+    uniforms.uTime.value = t;
+    const x =
+      position[0] +
+      Math.sin(t * roamSpeed + phaseShift[0]) * roamX +
+      Math.sin(t * roamSpeed * 0.53 + phaseShift[1]) * roamX * 0.38;
+    const y =
+      position[1] +
+      Math.cos(t * roamSpeed * 0.84 + phaseShift[1]) * roamY +
+      Math.sin(t * roamSpeed * 0.46 + phaseShift[2]) * roamY * 0.24;
+    const z =
+      position[2] +
+      Math.sin(t * roamSpeed * 0.68 + phaseShift[2]) * roamZ +
+      Math.cos(t * roamSpeed * 0.31 + phaseShift[0]) * roamZ * 0.34;
+    const clampedX = THREE.MathUtils.clamp(x, -6.15, -0.75);
+    const depthScale = THREE.MathUtils.clamp(1 + (-z - 2.6) * -0.13, 0.72, 1.34);
+
+    groupRef.current.position.set(clampedX, y, z);
+    groupRef.current.rotation.y = Math.sin(t * 0.41 + phaseShift[0]) * 0.38;
+    groupRef.current.rotation.x = Math.cos(t * 0.29 + phaseShift[1]) * 0.17;
+    groupRef.current.rotation.z = Math.sin(t * 0.23 + phaseShift[2]) * 0.12;
+    meshRef.current.scale.setScalar(scale * depthScale);
     meshRef.current.rotation.x += rotSpeed[0];
     meshRef.current.rotation.y += rotSpeed[1];
     meshRef.current.rotation.z += rotSpeed[2];
   });
 
   return (
-    <mesh ref={meshRef} position={position} scale={scale}>
-      <icosahedronGeometry args={[1, 20]} />
-      <shaderMaterial
-        vertexShader={VERT}
-        fragmentShader={FRAG}
-        uniforms={uniforms}
-        transparent
-        depthWrite={false}
-        side={THREE.FrontSide}
+    <group ref={groupRef} position={position}>
+      <mesh ref={meshRef} scale={scale}>
+        <icosahedronGeometry args={[1, 20]} />
+        <shaderMaterial
+          vertexShader={VERT}
+          fragmentShader={FRAG}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          side={THREE.FrontSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+function JellyCluster() {
+  return (
+    <>
+      <Orb
+        position={[-5.35, 2.35, -4.6]}
+        scale={0.24}
+        ampMultiplier={0.54}
+        colorA="#00ff41"
+        colorB="#00d4ff"
+        rotSpeed={[0.0042, 0.0028, 0.0014]}
+        phaseShift={[2.8, 1.1, 2.2]}
+        roamX={1.1}
+        roamY={1.25}
+        roamZ={1.35}
+        roamSpeed={0.58}
       />
-    </mesh>
+      <Orb
+        position={[-5.65, -1.85, -4.9]}
+        scale={0.22}
+        ampMultiplier={0.5}
+        colorA="#7c3aed"
+        colorB="#ff00aa"
+        rotSpeed={[0.0038, 0.005, 0.0011]}
+        phaseShift={[3.4, 2.9, 1.4]}
+        roamX={1.2}
+        roamY={1.35}
+        roamZ={1.45}
+        roamSpeed={0.66}
+      />
+      <Orb
+        position={[-3.55, 0.05, -2.6]}
+        scale={0.82}
+        ampMultiplier={0.9}
+        colorA="#00d4ff"
+        colorB="#7c3aed"
+        rotSpeed={[0.0022, 0.0032, 0.0008]}
+        phaseShift={[0.2, 0.6, 0.1]}
+        roamX={2.35}
+        roamY={1.55}
+        roamZ={1.55}
+        roamSpeed={0.34}
+      />
+      <Orb
+        position={[-4.45, 1.8, -3.8]}
+        scale={0.42}
+        ampMultiplier={0.72}
+        colorA="#00ff41"
+        colorB="#00d4ff"
+        rotSpeed={[0.0048, 0.0026, 0.0018]}
+        phaseShift={[1.3, 0.8, 1.7]}
+        roamX={1.75}
+        roamY={1.2}
+        roamZ={1.35}
+        roamSpeed={0.51}
+      />
+      <Orb
+        position={[-3.2, -2.1, -4.25]}
+        scale={0.28}
+        ampMultiplier={0.58}
+        colorA="#7c3aed"
+        colorB="#ff00aa"
+        rotSpeed={[0.0035, 0.0056, 0.0012]}
+        phaseShift={[2.1, 2.6, 0.9]}
+        roamX={2.05}
+        roamY={1.45}
+        roamZ={1.5}
+        roamSpeed={0.62}
+      />
+    </>
   );
 }
 
@@ -262,29 +369,7 @@ export default function Scene3D() {
         <Stars />
         <BinaryField />
 
-        {/* Main large central orb */}
-        <Orb
-          position={[1.5, 0.2, -1]}
-          scale={1.35}
-          colorA="#00d4ff" colorB="#7c3aed"
-          rotSpeed={[0.003, 0.004, 0.001]}
-        />
-        {/* Secondary orb — top right */}
-        <Orb
-          position={[-3.5, 2.5, -3]}
-          scale={0.65}
-          ampMultiplier={0.7}
-          colorA="#00ff41" colorB="#00d4ff"
-          rotSpeed={[0.005, 0.003, 0.002]}
-        />
-        {/* Tertiary orb — bottom left */}
-        <Orb
-          position={[3.8, -2.8, -4]}
-          scale={0.45}
-          ampMultiplier={0.6}
-          colorA="#7c3aed" colorB="#ff00aa"
-          rotSpeed={[0.004, 0.006, 0.001]}
-        />
+        <JellyCluster />
 
         <CameraRig />
 
@@ -297,6 +382,19 @@ export default function Scene3D() {
           />
         </EffectComposer>
       </Canvas>
+
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '50%',
+          height: '100%',
+          pointerEvents: 'none',
+        }}
+      >
+        <RightBinaryRain />
+      </div>
     </div>
   );
 }

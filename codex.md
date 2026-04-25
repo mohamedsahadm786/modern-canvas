@@ -1,0 +1,7 @@
+- Removed the opaque page background in `client/src/pages/Portfolio.tsx` so the fixed `Scene3D` layer remains visible behind the site content.
+- Disabled the left-side glyph rain in `client/src/components/MatrixRain3D.tsx` for the current preview so only the jelly cluster and right-side binary rain remain visible.
+- Replaced the previous unstable right-side 3D binary attempts with a dedicated right-half canvas overlay in `client/src/components/RightBinaryRain.tsx` for reliable Matrix-style `0/1` rain.
+- Split the background by panel: left side uses richer glyph rain, right side is reserved for lighter binary rain so the graph/animation area stays readable.
+- Reworked the jelly/orb composition in `client/src/components/Scene3D.tsx` to live only on the left half, keeping the right half visually clean for graph visuals.
+- Reduced the dominant jelly size, added extra far-left jellies, and changed all jellies to roam across the full left panel with depth-based scaling so nearer blobs enlarge and distant blobs shrink.
+- To restore the old left rain later, replace the current `return null;` in `client/src/components/MatrixRain3D.tsx` with the previous glyph-rain implementation from git history or the earlier branch commit.

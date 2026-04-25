@@ -42,6 +42,21 @@ See `plan.md` for the full plan. This file tracks what has been done.
 - Depth-based colour: near Z = cyan `#00f7eb`, far Z = green `#0de63d`; AdditiveBlending → bloom amplifies glow
 - Removed `AnimatedBackground.tsx` (2D canvas) from `App.tsx`; matrix rain now lives inside the existing R3F canvas sharing Bloom post-processing
 
+
+not finished and there no rain animation came in the site. and debugged 4 or 5 times and you burned my entire available claude code token thrice and finally you suggested one thing that is,
+
+  ⎿  Read client\src\components\MatrixRain3D.tsx (243 lines)
+  ⎿  Read completed.md (73 lines)
+  ⎿  Read client\src\App.tsx (64 lines)
+  ⎿  Read client\src\components\Scene3D.tsx (303 lines)
+  ⎿  Read client\src\components\Hero.tsx (286 lines)
+
+● The v4 fallback alpha of 0.12 is nearly invisible when composited over the transparent canvas — that's
+   why nothing shows even with the "safe" fallback. I'm rewriting with meshBasicMaterial first (same
+  material as the working BinaryField) to confirm instancing + positioning is correct, then adding the
+  character shader back.
+
+
 ## Phase 3 — Scroll-Driven 3D Scene
 **Status:** Not started
 
