@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { useTypewriter } from '@/hooks/useTypewriter';
-import profileImage from '@assets/generated_images/About/mine.png';
+import MorphVisual from '@/components/MorphVisual';
 
 const TITLE    = 'MOHAMED SAHAD M';
 const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
@@ -14,19 +14,15 @@ export default function Hero() {
   const tagline   = useTypewriter(TAGLINE,  28, 3200);
   const imageRef  = useRef<HTMLDivElement>(null);
 
-  // Scroll-zoom on the wireframe face
+  // Fade out the MorphVisual as user scrolls down
   useEffect(() => {
     const container = imageRef.current;
     if (!container) return;
-    const img = container.querySelector('img') as HTMLImageElement | null;
-    if (!img) return;
-
     const onScroll = () => {
       const prog = Math.min(window.scrollY / window.innerHeight, 1);
-      img.style.transform = `scale(${1 + prog * 1.3})`;
-      container.style.opacity = String(Math.max(0, 1 - prog * 2));
+      container.style.opacity = String(Math.max(0, 1 - prog * 2.2));
+      container.style.transform = `translateY(${prog * 30}px)`;
     };
-
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -121,41 +117,41 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── Right: wireframe face ──────────────────────────── */}
+      {/* ── Right: 3D morphing visualisation ──────────────── */}
       <div
         ref={imageRef}
-        className="hidden lg:block absolute right-0 top-0 w-1/2 h-full overflow-hidden"
-        style={{ transition: 'opacity 0.1s' }}
+        className="hidden lg:flex absolute right-0 top-0 w-1/2 h-full items-center justify-center overflow-hidden"
+        style={{ transition: 'opacity 0.1s, transform 0.1s' }}
       >
-        {/* Scan lines overlay */}
-        <div className="scan-lines absolute inset-0 z-10" />
-
-        {/* Vignette gradient */}
+        {/* Left-edge fade so it blends into the text column */}
         <div
-          className="absolute inset-0 z-10"
+          className="absolute inset-0 pointer-events-none z-10"
           style={{
-            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 30%, transparent 70%, hsl(var(--background)) 100%)',
+            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%, transparent 80%, hsl(var(--background)) 100%)',
           }}
         />
 
-        <img
-          src={profileImage}
-          alt="SAHAD - digital scan portrait"
-          className="wireframe-face w-full h-full object-cover object-top"
-          style={{ transition: 'transform 0.05s linear', transformOrigin: 'center top' }}
-          loading="eager"
-        />
+        {/* The auto-cycling 5-state canvas */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 1.2, ease: 'easeOut' }}
+          className="relative z-20"
+        >
+          <MorphVisual />
+        </motion.div>
 
-        {/* Corner decorations */}
-        {['top-4 left-4', 'top-4 right-4', 'bottom-4 left-4', 'bottom-4 right-4'].map((pos, i) => (
+        {/* Corner brackets */}
+        {(['top-8 left-8', 'top-8 right-8', 'bottom-8 left-8', 'bottom-8 right-8'] as const).map((pos, i) => (
           <div
             key={i}
-            className={`absolute ${pos} w-6 h-6 z-20`}
+            className={`absolute ${pos} w-7 h-7 z-20`}
             style={{
-              borderTop:    i < 2 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
+              borderTop:    i < 2  ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
               borderBottom: i >= 2 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
               borderLeft:   i % 2 === 0 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
               borderRight:  i % 2 === 1 ? '2px solid var(--neon-cyan, #00d4ff)' : 'none',
+              opacity: 0.6,
             }}
           />
         ))}
