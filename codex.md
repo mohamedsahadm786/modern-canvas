@@ -1,7 +1,7 @@
-- Removed the opaque `bg-background` wrapper from `client/src/pages/Portfolio.tsx` so the fixed `Scene3D` canvas can actually show through the site instead of being hidden behind a full-page solid layer.
-- Replaced the temporary fallback version of `client/src/components/MatrixRain3D.tsx` with a shader-driven instanced matrix rain:
-- Uses 1,200 instanced planes across 60 columns with real Z-depth spread.
-- Builds canvas atlas textures for code keywords, digits, math symbols, and algorithm tokens.
-- Cycles phases every 4 seconds with a 1-second shader crossfade between atlases.
-- Uses additive blending, depth-based cyan/green coloring, and stronger alpha so the rain remains visible through the site glass effects.
-- Keeps per-instance movement on the CPU with `setMatrixAt`, which is simpler to debug and more predictable than pushing the full motion logic into the vertex shader.
+- Removed the opaque page background in `client/src/pages/Portfolio.tsx` so the fixed `Scene3D` layer remains visible behind the site content.
+- Disabled the left-side glyph rain in `client/src/components/MatrixRain3D.tsx` for the current preview so only the jelly cluster and right-side binary rain remain visible.
+- Replaced the previous unstable right-side 3D binary attempts with a dedicated right-half canvas overlay in `client/src/components/RightBinaryRain.tsx` for reliable Matrix-style `0/1` rain.
+- Split the background by panel: left side uses richer glyph rain, right side is reserved for lighter binary rain so the graph/animation area stays readable.
+- Reworked the jelly/orb composition in `client/src/components/Scene3D.tsx` to live only on the left half, keeping the right half visually clean for graph visuals.
+- Reduced the dominant jelly size, added extra far-left jellies, and changed all jellies to roam across the full left panel with depth-based scaling so nearer blobs enlarge and distant blobs shrink.
+- To restore the old left rain later, replace the current `return null;` in `client/src/components/MatrixRain3D.tsx` with the previous glyph-rain implementation from git history or the earlier branch commit.
