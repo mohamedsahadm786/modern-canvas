@@ -1,11 +1,7 @@
 /**
  * Scene3D — persistent full-screen React Three Fiber canvas behind all sections.
- * Contains:
- *   • 4 000-point starfield orbiting slowly
- *   • Central morphing icosahedron (simplex-noise vertex displacement + bloom)
- *   • Two secondary smaller orbs for depth
- *   • Mouse-parallax camera rig
- *   • Bloom + chromatic aberration post-processing
+ * Phase 1: Starfield + morphing orbs + binary field + mouse parallax + bloom
+ * Phase 3: Scroll-driven camera path + NodeGlobe (About) + NeuralNetViz (Skills)
  */
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
@@ -14,6 +10,7 @@ import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import MatrixRain3D from './MatrixRain3D';
 import RightBinaryRain from './RightBinaryRain';
+import { scrollSync } from '../lib/scrollSync';
 
 /* ── Inline compact simplex-3D noise for GLSL ────────────────────────────── */
 const SIMPLEX = /* glsl */`
@@ -287,7 +284,6 @@ function BinaryField() {
   const meshRef = useRef<THREE.InstancedMesh>(null!);
 
   const data = useMemo(() => {
-    const mat = new THREE.Matrix4();
     const positions: [number, number, number, number, number][] = [];
     for (let i = 0; i < COUNT; i++) {
       positions.push([
@@ -324,23 +320,224 @@ function BinaryField() {
   );
 }
 
-/* ── Camera parallax ─────────────────────────────────────────────────────── */
+/* ── Phase 3: Node Globe — appears over About section ───────────────────── */
+function NodeGlobe() {
+  const opacityRef = useRef(0);
+
+  const { positions, linePositions } = useMemo(() => {
+    const N = 130;
+    const R = 2.1;
+    const positions = new Float32Array(N * 3);
+
+    // Golden-angle spiral distribution (even spread on sphere)
+    for (let i = 0; i < N; i++) {
+      const phi   = Math.acos(1 - 2 * (i + 0.5) / N);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      positions[i * 3]     = Math.sin(phi) * Math.cos(theta) * R;
+      positions[i * 3 + 1] = Math.cos(phi) * R;
+      positions[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * R;
+    }
+
+    // Connect nearby nodes with edges
+    const lineVerts: number[] = [];
+    const THRESHOLD = 1.05;
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = positions[i * 3]     - positions[j * 3];
+        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < THRESHOLD) {
+          lineVerts.push(
+            positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
+            positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2],
+          );
+        }
+      }
+    }
+    return { positions, linePositions: new Float32Array(lineVerts) };
+  }, []);
+
+  // Create Three.js objects once — mutate material in useFrame
+  const pointsMesh = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const mat = new THREE.PointsMaterial({
+      color: 0x00d4ff, size: 0.055, transparent: true,
+      opacity: 0, sizeAttenuation: true, depthWrite: false,
+    });
+    return new THREE.Points(geo, mat);
+  }, [positions]);
+
+  const linesMesh = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    const mat = new THREE.LineBasicMaterial({
+      color: 0x00d4ff, transparent: true, opacity: 0, depthWrite: false,
+    });
+    return new THREE.LineSegments(geo, mat);
+  }, [linePositions]);
+
+  useFrame(({ clock }) => {
+    // Normalize: even 10% viewport intersection → start fading in
+    const rawRatio  = scrollSync.sections['about'] ?? 0;
+    const targetOp  = Math.min(rawRatio / 0.12, 1);
+    opacityRef.current += (targetOp - opacityRef.current) * 0.04;
+    const op = opacityRef.current;
+
+    const t = clock.getElapsedTime() * 0.13;
+    pointsMesh.rotation.y = t;
+    linesMesh.rotation.y  = t;
+
+    (pointsMesh.material as THREE.PointsMaterial).opacity    = Math.min(op * 0.85, 0.85);
+    (linesMesh.material  as THREE.LineBasicMaterial).opacity = Math.min(op * 0.22, 0.22);
+  });
+
+  return (
+    <group position={[1.8, 0.0, -5.2]}>
+      <primitive object={pointsMesh} />
+      <primitive object={linesMesh}  />
+    </group>
+  );
+}
+
+/* ── Phase 3: Neural-net graph — appears over Skills section ─────────────── */
+function NeuralNetViz() {
+  const opacityRef = useRef(0);
+
+  const { nodePositions, edgePositions } = useMemo(() => {
+    // 4 layers of nodes: [4, 5, 5, 3]
+    const layers = [4, 5, 5, 3];
+    const layerSpacingX = 1.3;
+    const nodeSpacingY  = 0.85;
+
+    const nodePts: number[] = [];
+    const layerCoords: [number, number][][] = [];
+
+    layers.forEach((count, li) => {
+      const x = (li - (layers.length - 1) / 2) * layerSpacingX;
+      const coords: [number, number][] = [];
+      for (let ni = 0; ni < count; ni++) {
+        const y = (ni - (count - 1) / 2) * nodeSpacingY;
+        nodePts.push(x, y, 0);
+        coords.push([x, y]);
+      }
+      layerCoords.push(coords);
+    });
+
+    // Fully-connected edges between adjacent layers
+    const edgePts: number[] = [];
+    for (let li = 0; li < layers.length - 1; li++) {
+      layerCoords[li].forEach(([fx, fy]) => {
+        layerCoords[li + 1].forEach(([tx, ty]) => {
+          edgePts.push(fx, fy, 0, tx, ty, 0);
+        });
+      });
+    }
+
+    return {
+      nodePositions: new Float32Array(nodePts),
+      edgePositions: new Float32Array(edgePts),
+    };
+  }, []);
+
+  const nodesMesh = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+    const mat = new THREE.PointsMaterial({
+      color: 0x7c3aed, size: 0.10, transparent: true,
+      opacity: 0, sizeAttenuation: true, depthWrite: false,
+    });
+    return new THREE.Points(geo, mat);
+  }, [nodePositions]);
+
+  const edgesMesh = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(edgePositions, 3));
+    const mat = new THREE.LineBasicMaterial({
+      color: 0x00d4ff, transparent: true, opacity: 0, depthWrite: false,
+    });
+    return new THREE.LineSegments(geo, mat);
+  }, [edgePositions]);
+
+  useFrame(({ clock }) => {
+    const rawRatio  = scrollSync.sections['skills'] ?? 0;
+    const targetOp  = Math.min(rawRatio / 0.12, 1);
+    opacityRef.current += (targetOp - opacityRef.current) * 0.04;
+    const op = opacityRef.current;
+
+    // Pulsing glow
+    const pulse = Math.sin(clock.getElapsedTime() * 1.6) * 0.12 + 0.88;
+
+    (nodesMesh.material as THREE.PointsMaterial).opacity    = Math.min(op * pulse * 0.92, 0.92);
+    (edgesMesh.material as THREE.LineBasicMaterial).opacity = Math.min(op * pulse * 0.28, 0.32);
+
+    // Gentle bob
+    const bob = Math.sin(clock.getElapsedTime() * 0.35) * 0.18;
+    nodesMesh.position.y = bob;
+    edgesMesh.position.y = bob;
+  });
+
+  return (
+    <group position={[4.0, 0.0, -4.2]}>
+      <primitive object={nodesMesh} />
+      <primitive object={edgesMesh} />
+    </group>
+  );
+}
+
+/* ── Phase 3: Scroll-driven camera (mouse parallax + section drift) ──────── */
 function CameraRig() {
   const { camera } = useThree();
-  const target = useRef({ x: 0, y: 0 });
+  const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const h = (e: MouseEvent) => {
-      target.current.x = (e.clientX / window.innerWidth  - 0.5) * 0.8;
-      target.current.y = -(e.clientY / window.innerHeight - 0.5) * 0.5;
+      mouse.current.x = (e.clientX / window.innerWidth  - 0.5) * 0.8;
+      mouse.current.y = -(e.clientY / window.innerHeight - 0.5) * 0.5;
     };
     window.addEventListener('mousemove', h, { passive: true });
     return () => window.removeEventListener('mousemove', h);
   }, []);
 
   useFrame(() => {
-    camera.position.x += (target.current.x - camera.position.x) * 0.04;
-    camera.position.y += (target.current.y - camera.position.y) * 0.04;
+    const p = scrollSync.progress;
+
+    // Cinematic camera drift per scroll region:
+    //   0.00–0.12  → Hero:       center
+    //   0.12–0.30  → About:      drift right (+1.2) and slightly forward (-0.6)
+    //   0.30–0.52  → Skills:     drift left (-1.0), up (+0.4)
+    //   0.52–0.72  → Projects/Exp: return to center
+    //   0.72–1.00  → Contact:    settle at origin
+    let scrollX = 0;
+    let scrollY = 0;
+    let scrollZ = 0;
+
+    if (p < 0.12) {
+      scrollX = 0; scrollY = 0; scrollZ = 0;
+    } else if (p < 0.30) {
+      const t = (p - 0.12) / 0.18;
+      scrollX =  t * 1.2;
+      scrollZ = -t * 0.5;
+    } else if (p < 0.52) {
+      const t = (p - 0.30) / 0.22;
+      scrollX = 1.2 - t * 2.2;
+      scrollY = t * 0.4;
+      scrollZ = -0.5 + t * 0.3;
+    } else if (p < 0.72) {
+      const t = (p - 0.52) / 0.20;
+      scrollX = -1.0 + t * 1.0;
+      scrollY =  0.4 - t * 0.4;
+      scrollZ = -0.2 + t * 0.2;
+    }
+    // p >= 0.72 → all scroll offsets ease back to zero naturally via lerp
+
+    const targetX = mouse.current.x + scrollX;
+    const targetY = mouse.current.y + scrollY;
+    const targetZ = 7.0            + scrollZ;
+
+    camera.position.x += (targetX - camera.position.x) * 0.035;
+    camera.position.y += (targetY - camera.position.y) * 0.035;
+    camera.position.z += (targetZ - camera.position.z) * 0.022;
     camera.lookAt(0, 0, 0);
   });
 
@@ -363,13 +560,16 @@ export default function Scene3D() {
         style={{ background: 'transparent' }}
         dpr={[1, 1.5]}
       >
-        {/* 3-D instanced matrix rain — Phase 2 */}
+        {/* Phase 2: 3D instanced matrix rain (currently return null — disabled by Codex) */}
         <MatrixRain3D />
 
         <Stars />
         <BinaryField />
-
         <JellyCluster />
+
+        {/* Phase 3: scroll-driven scene elements */}
+        <NodeGlobe />
+        <NeuralNetViz />
 
         <CameraRig />
 
