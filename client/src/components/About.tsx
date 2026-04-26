@@ -123,10 +123,10 @@ export default function About() {
         </motion.div>
 
         {/* Two-column: video left, bio right */}
-        <div className="flex flex-col lg:flex-row items-stretch gap-16">
+        <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16">
 
           {/* About video — fills full left column height */}
-          <div className="relative w-full lg:w-5/12 min-h-[480px] lg:min-h-0 overflow-hidden">
+          <div className="relative w-full lg:w-5/12 min-h-[260px] sm:min-h-[360px] lg:min-h-0 overflow-hidden">
             <AboutVideo />
           </div>
 

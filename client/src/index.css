@@ -205,10 +205,21 @@
     @apply border-border;
   }
 
+  html {
+    overflow-x: hidden;
+    /* Smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Respect safe areas on notched phones */
+    scroll-padding-top: 72px;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    overflow-x: hidden;
     /* Custom cursor — hidden on touch devices */
     cursor: none;
+    /* Remove tap flash on mobile */
+    -webkit-tap-highlight-color: transparent;
     /* Subtle circuit-board grid visible through transparent sections */
     background-image:
       linear-gradient(hsl(var(--primary) / 0.03) 1px, transparent 1px),
@@ -229,6 +240,11 @@
   /* Restore pointer for interactive elements (fallback for touch) */
   @media (pointer: coarse) {
     a, button, [role="button"] { cursor: pointer; }
+  }
+
+  /* Prevent font scaling on orientation change (iOS) */
+  @media screen and (max-width: 768px) {
+    html { -webkit-text-size-adjust: 100%; }
   }
 }
 

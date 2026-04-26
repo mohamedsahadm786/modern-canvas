@@ -42,7 +42,7 @@ export default function Hero() {
       aria-label="Hero section"
     >
       {/* ── Left content column ─────────────────────────────── */}
-      <div className="relative z-10 w-full lg:w-1/2 px-8 md:px-14 lg:px-16">
+      <div className="relative z-10 w-full lg:w-1/2 px-6 md:px-14 lg:px-16 pt-20 lg:pt-0">
 
         {/* Scramble headline */}
         <ScrambleHeading

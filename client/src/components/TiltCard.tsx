@@ -32,8 +32,12 @@ export function TiltCard({
   const shineX = useMotionValue(50);
   const shineY = useMotionValue(50);
 
+  // Detect touch/no-hover once on mount — tilt is meaningless on touch
+  const isTouch = typeof window !== 'undefined' &&
+    window.matchMedia('(hover: none)').matches;
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
+    if (isTouch || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const dx = (e.clientX - rect.left  - rect.width  / 2) / (rect.width  / 2);
     const dy = (e.clientY - rect.top   - rect.height / 2) / (rect.height / 2);
@@ -44,6 +48,7 @@ export function TiltCard({
   };
 
   const handleMouseLeave = () => {
+    if (isTouch) return;
     animate(rotX, 0, { duration: 0.55, ease: 'easeOut' });
     animate(rotY, 0, { duration: 0.55, ease: 'easeOut' });
     shineX.set(50);
