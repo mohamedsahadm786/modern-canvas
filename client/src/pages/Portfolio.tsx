@@ -3,7 +3,6 @@ import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Education from '@/components/Education';
-import WorkGallery from '@/components/WorkGallery';
 import Projects from '@/components/Projects';
 import Experience from '@/components/Experience';
 import Certifications from '@/components/Certifications';
@@ -23,7 +22,6 @@ export default function Portfolio() {
         {/* All other sections sit on section-glass so canvas shows through */}
         <About />
         <Education />
-        <WorkGallery />
         <Projects />
         <Experience />
         <Certifications />
