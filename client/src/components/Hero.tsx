@@ -1,174 +1,177 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
-import heroImage1 from '@assets/generated_images/Data_scientist_hero_workspace_3108f382.png';
-import heroImage2 from '@assets/generated_images/home_page.avif';
+import { ChevronDown } from 'lucide-react';
+import { useCinematicTypewriter } from '@/hooks/useCinematicTypewriter';
+import ScrambleHeading from '@/components/ScrambleHeading';
 
-const heroImages = [
-  {
-    src: heroImage1,
-    alt: "Data scientist workspace with monitors and visualizations"
-  },
-  {
-    src: heroImage2,
-    alt: "AI and machine learning data visualization"
-  }
-];
+const TITLE    = 'MOHAMED SAHAD M';
+const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
+const TAGLINE  = 'Transforming raw data into meaningful insights';
 
 export default function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isVisible, setIsVisible] = useState(false);
+  const { lines, cursor } = useCinematicTypewriter([
+    { text: SUBTITLE, speed: 38, pauseAfter: 520 },
+    { text: TAGLINE,  speed: 26, pauseAfter: 0   },
+  ], 1000);
 
+  const [subtitleText, taglineText] = lines;
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  // Fade out the right panel as user scrolls down
   useEffect(() => {
-    setIsVisible(true);
+    const container = imageRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      const prog = Math.min(window.scrollY / window.innerHeight, 1);
+      container.style.opacity = String(Math.max(0, 1 - prog * 2.2));
+      container.style.transform = `translateY(${prog * 30}px)`;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    if (!isPlaying) return;
-    
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section 
-      id="hero" 
-      className="relative h-screen overflow-hidden"
+    <section
+      id="hero"
+      className="relative h-screen overflow-hidden flex items-center"
       aria-label="Hero section"
     >
-      {/* Background Image with Parallax */}
-      <div className="absolute inset-0">
-        {heroImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <img
-              src={image.src}
-              alt={image.alt}
-              className="w-full h-full object-cover"
-              loading={index === 0 ? 'eager' : 'lazy'}
-            />
-          </div>
-        ))}
-        
-        {/* Dark Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      {/* ── Left content column ─────────────────────────────── */}
+      <div className="relative z-10 w-full lg:w-1/2 px-6 md:px-14 lg:px-16 pt-20 lg:pt-0">
 
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center h-full">
-        <div className={`text-center text-white px-6 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <h1 
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-            data-testid="hero-title"
-          >
-            <span className="text-white">MOHAMED SAHAD M</span>
-          </h1>
-          
-          <p 
-            className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed"
-            data-testid="hero-subtitle"
-          >
-            DATA SCIENTIST - AI/ML ENGINEER - STATISTICIAN
-            <br />
-            Transforming raw data into meaningful insights
-          </p>
+        {/* Scramble headline */}
+        <ScrambleHeading
+          as="h1"
+          text={TITLE}
+          className="text-4xl md:text-5xl lg:text-6xl font-bold font-mono mb-6 leading-tight text-white"
+          delay={200}
+          data-testid="hero-title"
+        />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              size="lg"
-              className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 px-8 py-3 text-lg font-semibold"
-              onClick={() => window.open('https://drive.google.com/file/d/1t1SdzVxrDfx0uWxgvOW0mOI9Z8fl-3qi/view?usp=sharing', '_blank')}
-              data-testid="hero-cv-button"
-            >
-              Explore CV
-            </Button>
-            
-            <Button
-              size="lg"
-              variant="outline"
-              className="bg-transparent border-white text-white hover:bg-white hover:text-black px-8 py-3 text-lg font-semibold"
-              onClick={() => scrollToSection('projects')}
-              data-testid="hero-projects-button"
-            >
-              See Projects
-            </Button>
-          </div>
-        </div>
-      </div>
+        {/* Cyan divider */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ delay: 1.0, duration: 0.8, ease: 'easeOut' }}
+          className="h-px w-48 bg-primary mb-5"
+          style={{ boxShadow: '0 0 12px var(--neon-cyan, #00d4ff)', transformOrigin: 'left' }}
+        />
 
-      {/* Carousel Controls */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-white/20"
-          onClick={prevSlide}
-          data-testid="hero-prev-button"
-          aria-label="Previous image"
+        {/* Cinematic typewriter — subtitle */}
+        <p
+          className="font-mono text-sm md:text-base text-primary mb-2 tracking-widest"
+          data-testid="hero-subtitle"
         >
-          <ChevronLeft className="h-6 w-6" />
-        </Button>
+          {subtitleText}
+          {cursor === 0 && (
+            <span className="animate-type-cursor text-primary ml-0.5">▋</span>
+          )}
+        </p>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-white/20"
-          onClick={() => setIsPlaying(!isPlaying)}
-          data-testid="hero-play-pause-button"
-          aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
-        >
-          {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-        </Button>
+        {/* Cinematic typewriter — tagline */}
+        <p className="font-mono text-xs text-white/50 mb-10 tracking-wide">
+          {taglineText}
+          {cursor >= 1 && (
+            <span className="animate-type-cursor text-primary">▋</span>
+          )}
+        </p>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-white/20"
-          onClick={nextSlide}
-          data-testid="hero-next-button"
-          aria-label="Next image"
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1,  y: 0 }}
+          transition={{ delay: 1.8, duration: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4"
         >
-          <ChevronRight className="h-6 w-6" />
-        </Button>
+          <Button
+            size="lg"
+            className="font-mono border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-background backdrop-blur-sm px-8 py-3 text-base font-semibold transition-all duration-300"
+            style={{ boxShadow: '0 0 16px rgba(0,212,255,0.25)' }}
+            onClick={() => window.open('https://drive.google.com/file/d/1t1SdzVxrDfx0uWxgvOW0mOI9Z8fl-3qi/view?usp=sharing', '_blank')}
+            data-testid="hero-cv-button"
+          >
+            &gt; Explore CV
+          </Button>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className="font-mono border border-white/30 text-white/80 hover:border-primary hover:text-primary bg-transparent px-8 py-3 text-base font-semibold transition-all duration-300"
+            onClick={() => scrollToSection('projects')}
+            data-testid="hero-projects-button"
+          >
+            &gt; See Projects
+          </Button>
+        </motion.div>
       </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {heroImages.map((_, index) => (
-          <button
-            key={index}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentSlide ? 'bg-white' : 'bg-white/40'
-            }`}
-            onClick={() => setCurrentSlide(index)}
-            data-testid={`hero-indicator-${index}`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+      {/* ── Right: Hero video ────────────────────────────────── */}
+      <div
+        ref={imageRef}
+        className="hidden lg:block absolute right-0 top-0 w-1/2 h-full"
+        style={{ transition: 'opacity 0.1s, transform 0.1s' }}
+      >
+        {/* Left-edge fade — blends video into the text column */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 22%, transparent 80%, hsl(var(--background)) 100%)',
+          }}
+        />
+
+        {/* Top/bottom edge fades */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 12%, transparent 88%, hsl(var(--background)) 100%)',
+          }}
+        />
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1.6 }}
+          className="w-full h-full"
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              mixBlendMode: 'screen',
+            }}
+          >
+            <source src="/assets/hero-video.mp4" type="video/mp4" />
+          </video>
+        </motion.div>
       </div>
+
+      {/* ── Scroll indicator ───────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-20 text-primary/60"
+      >
+        <span className="font-mono text-xs tracking-widest">SCROLL</span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
+        >
+          <ChevronDown className="w-5 h-5" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

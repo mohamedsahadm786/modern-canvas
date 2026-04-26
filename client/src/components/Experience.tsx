@@ -1,12 +1,12 @@
-// path: src/components/Experience.tsx
-
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import ScrambleHeading from '@/components/ScrambleHeading';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Building } from 'lucide-react';
+import { Calendar, Building } from 'lucide-react';
 import In1 from '@assets/generated_images/Internship/4.png';
 import In2 from '@assets/generated_images/Internship/3.jpg';
 import In3 from '@assets/generated_images/Internship/1.jpg';
-import In4 from '@assets/generated_images/Internship/2.jpg';
 
 interface ExperienceItem {
   id: string;
@@ -62,102 +62,152 @@ const experiences: ExperienceItem[] = [
   }
 ];
 
+const slideIn = {
+  hidden:  { opacity: 0, x: -60 },
+  visible: (i: number) => ({
+    opacity: 1, x: 0,
+    transition: { duration: 0.7, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }
+  }),
+};
+
+const achievementVariant = {
+  hidden:  { opacity: 0, x: -12 },
+  visible: (i: number) => ({
+    opacity: 1, x: 0,
+    transition: { duration: 0.4, delay: 0.3 + i * 0.08 }
+  }),
+};
+
 export default function Experience() {
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
+
   return (
-    <section 
-      id="experience" 
-      className="py-20 lg:py-32 bg-gradient-to-br from-muted/30 via-card/20 to-background"
+    <section
+      id="experience"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Experience section"
     >
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 
-            className="text-4xl md:text-5xl font-bold text-foreground"
+
+        <motion.div
+          ref={headingRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
+        >
+          <ScrambleHeading
+            as="h2"
+            text="EXPERIENCE"
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="experience-title"
-          >
-            EXPERIENCE
-          </h2>
-        </div>
+          />
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
         <div className="space-y-8">
-          {experiences.map((exp) => (
-            <Card 
+          {experiences.map((exp, idx) => (
+            <motion.div
               key={exp.id}
-              className={
-                // added border + rounded corner for clean black outline
-                "hover-elevate transition-all duration-300 hover:scale-[1.02] overflow-hidden bg-card/80 backdrop-blur-sm border-2 border-black rounded-xl"
-              }
-              data-testid={`experience-card-${exp.id}`}
+              custom={idx}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={slideIn}
             >
-              <CardContent className="p-0">
-                <div className="flex flex-col lg:flex-row">
-                  {/* Content */}
-                  <div className="flex-1 p-8">
-                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
-                      <div className="mb-4 lg:mb-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 
-                            className="text-2xl lg:text-3xl font-bold text-primary"
-                            data-testid={`experience-title-${exp.id}`}
-                          >
-                            {exp.title}
-                          </h3>
-                          {exp.status && (
-                            <Badge variant="default" className="ml-2">
-                              {exp.status}
-                            </Badge>
-                          )}
+              <Card
+                className="glass-neon border-0 overflow-hidden hover:scale-[1.01] transition-transform duration-300"
+                data-testid={`experience-card-${exp.id}`}
+              >
+                <CardContent className="p-0">
+                  <div className="flex flex-col lg:flex-row">
+
+                    {/* Content */}
+                    <div className="flex-1 p-4 sm:p-8">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
+                        <div className="mb-4 lg:mb-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h3
+                              className="text-xl lg:text-2xl font-bold font-mono text-primary"
+                              data-testid={`experience-title-${exp.id}`}
+                            >
+                              {exp.title}
+                            </h3>
+                            {exp.status && (
+                              <Badge variant="secondary" className="font-mono text-xs ml-1">
+                                {exp.status}
+                              </Badge>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2 text-base font-semibold text-foreground mb-2">
+                            <Building className="w-4 h-4 text-primary/70" />
+                            {exp.company}
+                          </div>
+
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Calendar className="w-4 h-4 text-primary/50" />
+                            <span className="font-mono text-xs">{exp.duration}</span>
+                          </div>
                         </div>
-                        
-                        <div className="flex items-center gap-2 text-lg font-semibold text-foreground mb-2">
-                          <Building className="w-5 h-5 text-muted-foreground" />
-                          {exp.company}
-                        </div>
-                        
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-medium">{exp.duration}</span>
-                        </div>
+                      </div>
+
+                      {/* Achievements */}
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-mono font-semibold text-primary/80 mb-3 tracking-widest uppercase">
+                          Key Achievements:
+                        </h4>
+                        <ul className="space-y-3">
+                          {exp.achievements.map((achievement, achievementIndex) => (
+                            <motion.li
+                              key={achievementIndex}
+                              custom={achievementIndex}
+                              initial="hidden"
+                              whileInView="visible"
+                              viewport={{ once: true }}
+                              variants={achievementVariant}
+                              className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed"
+                            >
+                              <div
+                                className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                                style={{ background: 'var(--neon-cyan, #00d4ff)', boxShadow: '0 0 6px var(--neon-cyan, #00d4ff)' }}
+                              />
+                              <span>{achievement}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
 
-                    {/* Achievements */}
-                    <div className="space-y-3">
-                      <h4 className="text-lg font-semibold text-foreground mb-3">
-                        Key Achievements:
-                      </h4>
-                      <ul className="space-y-3">
-                        {exp.achievements.map((achievement, achievementIndex) => (
-                          <li 
-                            key={achievementIndex}
-                            className="flex items-start gap-3 text-muted-foreground leading-relaxed"
-                          >
-                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                            <span>{achievement}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    {/* Image with clip-path reveal */}
+                    <motion.div
+                      className="lg:w-72 lg:flex-shrink-0 overflow-hidden"
+                      initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                      whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+                      viewport={{ once: true, margin: '-60px' }}
+                      transition={{ duration: 0.9, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    >
+                      <img
+                        src={exp.image}
+                        alt={`${exp.company} office environment`}
+                        className="w-full h-64 lg:h-full object-cover"
+                        loading="lazy"
+                        data-testid={`experience-image-${exp.id}`}
+                      />
+                    </motion.div>
                   </div>
-
-                  {/* Image */}
-                  <div className="lg:w-80 lg:flex-shrink-0">
-                    <img
-                      src={exp.image}
-                      alt={`${exp.company} office environment`}
-                      className="w-full h-64 lg:h-full object-cover"
-                      loading="lazy"
-                      data-testid={`experience-image-${exp.id}`}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
-
-        {/* Timeline Connector */}
-        <div className="hidden lg:block absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
       </div>
     </section>
   );

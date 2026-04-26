@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import ScrambleHeading from '@/components/ScrambleHeading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +21,7 @@ interface EducationItem {
   description: string;
   link: string;
   side: 'left' | 'right';
-  image: string; // <-- new field
+  image: string;
 }
 
 const educationData: EducationItem[] = [
@@ -27,11 +29,10 @@ const educationData: EducationItem[] = [
     id: 'msc',
     degree: 'MSc in STATISTICS',
     institution: 'Pondicherry University, Pondicherry, India',
-    duration: 'September 2023 - June 2025',
+    duration: 'September 2023 – June 2025',
     grade: '8.34/10',
     gradeType: 'CGPA',
-    description:
-      "A place where I deepened my passion for data science and statistical analysis. Pursuing my Master's in Statistics here has provided me with a strong theoretical foundation and hands-on experience in advanced data analytics, artificial intelligence, and deep learning. The university's research-driven environment and exposure to cutting-edge tools have shaped my ability to solve real-world data challenges.",
+    description: "A place where I deepened my passion for data science and statistical analysis. Pursuing my Master's in Statistics here has provided me with a strong theoretical foundation and hands-on experience in advanced data analytics, artificial intelligence, and deep learning.",
     link: 'https://en.wikipedia.org/wiki/Pondicherry_University',
     side: 'left',
     image: E1,
@@ -43,8 +44,7 @@ const educationData: EducationItem[] = [
     duration: 'July 2023',
     grade: '8.49/10',
     gradeType: 'CGPA',
-    description:
-      "One of India's most prestigious institutions, Hindu College played a crucial role in building my analytical mindset. My undergraduate journey in Statistics here was filled with rigorous academic training, problem-solving, and a deep dive into the fundamentals of data science. The vibrant intellectual environment and emphasis on research fostered my skills in Python, SQL, and data visualization, laying a strong foundation for my career in analytics.",
+    description: "One of India's most prestigious institutions, Hindu College played a crucial role in building my analytical mindset. My undergraduate journey in Statistics here was filled with rigorous academic training, problem-solving, and a deep dive into the fundamentals of data science.",
     link: 'https://en.wikipedia.org/wiki/Hindu_College,_Delhi',
     side: 'right',
     image: E2,
@@ -75,138 +75,153 @@ const educationData: EducationItem[] = [
   },
 ];
 
+const slideVariant = (side: 'left' | 'right') => ({
+  hidden:  { opacity: 0, x: side === 'left' ? -80 : 80 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
+});
+
 export default function Education() {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
-  const toggleExpanded = (id: string) => {
-    setExpandedItem(expandedItem === id ? null : id);
-  };
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
 
   return (
     <section
       id="education"
-      className="py-20 lg:py-32 bg-muted/30"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Education section"
     >
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2
-            className="text-4xl md:text-5xl font-bold text-foreground"
+
+        <motion.div
+          ref={headingRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
+        >
+          <ScrambleHeading
+            as="h2"
+            text="Education"
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="education-title"
-          >
-            Education
-          </h2>
-        </div>
+          />
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
-        {/* Timeline Container */}
+        {/* Timeline */}
         <div className="relative">
-          {/* Timeline Line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary h-full hidden lg:block" />
+          {/* Animated centre line */}
+          <motion.div
+            className="absolute left-1/2 -translate-x-1/2 w-px hidden lg:block"
+            style={{ background: 'linear-gradient(to bottom, var(--neon-cyan, #00d4ff), var(--neon-purple, #7c3aed))', top: 0 }}
+            initial={{ height: 0 }}
+            whileInView={{ height: '100%' }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.6, ease: 'easeInOut' }}
+          />
 
-          <div className="space-y-12">
+          <div className="space-y-14">
             {educationData.map((item) => (
               <div
                 key={item.id}
-                className={`flex flex-col lg:flex-row items-center gap-8 relative ${
-                  item.side === 'right' ? 'lg:flex-row-reverse' : ''
-                }`}
+                className={`flex flex-col lg:flex-row items-center gap-8 relative ${item.side === 'right' ? 'lg:flex-row-reverse' : ''}`}
               >
-                {/* Blue connector line */}
-                <div className="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-blue-500 z-0" />
-
-                {/* Content Card */}
-                <div className="w-full lg:w-5/12 relative z-10">
-                  <Card className="border border-black hover-elevate transition-all duration-300 hover:scale-105">
+                {/* Content card */}
+                <motion.div
+                  className="w-full lg:w-5/12 relative z-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: '-60px' }}
+                  variants={slideVariant(item.side)}
+                >
+                  <Card className="glass-neon border-0 hover:scale-[1.02] transition-transform duration-300">
                     <CardContent className="p-6">
-                      <div className="text-center lg:text-left">
-                        <h3
-                          className="text-2xl font-bold text-primary mb-2"
-                          data-testid={`education-degree-${item.id}`}
-                        >
-                          {item.degree}
-                        </h3>
-                        <p className="text-lg font-semibold text-foreground mb-1">
-                          {item.institution}
-                        </p>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          {item.duration}
-                        </p>
+                      <h3
+                        className="text-xl font-bold font-mono text-primary mb-1"
+                        data-testid={`education-degree-${item.id}`}
+                      >
+                        {item.degree}
+                      </h3>
+                      <p className="text-sm font-semibold text-foreground mb-1">{item.institution}</p>
+                      <p className="text-xs font-mono text-muted-foreground mb-4">{item.duration}</p>
 
-                        {/* Grade Badge */}
-                        <div className="flex justify-center lg:justify-start mb-4">
-                          <Badge variant="secondary" className="px-4 py-2">
-                            <span className="font-bold text-lg">
-                              {item.grade}
-                            </span>
-                            <span className="ml-2 text-sm">{item.gradeType}</span>
-                          </Badge>
-                        </div>
-
-                        {/* Description */}
-                        {item.description && (
-                          <div className="mb-4">
-                            <div
-                              className={`text-sm text-muted-foreground leading-relaxed ${
-                                expandedItem === item.id ? '' : 'line-clamp-3'
-                              }`}
-                            >
-                              {item.description}
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleExpanded(item.id)}
-                              className="mt-2 p-0 h-auto text-primary hover:text-primary/80"
-                              data-testid={`education-expand-${item.id}`}
-                            >
-                              {expandedItem === item.id ? (
-                                <>
-                                  Show Less{' '}
-                                  <ChevronUp className="w-4 h-4 ml-1" />
-                                </>
-                              ) : (
-                                <>
-                                  Show More{' '}
-                                  <ChevronDown className="w-4 h-4 ml-1" />
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        )}
-
-                        {/* Institution Details Button */}
-                        <Button
-                          onClick={() => window.open(item.link, '_blank')}
-                          className="w-full"
-                          data-testid={`education-details-${item.id}`}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Institution Details
-                        </Button>
+                      <div className="flex mb-4">
+                        <Badge variant="secondary" className="font-mono text-xs px-3 py-1">
+                          <span className="font-bold">{item.grade}</span>
+                          <span className="ml-1 opacity-70">{item.gradeType}</span>
+                        </Badge>
                       </div>
+
+                      {item.description && (
+                        <div className="mb-4">
+                          <p className={`text-sm text-muted-foreground leading-relaxed ${expandedItem === item.id ? '' : 'line-clamp-3'}`}>
+                            {item.description}
+                          </p>
+                          <Button
+                            variant="ghost" size="sm"
+                            onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                            className="mt-1 p-0 h-auto text-primary hover:text-primary/80 font-mono text-xs"
+                            data-testid={`education-expand-${item.id}`}
+                          >
+                            {expandedItem === item.id
+                              ? <>Show Less <ChevronUp className="w-3 h-3 ml-1" /></>
+                              : <>Show More <ChevronDown className="w-3 h-3 ml-1" /></>}
+                          </Button>
+                        </div>
+                      )}
+
+                      <Button
+                        onClick={() => window.open(item.link, '_blank')}
+                        className="w-full font-mono text-xs"
+                        data-testid={`education-details-${item.id}`}
+                      >
+                        <ExternalLink className="w-3 h-3 mr-2" />
+                        Institution Details
+                      </Button>
                     </CardContent>
                   </Card>
-                </div>
+                </motion.div>
 
-                {/* Timeline Node */}
+                {/* Timeline node */}
                 <div className="hidden lg:flex w-2/12 justify-center relative z-10">
-                  <div className="w-4 h-4 bg-primary rounded-full border-4 border-background shadow-lg z-10" />
+                  <motion.div
+                    className="w-4 h-4 rounded-full border-4 border-background"
+                    style={{ background: 'var(--neon-cyan, #00d4ff)', boxShadow: '0 0 12px var(--neon-cyan, #00d4ff)' }}
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
+                  />
                 </div>
 
-                {/* Image Card */}
-                <div className="w-full lg:w-5/12 relative z-10">
-                  <Card className="border border-black hover-elevate transition-all duration-300 hover:scale-105">
-                    <CardContent className="p-6">
+                {/* Image card */}
+                <motion.div
+                  className="w-full lg:w-5/12 relative z-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: '-60px' }}
+                  variants={slideVariant(item.side === 'left' ? 'right' : 'left')}
+                >
+                  <Card className="glass-neon border-0 overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+                    <CardContent className="p-0">
                       <img
                         src={item.image}
                         alt={`${item.institution} campus`}
-                        className="w-full h-64 object-cover rounded-lg"
+                        className="w-full h-52 object-cover"
                         loading="lazy"
                         data-testid={`education-image-${item.id}`}
                       />
                     </CardContent>
                   </Card>
-                </div>
+                </motion.div>
               </div>
             ))}
           </div>

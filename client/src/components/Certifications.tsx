@@ -1,5 +1,7 @@
-// path: src/components/Certifications.tsx
-
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import ScrambleHeading from '@/components/ScrambleHeading';
+import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Award } from 'lucide-react';
@@ -23,7 +25,7 @@ interface Certificate {
   issuer: string;
   description: string;
   link: string;
-  image: string; // thumbnail image (C1..C5)
+  image: string;
 }
 
 const certificates: Certificate[] = [
@@ -77,115 +79,165 @@ const certificates: Certificate[] = [
   }
 ];
 
+const previewImages: Record<number, string> = {
+  1: CR6,
+  2: CR2,
+  3: CR3,
+  4: CR4,
+  5: CR5,
+  6: CR1
+};
+
+const cardVariant = {
+  hidden:  { opacity: 0, y: 60, rotateX: 18, scale: 0.92 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0, rotateX: 0, scale: 1,
+    transition: { duration: 0.65, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }
+  }),
+};
+
 export default function Certifications() {
-  // map certificate id -> preview image (CR1..CR5)
-  const previewImages: Record<number, string> = {
-    1: CR6,
-    2: CR2,
-    3: CR3,
-    4: CR4,
-    5: CR5,
-    6: CR1
-  };
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
 
   return (
-    <section 
-      id="certifications" 
-      className="py-20 lg:py-32 bg-muted/40"
+    <section
+      id="certifications"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Certifications section"
     >
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 
-            className="text-4xl md:text-5xl font-bold text-foreground mb-4"
+
+        <motion.div
+          ref={headingRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
+        >
+          <ScrambleHeading
+            as="h2"
+            text="CERTIFICATIONS"
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground mb-2"
             data-testid="certifications-title"
-          >
-            CERTIFICATIONS
-          </h2>
-          <div className="w-20 h-1 bg-primary mx-auto" />
-        </div>
+          />
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {certificates.map((cert) => (
-            <Card 
+          {certificates.map((cert, idx) => (
+            <motion.div
               key={cert.id}
-              // added black outline + rounded corners; kept hover/scale
-              className="group hover-elevate transition-all duration-300 hover:scale-105 bg-card/80 backdrop-blur-sm overflow-hidden border-2 border-black rounded-xl"
-              data-testid={`certificate-card-${cert.id}`}
+              custom={idx}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={cardVariant}
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              <CardContent className="p-6">
-                <div className="relative mb-4 overflow-hidden rounded-lg">
-                  <img
-                    src={cert.image}
-                    alt={`${cert.title} certificate`}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <Award className="w-12 h-12 text-white opacity-0 group-hover:opacity-80 transition-opacity duration-300" />
+              <TiltCard glowColor="124,58,237">
+              <Card
+                className="group glass-neon border-0 overflow-hidden"
+                data-testid={`certificate-card-${cert.id}`}
+              >
+                <CardContent className="p-6">
+                  {/* Image with hue-rotate scan effect on hover */}
+                  <div className="relative mb-4 overflow-hidden rounded-lg">
+                    <img
+                      src={cert.image}
+                      alt={`${cert.title} certificate`}
+                      className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-110 group-hover:[filter:hue-rotate(30deg)_brightness(1.1)]"
+                      loading="lazy"
+                    />
+                    {/* Scan line overlay on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-hidden">
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,212,255,0.04) 3px, rgba(0,212,255,0.04) 4px)',
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                      <Award
+                        className="w-12 h-12 opacity-0 group-hover:opacity-80 transition-all duration-300 drop-shadow-lg"
+                        style={{ color: 'var(--neon-cyan, #00d4ff)' }}
+                      />
+                    </div>
+                    {/* Neon border on hover */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg"
+                      style={{ boxShadow: 'inset 0 0 0 2px var(--neon-cyan, #00d4ff)' }}
+                    />
                   </div>
-                </div>
 
-                <div className="text-center">
-                  <h3 
-                    className="text-lg font-bold text-foreground mb-2 line-clamp-2"
-                    data-testid={`certificate-title-${cert.id}`}
-                  >
-                    {cert.title}
-                  </h3>
-                  
-                  <p className="text-primary font-semibold mb-3">
-                    {cert.issuer}
-                  </p>
-                  
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {cert.description}
-                  </p>
+                  <div className="text-center">
+                    <h3
+                      className="text-base font-bold font-mono text-foreground mb-2 line-clamp-2"
+                      data-testid={`certificate-title-${cert.id}`}
+                    >
+                      {cert.title}
+                    </h3>
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="mb-3 w-full"
-                        data-testid={`certificate-preview-${cert.id}`}
-                      >
-                        <Award className="w-4 h-4 mr-2" />
-                        Preview Certificate
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-4xl w-full" aria-describedby="certificate-description">
-                      <div className="text-center">
-                        {/* use previewImages mapping; fallback to cert.image */}
-                        <img
-                          src={previewImages[cert.id] ?? cert.image}
-                          alt={`${cert.title} certificate preview`}
-                          className="w-full h-auto max-h-[70vh] object-contain rounded-lg mb-4"
-                        />
-                        <h3 className="text-2xl font-bold text-foreground mb-2">
-                          {cert.title}
-                        </h3>
-                        <p className="text-lg text-primary font-semibold mb-2">
-                          Issued by {cert.issuer}
-                        </p>
-                        <p id="certificate-description" className="text-muted-foreground">
-                          {cert.description}
-                        </p>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                    <p className="text-primary font-mono font-semibold text-sm mb-3">
+                      {cert.issuer}
+                    </p>
 
-                  <Button
-                    onClick={() => window.open(cert.link, '_blank')}
-                    className="w-full"
-                    data-testid={`certificate-link-${cert.id}`}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    View Certificate
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                    <p className="text-xs text-muted-foreground mb-4 line-clamp-2">
+                      {cert.description}
+                    </p>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mb-3 w-full font-mono text-xs border-primary/30 hover:border-primary"
+                          data-testid={`certificate-preview-${cert.id}`}
+                        >
+                          <Award className="w-3 h-3 mr-2" />
+                          Preview Certificate
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl w-full" aria-describedby="certificate-description">
+                        <div className="text-center">
+                          <img
+                            src={previewImages[cert.id] ?? cert.image}
+                            alt={`${cert.title} certificate preview`}
+                            className="w-full h-auto max-h-[70vh] object-contain rounded-lg mb-4"
+                          />
+                          <h3 className="text-2xl font-bold font-mono text-foreground mb-2">
+                            {cert.title}
+                          </h3>
+                          <p className="text-lg text-primary font-semibold mb-2">
+                            Issued by {cert.issuer}
+                          </p>
+                          <p id="certificate-description" className="text-muted-foreground text-sm">
+                            {cert.description}
+                          </p>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button
+                      onClick={() => window.open(cert.link, '_blank')}
+                      className="w-full font-mono text-xs"
+                      data-testid={`certificate-link-${cert.id}`}
+                    >
+                      <ExternalLink className="w-3 h-3 mr-2" />
+                      View Certificate
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
       </div>

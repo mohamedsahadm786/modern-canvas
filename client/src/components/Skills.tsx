@@ -1,10 +1,11 @@
-// path: src/components/Skills.tsx
-
+import { useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import gsap from 'gsap';
+import ScrambleHeading from '@/components/ScrambleHeading';
+import { TiltCard } from '@/components/TiltCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 
-// Import images
 import python from '@assets/generated_images/Skills/1.png';
 import sql from '@assets/generated_images/Skills/3.png';
 import ecxel from '@assets/generated_images/Skills/5.png';
@@ -22,12 +23,15 @@ import communication from '@assets/generated_images/Skills/13.png';
 import data_story from '@assets/generated_images/Skills/4.png';
 import leadership from '@assets/generated_images/Skills/14.png';
 import teamwork from '@assets/generated_images/Skills/1.jpg';
+import claude from '@assets/generated_images/Skills/claude.webp';
+import docker from '@assets/generated_images/Skills/docker.jpg';
+import kubernetes from '@assets/generated_images/Skills/kubernetes.png';
 
-import { 
-  Database, 
-  BarChart3, 
-  Code2, 
-  MessageSquare, 
+import {
+  Database,
+  BarChart3,
+  Code2,
+  MessageSquare,
   TrendingUp,
   GitBranch,
   Languages,
@@ -45,7 +49,7 @@ interface Skill {
   proficiency: number;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
-  image?: string; // optional replacement image for the icon
+  image?: string;
 }
 
 interface SkillCategory {
@@ -53,6 +57,8 @@ interface SkillCategory {
   description: string;
   skills: Skill[];
   color: string;
+  /** RGB triplet for TiltCard glow/shine colour */
+  glowColor: string;
 }
 
 const skillCategories: SkillCategory[] = [
@@ -60,193 +66,207 @@ const skillCategories: SkillCategory[] = [
     title: 'Tools and Technologies',
     description: 'Technical tools and platforms I use for data science and development',
     color: 'bg-blue-50 border-blue-200',
+    glowColor: '0,212,255',
     skills: [
-      {
-        name: 'Python',
-        proficiency: 90,
-        icon: Code2,
-        image: python,
-        description: 'Advanced Python programming for data science, ML, and automation'
-      },
-      {
-        name: 'SQL & Databases',
-        proficiency: 85,
-        icon: Database,
-        image: sql,
-        description: 'PostgreSQL, MySQL, database optimization, and complex query writing'
-      },
-      {
-        name: 'Advanced MS Excel',
-        proficiency: 88,
-        icon: FileSpreadsheet,
-        image: ecxel,
-        description: 'Advanced formulas, pivot tables, macros, and data analysis tools'
-      },
-      {
-        name: 'Power BI',
-        proficiency: 85,
-        icon: BarChart3,
-        image: powerBI,
-        description: 'Business intelligence dashboards and interactive data visualizations'
-      },
-      {
-        name: 'Artificial Intelligence',
-        proficiency: 87,
-        icon: Bot,
-        image: AI,
-        description: 'AI model development, NLP, computer vision, and machine learning'
-      },
-      {
-        name: 'Deep Learning',
-        proficiency: 85,
-        icon: Network,
-        image: DL,
-        description: 'Neural networks, TensorFlow, PyTorch for complex pattern recognition'
-      },
-      {
-        name: 'Amazon Web Services (AWS)',
-        proficiency: 80,
-        icon: Calculator,
-        image: spss,
-        description: 'Cloud computing for scalable infrastructure, ML deployment, and data-driven applications'
-      },
-      {
-        name: 'Git & Version Control',
-        proficiency: 95,
-        icon: GitBranch,
-        image: git,
-        description: 'Git workflows, GitHub collaboration, and code version management'
-      }
+      { name: 'Python', proficiency: 90, icon: Code2, image: python, description: 'Advanced Python programming for data science, ML, and automation' },
+      { name: 'SQL & Databases', proficiency: 85, icon: Database, image: sql, description: 'PostgreSQL, MySQL, database optimization, and complex query writing' },
+      { name: 'Claude Code', proficiency: 90, icon: FileSpreadsheet, image: claude, description: 'AI-assisted coding, debugging, code generation, and workflow automation tools' },
+      { name: 'Docker', proficiency: 90, icon: FileSpreadsheet, image: docker, description: 'Containerization, image management, deployment, and environment consistency tools' },
+      { name: 'Kubernetes', proficiency: 90, icon: FileSpreadsheet, image: kubernetes, description: 'Container orchestration, scaling, service management, and automated deployment tools' },
+      { name: 'Advanced MS Excel', proficiency: 88, icon: FileSpreadsheet, image: ecxel, description: 'Advanced formulas, pivot tables, macros, and data analysis tools' },
+      { name: 'Power BI', proficiency: 85, icon: BarChart3, image: powerBI, description: 'Business intelligence dashboards and interactive data visualizations' },
+      { name: 'Artificial Intelligence', proficiency: 87, icon: Bot, image: AI, description: 'AI model development, NLP, computer vision, and machine learning' },
+      { name: 'Deep Learning', proficiency: 85, icon: Network, image: DL, description: 'Neural networks, TensorFlow, PyTorch for complex pattern recognition' },
+      { name: 'Amazon Web Services (AWS)', proficiency: 80, icon: Calculator, image: spss, description: 'Cloud computing for scalable infrastructure, ML deployment, and data-driven applications' },
+      { name: 'Git & Version Control', proficiency: 95, icon: GitBranch, image: git, description: 'Git workflows, GitHub collaboration, and code version management' }
     ]
   },
   {
     title: 'Programming Languages',
     description: 'Programming languages and frameworks in my toolkit',
     color: 'bg-green-50 border-green-200',
+    glowColor: '34,197,94',
     skills: [
-      {
-        name: 'Python',
-        proficiency: 90,
-        icon: Code2,
-        image: python,
-        description: 'Primary language for data science, AI/ML, and backend development'
-      },
-      {
-        name: 'R',
-        proficiency: 75,
-        icon: TrendingUp,
-        image: r,
-        description: 'Statistical computing, advanced analytics, and research projects'
-      },
-      {
-        name: 'SQL',
-        proficiency: 85,
-        icon: Database,
-        image: sql,
-        description: 'Database querying, optimization, and data manipulation'
-      },
-      {
-        name: 'JavaScript',
-        proficiency: 70,
-        icon: Code2,
-        image: JS,
-        description: 'Frontend development and data visualization libraries'
-      }
+      { name: 'Python', proficiency: 90, icon: Code2, image: python, description: 'Primary language for data science, AI/ML, and backend development' },
+      { name: 'R', proficiency: 75, icon: TrendingUp, image: r, description: 'Statistical computing, advanced analytics, and research projects' },
+      { name: 'SQL', proficiency: 85, icon: Database, image: sql, description: 'Database querying, optimization, and data manipulation' },
+      { name: 'JavaScript', proficiency: 70, icon: Code2, image: JS, description: 'Frontend development and data visualization libraries' }
     ]
   },
   {
     title: 'Languages',
     description: 'Languages I speak fluently for global communication',
     color: 'bg-emerald-50 border-emerald-200',
+    glowColor: '124,58,237',
     skills: [
-      {
-        name: 'English',
-        proficiency: 95,
-        icon: Languages,
-        image: english,
-        description: 'Native-level proficiency in academic and professional settings'
-      },
-      {
-        name: 'Malayalam',
-        proficiency: 100,
-        icon: Languages,
-        image: malayalam,
-        description: 'Native language with complete fluency'
-      },
-      {
-        name: 'Hindi',
-        proficiency: 90,
-        icon: Languages,
-        image: hindi,
-        description: 'Fluent in conversation and business communication'
-      }
+      { name: 'English', proficiency: 95, icon: Languages, image: english, description: 'Native-level proficiency in academic and professional settings' },
+      { name: 'Malayalam', proficiency: 100, icon: Languages, image: malayalam, description: 'Native language with complete fluency' },
+      { name: 'Hindi', proficiency: 90, icon: Languages, image: hindi, description: 'Fluent in conversation and business communication' }
     ]
   },
   {
     title: 'Interpersonal Skills',
     description: 'Soft skills that enable effective collaboration and leadership',
     color: 'bg-purple-50 border-purple-200',
+    glowColor: '244,63,94',
     skills: [
-      {
-        name: 'Communication',
-        proficiency: 92,
-        icon: MessageSquare,
-        image: communication,
-        description: 'Clear presentation of complex data insights to stakeholders'
-      },
-      {
-        name: 'Data Storytelling',
-        proficiency: 90,
-        icon: BookOpen,
-        image: data_story,
-        description: 'Transforming complex data into compelling narratives and insights'
-      },
-      {
-        name: 'Leadership',
-        proficiency: 85,
-        icon: Crown,
-        image: leadership,
-        description: 'Leading data science projects and mentoring team members'
-      },
-      {
-        name: 'Teamwork',
-        proficiency: 95,
-        icon: HandHeart,
-        image: teamwork,
-        description: 'Collaborative approach to cross-functional team projects and initiatives'
-      }
+      { name: 'Communication', proficiency: 92, icon: MessageSquare, image: communication, description: 'Clear presentation of complex data insights to stakeholders' },
+      { name: 'Data Storytelling', proficiency: 90, icon: BookOpen, image: data_story, description: 'Transforming complex data into compelling narratives and insights' },
+      { name: 'Leadership', proficiency: 85, icon: Crown, image: leadership, description: 'Leading data science projects and mentoring team members' },
+      { name: 'Teamwork', proficiency: 95, icon: HandHeart, image: teamwork, description: 'Collaborative approach to cross-functional team projects and initiatives' }
     ]
   }
 ];
 
-export default function Skills() {
+/* ── GSAP counter badge — counts up from 0 to value when scrolled into view ── */
+function CountBadge({ value, delay = 0 }: { value: number; delay?: number }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = spanRef.current;
+    if (!el) return;
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      obs.disconnect();
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: value,
+        duration: 1.4,
+        delay,
+        ease: 'power2.out',
+        snap: { val: 1 },
+        onUpdate: () => {
+          if (el) el.textContent = `${counter.val}/100`;
+        },
+      });
+    }, { threshold: 0.5 });
+
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [value, delay]);
+
   return (
-    <section 
-      id="skills" 
-      className="py-20 lg:py-32 bg-gradient-to-br from-background via-muted/20 to-card/30"
+    <Badge variant="secondary" className="text-xs font-mono">
+      <span ref={spanRef}>0/100</span>
+    </Badge>
+  );
+}
+
+/* ── Shimmer progress bar ─────────────────────────────────────────────────── */
+function ProgressBar({ proficiency, skillIndex }: { proficiency: number; skillIndex: number }) {
+  const fillDelay = 0.2 + skillIndex * 0.1;
+  const shimmerDelay = fillDelay + 1.2; // starts after fill completes
+
+  return (
+    <div
+      className="h-1.5 w-full rounded-full overflow-hidden"
+      style={{ background: 'rgba(0,212,255,0.1)' }}
+    >
+      <motion.div
+        className="h-full rounded-full relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(90deg, var(--neon-cyan, #00d4ff), var(--neon-purple, #7c3aed))',
+          boxShadow: '0 0 8px rgba(0,212,255,0.5)',
+        }}
+        initial={{ width: 0 }}
+        whileInView={{ width: `${proficiency}%` }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, delay: fillDelay, ease: 'easeOut' }}
+        data-testid={`skill-progress-bar`}
+      >
+        {/* Shimmer sweep — slides from left to right, repeats */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.38) 50%, transparent 100%)',
+          }}
+          animate={{ x: ['-100%', '200%'] }}
+          transition={{
+            duration: 1.6,
+            delay: shimmerDelay,
+            ease: 'linear',
+            repeat: Infinity,
+            repeatDelay: 2.8,
+          }}
+        />
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── Animation variants ───────────────────────────────────────────────────── */
+const categoryVariant = {
+  hidden:  { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
+const cardVariant = {
+  hidden:  { opacity: 0, scale: 0.9 },
+  visible: (i: number) => ({
+    opacity: 1, scale: 1,
+    transition: { duration: 0.5, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }
+  }),
+};
+
+/* ── Main component ───────────────────────────────────────────────────────── */
+export default function Skills() {
+  const headingRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headingScroll } = useScroll({
+    target: headingRef,
+    offset: ['start end', 'end start'],
+  });
+  const headingY = useTransform(headingScroll, [0, 1], ['-18px', '18px']);
+
+  return (
+    <section
+      id="skills"
+      className="py-20 lg:py-32 section-glass"
       aria-label="Skills section"
     >
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 
-            className="text-4xl md:text-5xl font-bold text-foreground"
+
+        <motion.div
+          ref={headingRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{ y: headingY }}
+        >
+          <ScrambleHeading
+            as="h2"
+            text="SKILLS"
+            className="text-4xl md:text-5xl font-bold font-mono text-foreground"
             data-testid="skills-title"
-          >
-            SKILLS
-          </h2>
-        </div>
+          />
+          <div className="h-px w-24 mx-auto mt-4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </motion.div>
 
         <div className="space-y-16">
           {skillCategories.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="space-y-8">
+            <motion.div
+              key={categoryIndex}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={categoryVariant}
+              className="space-y-8"
+            >
               <div className="text-left">
-                <h3 
-                  className="text-2xl md:text-3xl font-bold text-foreground mb-3"
+                <ScrambleHeading
+                  as="h3"
+                  text={`▸ ${category.title}`}
+                  className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-3"
+                  delay={categoryIndex * 120}
                   data-testid={`skills-category-${categoryIndex}`}
                 >
+                  <span className="text-primary/60 text-lg mr-2">▸</span>
                   {category.title}
-                </h3>
-                <p className="text-muted-foreground text-lg max-w-3xl">
+                </ScrambleHeading>
+                <p className="text-muted-foreground text-base max-w-3xl font-mono text-sm">
                   {category.description}
                 </p>
               </div>
@@ -259,59 +279,79 @@ export default function Skills() {
                     category.title !== 'Interpersonal Skills';
 
                   return (
-                    <Card 
+                    <motion.div
                       key={skillIndex}
-                      className={`group hover-elevate transition-all duration-300 hover:scale-105 ${category.color} border-2 border-black rounded-xl`}
-                      data-testid={`skill-card-${categoryIndex}-${skillIndex}`}
+                      custom={skillIndex}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                      variants={cardVariant}
+                      className="h-full"
                     >
-                      <CardContent className="p-6 text-center">
-                        <div className="mb-4 flex justify-center">
-                          {/* circular container; image fills it */}
-                          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300 overflow-hidden">
-                            {skill.image ? (
-                              <img
-                                src={skill.image}
-                                alt={`${skill.name} logo`}
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <IconComponent className="w-8 h-8 text-primary" />
-                            )}
-                          </div>
-                        </div>
+                      <TiltCard
+                        glowColor={category.glowColor}
+                        className="h-full rounded-xl"
+                        data-testid={`skill-card-${categoryIndex}-${skillIndex}`}
+                      >
+                        <Card className="glass-neon border-0 h-full">
+                          <CardContent className="p-6 text-center">
 
-                        <h4 className="text-lg font-bold text-foreground mb-2">
-                          {skill.name}
-                        </h4>
-
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                          {skill.description}
-                        </p>
-
-                        {showProficiency && (
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium text-foreground">
-                                Proficiency
-                              </span>
-                              <Badge variant="secondary" className="text-xs">
-                                {skill.proficiency}/100
-                              </Badge>
+                            {/* Icon / Image — spins 360° on hover */}
+                            <div className="mb-4 flex justify-center">
+                              <div
+                                className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:rotate-[360deg]"
+                                style={{
+                                  background: `rgba(${category.glowColor},0.08)`,
+                                  border: `1px solid rgba(${category.glowColor},0.25)`,
+                                  boxShadow: `0 0 10px rgba(${category.glowColor},0.15)`,
+                                }}
+                              >
+                                {skill.image ? (
+                                  <img
+                                    src={skill.image}
+                                    alt={`${skill.name} logo`}
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                  />
+                                ) : (
+                                  <IconComponent className="w-8 h-8 text-primary" />
+                                )}
+                              </div>
                             </div>
-                            <Progress 
-                              value={skill.proficiency} 
-                              className="h-2"
-                              data-testid={`skill-progress-${categoryIndex}-${skillIndex}`}
-                            />
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
+
+                            <h4 className="text-base font-bold font-mono text-foreground mb-2">
+                              {skill.name}
+                            </h4>
+
+                            <p className="text-xs text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                              {skill.description}
+                            </p>
+
+                            {showProficiency && (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-mono text-muted-foreground">
+                                    Proficiency
+                                  </span>
+                                  <CountBadge
+                                    value={skill.proficiency}
+                                    delay={0.3 + skillIndex * 0.1}
+                                  />
+                                </div>
+                                <ProgressBar
+                                  proficiency={skill.proficiency}
+                                  skillIndex={skillIndex}
+                                />
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </TiltCard>
+                    </motion.div>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
