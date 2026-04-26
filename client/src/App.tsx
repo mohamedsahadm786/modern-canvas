@@ -51,7 +51,7 @@ function App() {
     <ThemeProvider
       attribute="class"
       defaultTheme="night"
-      themes={['dark', 'light', 'night']}
+      themes={['dark', 'night']}
       enableSystem={false}
     >
       <QueryClientProvider client={queryClient}>
