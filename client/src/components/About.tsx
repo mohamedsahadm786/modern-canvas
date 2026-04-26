@@ -2,28 +2,27 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import ScrambleHeading from '@/components/ScrambleHeading';
 
-/* ── AboutVideo: AI face video fitted into left column ── */
+/* ── AboutVideo: AI face video — fills full left column height ── */
 function AboutVideo() {
   return (
     <motion.div
-      className="relative w-full"
+      className="absolute inset-0"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-      style={{ maxWidth: 420 }}
     >
       {/* Edge fades — blend into section background */}
       <div
         className="absolute inset-0 pointer-events-none z-10"
         style={{
-          background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 18%, transparent 82%, hsl(var(--background)) 100%)',
+          background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%, transparent 80%, hsl(var(--background)) 100%)',
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none z-10"
         style={{
-          background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 14%, transparent 86%, hsl(var(--background)) 100%)',
+          background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 12%, transparent 88%, hsl(var(--background)) 100%)',
         }}
       />
 
@@ -37,6 +36,7 @@ function AboutVideo() {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          objectPosition: 'center top',
           display: 'block',
           mixBlendMode: 'screen',
         }}
@@ -122,11 +122,11 @@ export default function About() {
           <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent mt-4" />
         </motion.div>
 
-        {/* Two-column: DataGlobe left, bio right */}
-        <div className="flex flex-col lg:flex-row items-center gap-16">
+        {/* Two-column: video left, bio right */}
+        <div className="flex flex-col lg:flex-row items-stretch gap-16">
 
-          {/* About video — left column */}
-          <div className="w-full lg:w-5/12 flex justify-center">
+          {/* About video — fills full left column height */}
+          <div className="relative w-full lg:w-5/12 min-h-[480px] lg:min-h-0 overflow-hidden">
             <AboutVideo />
           </div>
 
