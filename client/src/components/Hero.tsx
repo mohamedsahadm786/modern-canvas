@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { useCinematicTypewriter } from '@/hooks/useCinematicTypewriter';
 import ScrambleHeading from '@/components/ScrambleHeading';
+import RightBinaryRain from '@/components/RightBinaryRain';
 
 const TITLE    = 'MOHAMED SAHAD M';
 const SUBTITLE = 'DATA SCIENTIST  ·  AI/ML ENGINEER  ·  STATISTICIAN';
@@ -17,6 +18,14 @@ export default function Hero() {
 
   const [subtitleText, taglineText] = lines;
   const imageRef = useRef<HTMLDivElement>(null);
+
+  // Show binary rain on mobile where Scene3D (and its built-in rain) is disabled
+  const [showRain, setShowRain] = useState(false);
+  useEffect(() => {
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const isNarrow = window.innerWidth < 768;
+    if (isTouch || isNarrow) setShowRain(true);
+  }, []);
 
   // Fade out the right panel as user scrolls down
   useEffect(() => {
@@ -41,6 +50,9 @@ export default function Hero() {
       className="relative h-screen overflow-hidden flex items-center"
       aria-label="Hero section"
     >
+      {/* Binary rain — mobile only (desktop gets it from Scene3D) */}
+      {showRain && <RightBinaryRain />}
+
       {/* ── Left content column ─────────────────────────────── */}
       <div className="relative z-10 w-full lg:w-1/2 px-6 md:px-14 lg:px-16 pt-20 lg:pt-0">
 
@@ -110,7 +122,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── Right: Hero video ────────────────────────────────── */}
+      {/* ── Right: Hero video (desktop only) ────────────────────────────────── */}
       <div
         ref={imageRef}
         className="hidden lg:block absolute right-0 top-0 w-1/2 h-full"
