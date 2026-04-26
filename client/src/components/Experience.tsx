@@ -130,7 +130,7 @@ export default function Experience() {
                   <div className="flex flex-col lg:flex-row">
 
                     {/* Content */}
-                    <div className="flex-1 p-8">
+                    <div className="flex-1 p-4 sm:p-8">
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
                         <div className="mb-4 lg:mb-0">
                           <div className="flex flex-wrap items-center gap-2 mb-2">

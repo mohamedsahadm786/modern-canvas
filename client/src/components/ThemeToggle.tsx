@@ -1,15 +1,14 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { Moon, Sun, Zap } from 'lucide-react';
+import { Moon, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const themes = ['night', 'dark', 'light'] as const;
+const themes = ['night', 'dark'] as const;
 type Theme = (typeof themes)[number];
 
 const themeConfig: Record<Theme, { icon: React.ComponentType<{ className?: string }>; label: string; title: string }> = {
-  night: { icon: Zap,  label: 'Night', title: 'Switch to Dark mode'  },
-  dark:  { icon: Moon, label: 'Dark',  title: 'Switch to Light mode' },
-  light: { icon: Sun,  label: 'Light', title: 'Switch to Night mode' },
+  night: { icon: Zap,  label: 'Night', title: 'Switch to Dark mode' },
+  dark:  { icon: Moon, label: 'Dark',  title: 'Switch to Night mode' },
 };
 
 export default function ThemeToggle() {

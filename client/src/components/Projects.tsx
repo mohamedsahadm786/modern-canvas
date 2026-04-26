@@ -26,6 +26,8 @@ import PR17 from '@assets/generated_images/Projects/17.jpg';
 import PR18 from '@assets/generated_images/Projects/18.png';
 import PR19 from '@assets/generated_images/Projects/19.png';
 import PR20 from '@assets/generated_images/Projects/20.png';
+import PR21 from '@assets/generated_images/Projects/21.png';
+
 
 interface Project {
   id: number;
@@ -52,6 +54,14 @@ const projects: Project[] = [
     image: PR19,
     githubUrl: "https://github.com/mohamedsahadm786/agentic_supplier_risk_ai",
     technologies: ["Python", "LangGraph", "LangChain", "MCP", "LLM", "AWS", "Docker", "FastAPI", "Pydantic", "PostgreSQL"]
+  },
+    {
+    id: 8,
+    title: " Loomin-Docs — Air-Gapped AI Document Intelligence Platform",
+    description: "Architected and built a fully offline, RHEL 9-compatible GenAI document editor for regulated environments where sending data to external LLM APIs is a compliance blocker — combining a React/TypeScript frontend, FastAPI async backend, Ollama-powered local LLM inference, FAISS vector retrieval, and a custom PII sanitization layer, all packaged as a single-command Docker offline-bootstrap deployment with zero external API calls and 100% on-premise data residency.",
+    image: PR21,
+    githubUrl: "https://github.com/mohamedsahadm786/loomin-docs",
+    technologies: ["LLaMA","Air-Gapped Systems","Data Privacy","PII Detection / PII Redaction","Linux (RHEL 9)","Containerization","CI/CD","Microservices"]
   },
   {
     id: 8,

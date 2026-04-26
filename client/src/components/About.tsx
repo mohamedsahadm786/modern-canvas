@@ -1,75 +1,49 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import profileImage from '@assets/generated_images/About/mine.png';
 import ScrambleHeading from '@/components/ScrambleHeading';
 
-/* ── ProfilePhoto: 3-D rotating photo with zoom-out entry ── */
-function ProfilePhoto() {
+/* ── AboutVideo: AI face video — fills full left column height ── */
+function AboutVideo() {
   return (
-    <div className="relative flex items-center justify-center" style={{ width: 320, height: 320 }}>
-      {/* Outer neon glow ring — pulses */}
+    <motion.div
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
+      {/* Edge fades — blend into section background */}
       <div
-        className="absolute inset-0 rounded-full animate-pulse-neon pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-10"
         style={{
-          background: 'radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%)',
-          boxShadow: '0 0 60px rgba(0,212,255,0.25), 0 0 120px rgba(0,212,255,0.10)',
+          background: 'linear-gradient(to right, hsl(var(--background)) 0%, transparent 20%, transparent 80%, hsl(var(--background)) 100%)',
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 12%, transparent 88%, hsl(var(--background)) 100%)',
         }}
       />
 
-      {/* Rotating scan ring */}
-      <motion.div
-        className="absolute inset-4 rounded-full pointer-events-none"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
         style={{
-          border: '1px solid transparent',
-          borderTopColor: 'var(--neon-cyan, #00d4ff)',
-          borderRightColor: 'rgba(0,212,255,0.3)',
-          opacity: 0.7,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center top',
+          display: 'block',
+          mixBlendMode: 'screen',
         }}
-      />
-      <motion.div
-        className="absolute inset-8 rounded-full pointer-events-none"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-        style={{
-          border: '1px solid transparent',
-          borderBottomColor: 'var(--neon-cyan, #00d4ff)',
-          borderLeftColor: 'rgba(0,212,255,0.2)',
-          opacity: 0.5,
-        }}
-      />
-
-      {/* Photo — full 3D Y-axis rotation, entry zoom-out */}
-      <motion.div
-        initial={{ scale: 1.4, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative z-10"
-        style={{ width: 240, height: 240 }}
       >
-        <motion.div
-          animate={{ rotateY: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          style={{ transformPerspective: 1000, width: '100%', height: '100%' }}
-        >
-          <img
-            src={profileImage}
-            alt="Mohamed Sahad M"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'top',
-              borderRadius: '50%',
-              filter: 'drop-shadow(0 0 24px rgba(0,212,255,0.5)) drop-shadow(0 0 60px rgba(0,212,255,0.2)) grayscale(0.3) contrast(1.1)',
-              border: '2px solid rgba(0,212,255,0.4)',
-            }}
-          />
-        </motion.div>
-      </motion.div>
-    </div>
+        <source src="/assets/about-video.mp4" type="video/mp4" />
+      </video>
+    </motion.div>
   );
 }
 
@@ -148,19 +122,13 @@ export default function About() {
           <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent mt-4" />
         </motion.div>
 
-        {/* Two-column: DataGlobe left, bio right */}
-        <div className="flex flex-col lg:flex-row items-center gap-16">
+        {/* Two-column: video left, bio right */}
+        <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16">
 
-          {/* Profile photo — zoom-out entry + continuous 3D Y rotation */}
-          <motion.div
-            className="w-full lg:w-5/12 flex justify-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <ProfilePhoto />
-          </motion.div>
+          {/* About video — fills full left column height */}
+          <div className="relative w-full lg:w-5/12 min-h-[260px] sm:min-h-[360px] lg:min-h-0 overflow-hidden">
+            <AboutVideo />
+          </div>
 
           {/* Bio blocks */}
           <div className="w-full lg:w-7/12 space-y-10">

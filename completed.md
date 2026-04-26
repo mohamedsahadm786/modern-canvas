@@ -8,82 +8,106 @@ See `plan.md` for the full plan. This file tracks what has been done.
 **Branch:** `feature/phase-1-foundation` → merged into `design-overhaul`
 
 - Tagged `main` as `v1-pre-overhaul` for instant rollback
-- Installed `three`, `@react-three/fiber@8`, `@react-three/drei@9`, `@react-three/postprocessing@2` (pinned to v8/v9/v2 because project uses React 18; R3F v9 requires React 19)
-- Added `Scene3D.tsx` — full-screen fixed Three.js canvas: morphing icosahedron orbs (simplex-noise GLSL shaders), 4000-point starfield, floating binary field, mouse-parallax camera, bloom post-processing
-- Added `MorphVisual.tsx` — 360×360 canvas: 5-state auto-morph cycle (Globe → Data Science → Analytics → Neural Net → Terminal), particle burst transitions, theme-aware colors
-- Wired `Scene3D` into `App.tsx` via `React.lazy + Suspense` (lazy-loaded to avoid blocking first paint); sits on top of `AnimatedBackground` (both transparent canvases layer correctly)
+- Installed `three`, `@react-three/fiber@8`, `@react-three/drei@9`, `@react-three/postprocessing@2`
+- Added `Scene3D.tsx` — full-screen fixed Three.js canvas: morphing icosahedron orbs, 4000-point starfield, floating binary field, mouse-parallax camera, bloom post-processing
+- Added `MorphVisual.tsx` — 360×360 canvas: 5-state auto-morph cycle, particle burst transitions, theme-aware colors
+- Wired `Scene3D` into `App.tsx` via `React.lazy + Suspense`
 - Replaced wireframe face in `Hero.tsx` with `MorphVisual`; scroll handler fades + parallaxes it on scroll
-- Fixed duplicate `style` attribute warning in `Hero.tsx`
-- Removed 4 corner bracket decorations from Hero MorphVisual container
-- Reordered MorphVisual states: AI/ML → Software Eng → Data Science → Analytics → Globe
-- Replaced DataGlobe in About section with real profile photo (`mine.png`):
-  - Zoom-out entry animation (scale 1.4 → 1.0 on scroll into view)
-  - Continuous full 360° Y-axis rotation (20s cycle)
-  - Two counter-rotating scan rings + cyan neon glow border
-- Added `MorphField` system to Hero right panel:
-  - Phase cycle (4s each): 1 → 2 → 4 → 8 copies → loops back to 1
-  - 1 / 2 / 4 copies: full size (scale 1.0), free random-walk motion (easeInOut)
-  - 8 copies: reduced size (scale 0.28), circular orbit motion (rAF loop, evenly spaced)
-  - Every copy rotates full 360° on Y-axis (16s, Framer Motion)
-  - AnimatePresence handles scale-pop appear / exit between phases
+- Replaced DataGlobe in About section with real profile photo (`mine.png`): zoom-out entry, 360° Y-axis rotation, scan rings, cyan neon glow border
+- Added `MorphField` system to Hero right panel (1→2→4→8 copies, orbit motion)
 
 ---
 
-## Phase 2 — Matrix Code Rain (3D, Morphing) ✓
+## Phase 2 — Matrix Code Rain ✓
 **Branch:** `feature/phase-2-matrix-rain` → merged into `design-overhaul`
 
-- Created `MatrixRain3D.tsx` — 1,200 instanced `PlaneGeometry` sprites sharing the Scene3D canvas
-- 60 columns × 20 drops per column; Z spread ±4.5 world units for real 3D parallax depth
-- Per-instance buffer attributes: column, startY, fallSpeed, depth, charSeed, charSpeed
-- Vertex shader: dynamic character cycling per instance (`aCharSpeed * time`), depth-based scale, depth-based alpha
-- Fragment shader: samples two canvas atlas textures (640×64px each, 10 chars per atlas), mixes by `uBlend` for smooth cross-fade
-- Phase cycling every 4 s: **code keywords → digits (0–9) → math symbols (Σ ∫ ∇ σ …) → algorithm tokens** → loops
-- 1-second GLSL cross-fade blend at end of each phase (character shapes dissolve into next set)
-- Depth-based colour: near Z = cyan `#00f7eb`, far Z = green `#0de63d`; AdditiveBlending → bloom amplifies glow
-- Removed `AnimatedBackground.tsx` (2D canvas) from `App.tsx`; matrix rain now lives inside the existing R3F canvas sharing Bloom post-processing
-
-
-**Note:** The 3D instanced GLSL approach never produced a visible rain on the transparent canvas after multiple debug attempts. Final resolution: `MatrixRain3D.tsx` was disabled; a simpler `RightBinaryRain` overlay component was added instead. The GLSL phase-morphing rain remains unshipped.
+- Attempted 1,200 instanced GLSL sprite rain (MatrixRain3D.tsx) — never rendered visibly on transparent canvas
+- Final resolution: `MatrixRain3D.tsx` disabled; `RightBinaryRain` overlay component added instead
+- Removed `AnimatedBackground.tsx` (2D canvas) from `App.tsx`
 
 ---
 
 ## Phase 3 — Scroll-Driven 3D Scene ✓
 **Branch:** `feature/phase-3-scroll-3d` → merged into `design-overhaul`
 
-- Added scroll-driven 3D camera path using `useScroll` from Drei + `THREE.CatmullRomCurve3`
-- NodeGlobe and NeuralNetViz components were added then removed (kept scroll camera only)
-- Scene transitions as user scrolls through sections; cinematic camera movement active
+- Scroll-driven 3D camera path using `useScroll` from Drei + `THREE.CatmullRomCurve3`
+- NodeGlobe and NeuralNetViz added then removed; scroll camera kept
 
 ---
 
-## Phase 4 — 3D Morphing Shapes
-**Status:** Not started
+## Phase 4 — 3D Morphing Shapes ✓
+**Branch:** `feature/phase-4-morphing-shapes` → merged into `design-overhaul`
+
+- Created `MorphShape3D.tsx` — dedicated R3F Canvas in Hero right panel
+- N=1200 points, CPU Float32Array lerp each frame; 4 shapes: Cube → Sphere → Neural Graph → Humanoid
+- `InstancedMesh` with `MeshPhysicalMaterial` clearcoat:1, metalness:0.75
+- Auto-cycle every 5s, 80 burst particles at each transition
+- DOM label updated via shared `labelRef` (no re-renders)
+- Internal EffectComposer + Bloom; pauses when hero not visible
+
+**Superseded:** MorphShape3D later replaced by hero video (see Phase 8)
 
 ---
 
-## Phase 5 — 3D Cards ✓
+## Phase 5 — 3D Tilt Cards ✓
 **Branch:** `feature/phase-5-3d-cards` → merged into `design-overhaul`
 
-- Mouse-tracked 3D tilt on all cards (Projects, Certifications, WorkGallery) using Framer Motion `useMotionValue` → `rotateX/rotateY`
-- Specular shine: radial gradient `::after` layer tracks cursor position
-- Neon glow border: animated `box-shadow` cyan/purple on hover
-- Z-pop on hover: `translateZ(40px)` + scale 1.05×
-- Entry animation: cards fly in from 60° angle via `whileInView`
-- Staggered children fade-in inside each card
+- Created `TiltCard.tsx` — reusable wrapper: mouse-tracked rotateX/rotateY, specular shine, neon glow, Z-pop
+- Applied to Projects, Certifications, and Skills cards
+- Entry animation: cards fly in from 60° angle via `whileInView`; staggered children fade-in
 
 ---
 
-## Phase 6 — Cinematic Skills Section
-**Status:** Not started
+## Phase 6 — Cinematic Skills Section ✓
+**Branch:** `feature/phase-6-skills` → merged into `design-overhaul`
+
+- `TiltCard` wraps every skill card with per-category glow colours (cyan / green / purple / rose)
+- `TiltCard` extended to forward arbitrary HTML attributes (`data-testid` etc.)
+- `CountBadge`: IntersectionObserver + GSAP tween counts 0 → value when scrolled into view
+- `ProgressBar`: shimmer sweep (`motion.div` x: −100% → 200%) loops after bar fills
+- Icon ring border/glow tinted to category colour
+
+---
 
 ## Phase 7 — Typography & Text Effects ✓
 **Branch:** `feature/phase-7-typography` → merged into `design-overhaul`
 
-- Created `ScrambleHeading` component: scroll-triggered hacker-style character scramble that resolves left-to-right into real text; unresolved chars glow cyan; full hover re-scramble on any resolved heading; `prefers-reduced-motion` skips straight to resolved; optional `children` prop swaps in multi-colour markup after resolution
-- Created `useCinematicTypewriter` hook: sequences through multiple lines — each line types character by character, cursor transfers to the next line after a configurable pause, cursor stays on the last line once all lines are done
-- Hero: title replaced with `ScrambleHeading`; subtitle + tagline now use cinematic typewriter with live cursor handoff between the two lines
-- All 9 section headings replaced with `ScrambleHeading` (About, Education, WorkGallery, Projects, Experience, Certifications, Skills × h2, Skills × 4 category h3s, Contact)
-- Every section heading container gets scroll-driven parallax Y ±18 px via Framer Motion `useScroll` + `useTransform`
+- Created `ScrambleHeading` — scroll-triggered hacker-style char scramble resolving left-to-right; hover re-scramble; `prefers-reduced-motion` bypass; optional `children` for multi-colour markup
+- Created `useCinematicTypewriter` — sequences multiple lines char-by-char; cursor handoff between lines
+- Hero title → `ScrambleHeading`; subtitle + tagline → cinematic typewriter with live cursor
+- All section headings (About, Education, Projects, Experience, Certifications, Skills ×5, Contact) replaced with `ScrambleHeading`
+- Every section heading container: scroll-driven parallax Y ±18px via Framer Motion `useScroll + useTransform`
 
-## Phase 8 — Global Polish
-**Status:** Not started
+---
+
+## Phase 8 — Global Polish ✓
+**Branch:** `feature/phase-8-polish` (in progress on `design-overhaul`)
+
+### Hero video
+- Removed `MorphShape3D` R3F canvas from Hero right panel
+- `AI_Evolution_Transformation_Video.mp4` → `public/assets/hero-video.mp4`
+- `<video>` autoPlay loop muted playsInline, `objectFit: cover`, `mixBlendMode: screen`
+- Left/top/bottom edge fade overlays blend video into background
+- Scroll fade-out handler preserved
+
+### About video
+- Removed rotating profile photo + scan rings from About section
+- `AI_Face_Evolution_Video_Generation.mp4` → `public/assets/about-video.mp4`
+- Video fills full left column (`absolute inset-0`, `items-stretch` on flex row)
+- `objectPosition: center top`, edge fades on all sides
+
+### WorkGallery removed
+- "Things I've Worked On" section removed from Portfolio entirely
+
+### Theme: light mode removed
+- ThemeToggle cycles Night → Dark only (Sun icon removed)
+- ThemeProvider `themes` array reduced to `['dark', 'night']`
+
+### Mobile-first responsive overhaul
+- `index.css`: `overflow-x: hidden` on html/body, `-webkit-tap-highlight-color` removed, `scroll-padding-top: 72px`, `text-size-adjust` on mobile
+- `App.tsx`: Scene3D disabled on touch / coarse-pointer / narrow / <4-core devices
+- `TiltCard`: tilt handlers skipped on `hover: none` (touch) devices
+- `Navigation`: full-screen right-to-left slide drawer with backdrop blur, animated hamburger ↔ X icon, numbered nav items, body scroll lock, ThemeToggle in mobile header, auto-close on resize
+- `Hero`: `pt-20` on mobile for fixed nav clearance; `px-6` on small screens
+- `About`: gap `8 lg:16` between columns; video `min-h-[260px] sm:min-h-[360px] lg:min-h-0`
+- `Experience`: card inner padding `p-4 sm:p-8`
