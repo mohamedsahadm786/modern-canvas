@@ -23,6 +23,9 @@ import communication from '@assets/generated_images/Skills/13.png';
 import data_story from '@assets/generated_images/Skills/4.png';
 import leadership from '@assets/generated_images/Skills/14.png';
 import teamwork from '@assets/generated_images/Skills/1.jpg';
+import claude from '@assets/generated_images/Skills/claude.webp';
+import docker from '@assets/generated_images/Skills/docker.jpg';
+import kubernetes from '@assets/generated_images/Skills/kubernetes.png';
 
 import {
   Database,
@@ -67,6 +70,9 @@ const skillCategories: SkillCategory[] = [
     skills: [
       { name: 'Python', proficiency: 90, icon: Code2, image: python, description: 'Advanced Python programming for data science, ML, and automation' },
       { name: 'SQL & Databases', proficiency: 85, icon: Database, image: sql, description: 'PostgreSQL, MySQL, database optimization, and complex query writing' },
+      { name: 'Claude Code', proficiency: 90, icon: FileSpreadsheet, image: claude, description: 'AI-assisted coding, debugging, code generation, and workflow automation tools' },
+      { name: 'Docker', proficiency: 90, icon: FileSpreadsheet, image: docker, description: 'Containerization, image management, deployment, and environment consistency tools' },
+      { name: 'Kubernetes', proficiency: 90, icon: FileSpreadsheet, image: kubernetes, description: 'Container orchestration, scaling, service management, and automated deployment tools' },
       { name: 'Advanced MS Excel', proficiency: 88, icon: FileSpreadsheet, image: ecxel, description: 'Advanced formulas, pivot tables, macros, and data analysis tools' },
       { name: 'Power BI', proficiency: 85, icon: BarChart3, image: powerBI, description: 'Business intelligence dashboards and interactive data visualizations' },
       { name: 'Artificial Intelligence', proficiency: 87, icon: Bot, image: AI, description: 'AI model development, NLP, computer vision, and machine learning' },
